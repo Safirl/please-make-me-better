@@ -1,19 +1,18 @@
-# Welcome to your Expo app 👋
+# Welcome to Make Me Better 💅
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
 
-## Get started
+## Installation / Setup
 
 1. Install dependencies
 
    ```bash
+
+   git clone git@github.com:Safirl/please-make-me-better.git
+   cd please-make-me-better
    npm install
-   ```
-
-2. Start the app
-
-   ```bash
+   Start the app
    npx expo start
+
    ```
 
 In the output, you'll find options to open the app in a
@@ -25,26 +24,23 @@ In the output, you'll find options to open the app in a
 
 You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
 
-## Get a fresh project
 
-When you're ready, run:
 
-```bash
-npm run reset-project
-```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
 
-## Learn more
+## Synopsis 
+In a near-future dystopia, scientific advancements have made it possible to alter the human mind. Corporations have seized upon these discoveries to offer the creation of a superior human being — more confident, more intelligent, more eloquent. While some use this technology to become better versions of themselves, others exploit it to control the minds of others.
+You are an employee at one of these companies. Every day, you receive client requests and attempt to modify their subconscious using your configurator. But altering the very soul carries a moral weight. The more extravagant the requests become, the more tormented you feel. Where does the limit of your ethics lie — and will you be able to bear the consequences?
 
-To learn more about developing your project with Expo, look at the following resources:
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
 
-## Join the community
 
-Join our community of developers creating universal apps.
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+
+
+
+## Team
+- Loïc LEFORESTIER (Dev)
+- Yasmîn BOUNEKHLA (Designer)
+- Émilien VIVIER (Dev)
+- Camille CAMBET PETIT JEAN (Designer)
