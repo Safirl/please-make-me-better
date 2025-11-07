@@ -41,15 +41,16 @@ export default class Experience {
 
         this.sizes.on("resize", () => this.resize());
         this.time.on("tick", () => this.update());
-        this.time.tick()
-        this.ressources.on('ready', () => this.onReady())
+        this.time.tick();
+        // this.ressources.on('ready', () => this.onReady())
+        this.onReady();
     }
 
-    public createWorld(Exp: World) {
+    public createWorld(Exp: new (e : Experience) => World) {
         if (!Exp) return
         this.world?.clean()
         this.world = new Exp(this)
-        this.isReady && (this.world.show())
+        this.isReady && this.world && (this.world.show())
 
     }
 

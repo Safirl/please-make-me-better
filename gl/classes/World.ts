@@ -1,4 +1,4 @@
-import * as THREE from "three"
+import * as THREE from "three";
 import EventEmitter from "../utils/EventEmitter";
 export default class World extends EventEmitter {
     constructor() {
