@@ -3,12 +3,9 @@ import { ExpoWebGLRenderingContext, GLView } from 'expo-gl';
 import * as React from 'react';
 export default function GLComponent() {
 
-    const [experience, setExperience] = React.useState(null) 
+    const [experience, setExperience] = React.useState<Experience | null>(null)
 
     const createExperience = (gl: ExpoWebGLRenderingContext) => {
-
-        // const renderer = new Renderer({ gl });
-        // renderer.setSize(gl.drawingBufferWidth, gl.drawingBufferHeight);
         setExperience(new Experience(gl))
     }
 
