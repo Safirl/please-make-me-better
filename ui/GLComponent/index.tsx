@@ -1,6 +1,7 @@
 import Experience from '@/gl/Experience';
 import { ExpoWebGLRenderingContext, GLView } from 'expo-gl';
 import * as React from 'react';
+import { glStyles } from "./style";
 export default function GLComponent() {
 
     const [experience, setExperience] = React.useState<Experience | null>(null)
@@ -15,7 +16,7 @@ export default function GLComponent() {
 
     return (
         <GLView
-            style={{ flex: 1 }}
+            style={glStyles.soul}
             onContextCreate={createExperience}
         />
     );

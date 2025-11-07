@@ -1,10 +1,11 @@
 import { StyleSheet } from 'react-native';
 
-export const buttonExampleStyles = StyleSheet.create({
-  scope: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 6,
-  },
+export const glStyles = StyleSheet.create({
+  soul: {
+    position: "fixed",
+    zIndex: 0,
+    height: "100%",
+    width: "100%"
+  }
 });
 
