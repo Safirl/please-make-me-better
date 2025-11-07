@@ -3,7 +3,7 @@ import * as THREE from "three";
 import World from "./classes/World";
 // import sources from "./common/sources";
 import Camera from "./utils/Camera";
-// import Helpers from "./utils/Helpers";
+import Helpers from "./utils/Helpers";
 import Renderer from "./utils/Renderer";
 import Ressources from "./utils/Ressources";
 import Sizes from "./utils/Sizes";
@@ -20,7 +20,7 @@ export default class Experience {
     public scene: THREE.Scene;
     public camera: Camera;
     public renderer: Renderer;
-    // public helpers: Helpers
+    public helpers: Helpers
     public ressources: Ressources
 
     public world: World | null = null; // use the genera Page class type
@@ -32,7 +32,7 @@ export default class Experience {
 
         this.sizes = new Sizes(this);
         this.time = new Time();
-        // this.helpers = new Helpers();
+        this.helpers = new Helpers();
         this.camera = new Camera(this);
         this.renderer = new Renderer(this);
         this.ressources = new Ressources([])
