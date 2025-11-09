@@ -1,4 +1,9 @@
-import { Text, View } from "react-native";
+import Modal from "@/components/Modal/modal";
+import { WheelParameter } from "@/components/Parameters/wheelParameter";
+import { Dimensions, View } from "react-native";
+
+const { width, height } = Dimensions.get('window');
+
 
 export default function Index() {
   return (
@@ -7,9 +12,14 @@ export default function Index() {
         flex: 1,
         justifyContent: "center",
         alignItems: "center",
+        overflow: "hidden"
       }}
     >
-      <Text>Edit app/index.tsx to edit this screen.</Text>
+      {/* <Text>The current count is {}</Text> */}
+      {/* <CursorParameter></CursorParameter> */}
+      <Modal modalWidth={200}>
+        <WheelParameter/>
+      </Modal>
     </View>
   );
 }
