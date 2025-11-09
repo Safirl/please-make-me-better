@@ -1,4 +1,4 @@
-import { useStorage } from "@/app/store";
+import { useStorage } from "@/storage/store";
 import { useEffect } from "react";
 import { StyleSheet, Text, TextInput, View } from "react-native";
 

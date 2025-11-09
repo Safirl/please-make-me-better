@@ -1,4 +1,5 @@
-import { useRef } from 'react';
+import { useStorage } from '@/storage/store';
+import { useEffect, useRef } from 'react';
 import { Animated, Dimensions, Pressable, StyleSheet, Text } from 'react-native';
 
 const { width, height } = Dimensions.get('window');
@@ -13,6 +14,13 @@ interface modalProps {
 export default function Modal(props: modalProps) {
     const {children} = props
     const slideAnim = useRef(new Animated.Value(width)).current;
+    const isModalOpened = useStorage((state: any ) => state.isModalOpened)
+    const resetCurrentParameter = useStorage((state: any) => state.resetCurrentParameter)
+
+    useEffect(() => {
+        console.log("opening", isModalOpened)
+        isModalOpened ? openModal() : closeModal()
+    }, [isModalOpened])
     
     const openModal = () => {
         Animated.timing(slideAnim, {
@@ -38,7 +46,7 @@ export default function Modal(props: modalProps) {
         >
             {children}
             <Pressable
-                onPress={closeModal}
+                onPress={resetCurrentParameter}
                 style={{
                     marginTop: 20,
                     backgroundColor: '#007AFF',
@@ -63,6 +71,6 @@ const styles = StyleSheet.create({
         borderTopLeftRadius: 24,
         borderBottomLeftRadius: 24,
         padding: 20,
-        zIndex: 1000,
+        zIndex: 10,
     }
 });

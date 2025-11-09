@@ -1,11 +1,13 @@
 import Modal from "@/components/Modal/modal";
 import { WheelParameter } from "@/components/Parameters/wheelParameter";
-import { Dimensions, View } from "react-native";
-
-const { width, height } = Dimensions.get('window');
-
+import { Text } from "@react-navigation/elements";
+import { Pressable, View } from "react-native";
+import { useStorage } from "../storage/store";
 
 export default function Index() {
+  const currentParameter: string = useStorage((state: any) => state.currentParameter)
+  const setCurrentParameter = useStorage((state: any) => state.setCurrentParameter)
+
   return (
     <View
       style={{
@@ -15,11 +17,14 @@ export default function Index() {
         overflow: "hidden"
       }}
     >
-      {/* <Text>The current count is {}</Text> */}
-      {/* <CursorParameter></CursorParameter> */}
       <Modal modalWidth={200}>
-        <WheelParameter/>
+        {
+          currentParameter === "" && <WheelParameter/>
+        }
       </Modal>
+      <Pressable onPress={() => {setCurrentParameter("")}}>
+        <Text>Open modal</Text>
+      </Pressable>
     </View>
   );
 }
