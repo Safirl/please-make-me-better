@@ -46,10 +46,10 @@ export default class Experience {
         this.onReady();
     }
 
-    public createWorld(Exp: new (e : Experience) => World) {
-        if (!Exp) return
+    public createWorld(newWorld: new (e : Experience) => World) {
+        if (!newWorld) return
         this.world?.clean()
-        this.world = new Exp(this)
+        this.world = new newWorld(this)
         this.isReady && this.world && (this.world.show())
 
     }
