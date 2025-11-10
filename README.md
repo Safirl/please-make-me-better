@@ -10,7 +10,7 @@
    git clone git@github.com:Safirl/please-make-me-better.git
    cd please-make-me-better
    npm install
-   Start the app
+   # Start the app
    npx expo start
 
    ```
