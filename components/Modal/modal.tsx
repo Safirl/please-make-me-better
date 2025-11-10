@@ -18,7 +18,6 @@ export default function Modal(props: modalProps) {
     const resetCurrentParameter = useStorage((state: any) => state.resetCurrentParameter)
 
     useEffect(() => {
-        console.log("opening", isModalOpened)
         isModalOpened ? openModal() : closeModal()
     }, [isModalOpened])
     
