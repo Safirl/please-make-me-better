@@ -1,6 +1,7 @@
 import { THREE } from 'expo-three';
 // import type GUI from 'lil-gui';
 
+import { Asset } from 'expo-asset';
 import Experience from "../Experience";
 import Helpers from '../utils/Helpers';
 import type Time from '../utils/Time';
@@ -8,14 +9,17 @@ const getRandomBetween = (min: number, max: number) => Math.random() * (max - mi
 
 
 export default class Soul {
+    private shadersLoaded = false;
+    private vertexShader = '';
+    private fragmentShader = '';
 
     private experience: Experience
     private scene: THREE.Scene
     private time: Time
     private helpers: Helpers
 
-    private geometry: THREE.SphereGeometry | null = null
-    private material: THREE.MeshBasicMaterial | null = null
+    private geometry: THREE.PlaneGeometry | null = null
+    private material: THREE.ShaderMaterial | null = null
     private mesh: THREE.Mesh | null = null
 
     private params = {
@@ -28,9 +32,11 @@ export default class Soul {
         this.scene = this.experience.scene
         this.time = this.experience.time
         this.helpers = this.experience.helpers
+        this.loadShaders();
 
 
-        this.createSphere()
+
+        // this.createSphere()
 
 
         this.helpers.tweak(
@@ -48,14 +54,42 @@ export default class Soul {
         )
     }
 
+    async loadShaders() {
+        try {
+            const [vertexShader, fragmentShader] = await Promise.all([
+                Asset.fromModule(require('@/glsl/soul.vert.glsl')).downloadAsync(),
+                Asset.fromModule(require('@/glsl/soul.frag.glsl')).downloadAsync(),
+            ])
+
+            const [vert, frag] = await Promise.all([
+                fetch(vertexShader.localUri || '').then(r => r.text()),
+                fetch(fragmentShader.localUri || '').then(r => r.text()),
+            ]);
+
+            this.vertexShader = vert;
+            this.fragmentShader = frag;
+            this.shadersLoaded = true;
+
+            this.createSphere();
+            this.addScene();
+        }
+        catch(error) {
+            console.error('Erreur chargement shaders:', error);
+        }
+    }
+
     createSphere() {
-
-        this.geometry = new THREE.SphereGeometry(this.params.radius, 32, 16);
-        this.material = new THREE.MeshBasicMaterial({ color: 0xd58be6 });
+        // this.geometry = new THREE.SphereGeometry(this.params.radius, 32, 16);
+        // this.material = new THREE.MeshBasicMaterial({ color: 0xd58be6 });
+        // this.mesh = new THREE.Mesh(this.geometry, this.material);
+        this.geometry = new THREE.PlaneGeometry(32, 32);
+        this.material = new THREE.ShaderMaterial(
+            {
+                vertexShader: this.vertexShader,
+                fragmentShader: this.fragmentShader,
+            }
+        );
         this.mesh = new THREE.Mesh(this.geometry, this.material);
-
-
-
     }
 
     addScene() {
