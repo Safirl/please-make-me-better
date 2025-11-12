@@ -10,7 +10,7 @@ export default class Soul extends Component {
 
     private params = {
         radius: 1,
-        blendingFactor: 2
+        blendingFactor: 2 //transition radius
     }
 
     private uTimeLoc: WebGLUniformLocation | null = null
