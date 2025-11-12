@@ -12,6 +12,8 @@ export default class Soul extends Component {
     }
     private uTimeLoc: WebGLUniformLocation | null = null
     private uResolutionLoc: WebGLUniformLocation | null = null
+
+
     constructor(experience: Experience) {
         super(experience)
 
@@ -32,7 +34,15 @@ export default class Soul extends Component {
     }
 
     createSphere() {
+        const vertices = [
+            -1, -1, // Bottom left corner of the screen triangle
+            -1, 1, // Bottom left corner of the screen triangle
+            1, -1, // Bottom left corner of the screen triangle
 
+            1, 1,
+            -1, 1,
+            1, -1
+        ]
 
 
 
@@ -45,11 +55,12 @@ export default class Soul extends Component {
         this.gl.shaderSource(
             vert,
             `
-    void main(void) {
-      gl_Position = vec4(0.0, 0.0, 0.0, 1.0);
-      gl_PointSize = 150.0;
-    }
-  `
+            attribute vec2 position;
+
+            void main() {
+                gl_Position = vec4(position.x, position.y, 0.0, 1.0);
+            }
+            `
         );
         this.gl.compileShader(vert);
 
@@ -72,11 +83,11 @@ export default class Soul extends Component {
             void main() {
 
 
-                vec2 uv = gl_FragCoord.xy / uResolution;
-                uv -= 0.5;
-                uv.x *= uResolution.x / uResolution.y;
+                vec2 uv = gl_FragCoord.xy/uResolution;
+                uv -= 1.;
+                // uv.x *= uResolution.x / uResolution.y;
 
-                gl_FragColor = vec4(uv.x , uv.y, 0.0, 1.0);
+                gl_FragColor = vec4(uv.x , uv.y, .0, 1.0);
             }
   `
         );
@@ -110,7 +121,30 @@ export default class Soul extends Component {
         this.gl.attachShader(program, vert);
         this.gl.attachShader(program, frag);
         this.gl.linkProgram(program);
+
+        const buffer = this.gl.createBuffer();
+        this.gl.bindBuffer(this.gl.ARRAY_BUFFER, buffer);
+
+        this.gl.bufferData(this.gl.ARRAY_BUFFER, new Float32Array(vertices), this.gl.STATIC_DRAW);
+
+        this.gl.bindBuffer(this.gl.ARRAY_BUFFER, null);
+
         this.gl.useProgram(program);
+
+
+
+        // Link the GPU information to the CPU
+        const position = this.gl.getAttribLocation(program, "position");
+
+        this.gl.enableVertexAttribArray(position);
+        this.gl.bindBuffer(this.gl.ARRAY_BUFFER, buffer);
+        this.gl.vertexAttribPointer(position, 2, this.gl.FLOAT, this.gl.FALSE, 0, 0);
+
+
+
+
+
+
 
         // Create Uniforms : 
 
@@ -131,6 +165,7 @@ export default class Soul extends Component {
     }
 
     draw() {
-        this.gl.drawArrays(this.gl.POINTS, 0, 1);
+        // this.gl.drawArrays(this.gl.POINTS, 0, 1);
+        this.gl.drawArrays(this.gl.TRIANGLES, 0, 6); // 6 cause triangles of 3 vertices. Get this info dynamicly in the future
     }
 }
