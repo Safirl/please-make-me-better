@@ -10,12 +10,14 @@ export default class Soul extends Component {
 
     private params = {
         radius: 1,
-        blendingFactor: 2 //transition radius
+        blendingFactor: 2, //transition radius
+        factor: 0.25
     }
 
     private uTimeLoc: WebGLUniformLocation | null = null
     private uResolutionLoc: WebGLUniformLocation | null = null
     private uBlendingFactor: WebGLUniformLocation | null = null
+    private uFactorLoc: WebGLUniformLocation | null = null
 
 
     constructor(experience: Experience) {
@@ -39,6 +41,15 @@ export default class Soul extends Component {
             0,
             10,
             0.1,
+            HELPER_FOLDER
+        )
+        this.helpers.tweak(
+            "factor",
+            this.params,
+            (e: number) => {},
+            0,
+            10,
+            0.01,
             HELPER_FOLDER
         )
     }
@@ -135,6 +146,7 @@ export default class Soul extends Component {
         this.uTimeLoc = this.gl.getUniformLocation(program, "uTime");
         this.uResolutionLoc = this.gl.getUniformLocation(program, "uResolution");
         this.uBlendingFactor = this.gl.getUniformLocation(program, "uBlendingFactor");
+        this.uFactorLoc = this.gl.getUniformLocation(program, "uFactor");
 
 
         if (!this.gl.getProgramParameter(program, this.gl.LINK_STATUS)) {
@@ -151,6 +163,7 @@ export default class Soul extends Component {
         this.gl.uniform1f(this.uTimeLoc, this.time.elapsedTime * 0.0005);
         this.gl.uniform1f(this.uBlendingFactor, this.params.blendingFactor);
         this.gl.uniform2f(this.uResolutionLoc, this.experience.sizes.width, this.experience.sizes.height);
+        this.gl.uniform1f(this.uFactorLoc, this.params.factor);
     }
 
     draw() {

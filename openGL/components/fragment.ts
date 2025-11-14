@@ -20,16 +20,16 @@ float smoothmin(float a, float b, float k) {
  */
 const scene = /* glsl */`
 float scene(vec3 p) {
-    float sphere1 = sdSphere(p - vec3(1.0 + cos(uTime), 0.7, 0.0), 1.0);
+  float displacement = sin(5.0 * p.x) * sin(5.0 * p.y) * sin(5.0 * p.z) * (uFactor + sin(uTime))+ sin(uTime) ;
+    float sphere1 = sdSphere(p - vec3(1.0 + cos(uTime), 0.7, 0.0), 1.0) + displacement;
     float sphere2 = sdSphere(p + vec3(1.0, 0.5 + sin(uTime)/2.0, 0.0), 1.0);
-
 
 
     /** 
      * COLORS
      * smoothmin math but applied to the shape
      **/
-    float h = clamp(0.5 + 0.5 * (sphere2 - sphere1) / uBlendingFactor, 0.0, 1.0);
+    float h = clamp(0.5 + 0.5 * (sphere2 - (sphere1)) / uBlendingFactor, 0.0, 1.0);
     objectColor = mix(vec3(213./255., 139./255., 230./255.),  vec3(0.0, 0.3, 1.0), h);
 
 
@@ -37,7 +37,7 @@ float scene(vec3 p) {
      *  SHAPE
      **/ 
     float distance1 = smoothmin(sphere1, sphere2, uBlendingFactor);
-    return distance1;
+    return distance1 ;
 }
 `
 
@@ -81,7 +81,7 @@ void main() {
   uv.x *= uResolution.x / uResolution.y;
 
   // Light Position
-  vec3 lightPosition = vec3(-10.0 * cos(uTime * 0.2), 10.0, 10.0 * sin(uTime * 0.2));
+  vec3 lightPosition = vec3(2.0 /** cos(uTime * 0.2)*/, 0.0, 10.0 /** sin(uTime * 0.2)*/);
 
 
   vec3 ray_origin = vec3(0.0, 0.0, 5.0);
@@ -110,6 +110,7 @@ precision mediump float;
 uniform float uTime;
 uniform vec2 uResolution;
 uniform float uBlendingFactor;
+uniform float uFactor;
 
 #define MAX_STEPS 50
 #define MAX_DIST 100.0
