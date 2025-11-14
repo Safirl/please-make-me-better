@@ -1,8 +1,8 @@
-import GLComponent from "@/ui/GLComponent";
+import GL from "@/ui/GL";
 import { Stack } from "expo-router";
 export default function RootLayout() {
   return <>
     <Stack />
-    <GLComponent />
+    <GL/>
   </>;
 }
