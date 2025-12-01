@@ -17,16 +17,16 @@ export default class Experience {
     public sizes: Sizes;
     public time: Time;
     public scene: Component[];
-    public renderer: Renderer | null = null;
+    public renderer: Renderer | undefined;
     public helpers: Helpers
-    public world: World | null = null; // use the genera Page class type
+    public world: World | undefined; // use the genera Page class type
 
     /**
      * config
      */
-    public adapter: any
-    public device: any
-    public presentationFormat: any
+    public adapter: GPUAdapter | undefined
+    public device: GPUDevice | undefined
+    public presentationFormat: GPUTextureFormat | undefined
 
     constructor(ctx: RNCanvasContext, adapter: any) {
 
@@ -56,12 +56,12 @@ export default class Experience {
     }
 
     private async initGPUConfig() {
-        this.adapter = await navigator.gpu.requestAdapter()
+        const adapter = await navigator.gpu.requestAdapter()
 
-        if (!this.adapter) {
+        if (!adapter) {
             throw new Error("No adapter");
         }
-
+        this.adapter = adapter
         this.device = await this.adapter.requestDevice()
 
 
