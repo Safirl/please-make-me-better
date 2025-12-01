@@ -1,5 +1,6 @@
 import Experience from "../Experience";
 import Component from "../classes/Component";
+import fragment from "./fragment";
 const HELPER_FOLDER = "Sphere"
 
 
@@ -8,27 +9,47 @@ export default class Soul extends Component {
 
 
     private params = {
-        radius: 1
+        radius: 1,
+        blendingFactor: 2, //transition radius
+        factor: 0.25
     }
+
     private uTimeLoc: WebGLUniformLocation | null = null
     private uResolutionLoc: WebGLUniformLocation | null = null
+    private uBlendingFactor: WebGLUniformLocation | null = null
+    private uFactorLoc: WebGLUniformLocation | null = null
 
 
     constructor(experience: Experience) {
         super(experience)
 
         this.createSphere()
+
         this.helpers.tweak(
             "radius",
             this.params,
-            (e: number) => {
-                this.dispose()
-                this.createSphere()
-                this.addScene()
-            },
+            (e: number) => {},
             0,
             2,
             0.1,
+            HELPER_FOLDER
+        )
+        this.helpers.tweak(
+            "blendingFactor",
+            this.params,
+            (e: number) => {},
+            0,
+            10,
+            0.1,
+            HELPER_FOLDER
+        )
+        this.helpers.tweak(
+            "factor",
+            this.params,
+            (e: number) => {},
+            0,
+            10,
+            0.01,
             HELPER_FOLDER
         )
     }
@@ -68,29 +89,7 @@ export default class Soul extends Component {
         const frag = this.gl.createShader(this.gl.FRAGMENT_SHADER)
         if (!frag) throw new Error('ERROR while Sphere Fragment Shader creation');
 
-        this.gl.shaderSource(
-            frag,
-            `
-            precision mediump float;
-            uniform float uTime;
-            uniform vec2 uResolution;
-
-// #define MAX_STEPS 50
-// #define MAX_DIST 100.0
-// #define SURFACE_DIST 0.001
-
-
-            void main() {
-
-
-                vec2 uv = gl_FragCoord.xy/uResolution;
-                uv -= 1.;
-                // uv.x *= uResolution.x / uResolution.y;
-
-                gl_FragColor = vec4(uv.x , uv.y, .0, 1.0);
-            }
-  `
-        );
+        this.gl.shaderSource(frag, fragment);
         this.gl.compileShader(frag);
 
 
@@ -124,9 +123,7 @@ export default class Soul extends Component {
 
         const buffer = this.gl.createBuffer();
         this.gl.bindBuffer(this.gl.ARRAY_BUFFER, buffer);
-
         this.gl.bufferData(this.gl.ARRAY_BUFFER, new Float32Array(vertices), this.gl.STATIC_DRAW);
-
         this.gl.bindBuffer(this.gl.ARRAY_BUFFER, null);
 
         this.gl.useProgram(program);
@@ -135,7 +132,6 @@ export default class Soul extends Component {
 
         // Link the GPU information to the CPU
         const position = this.gl.getAttribLocation(program, "position");
-
         this.gl.enableVertexAttribArray(position);
         this.gl.bindBuffer(this.gl.ARRAY_BUFFER, buffer);
         this.gl.vertexAttribPointer(position, 2, this.gl.FLOAT, this.gl.FALSE, 0, 0);
@@ -147,10 +143,10 @@ export default class Soul extends Component {
 
 
         // Create Uniforms : 
-
         this.uTimeLoc = this.gl.getUniformLocation(program, "uTime");
-        // this.gl.uniform1f(uTime, this.time.elapsedTime);
         this.uResolutionLoc = this.gl.getUniformLocation(program, "uResolution");
+        this.uBlendingFactor = this.gl.getUniformLocation(program, "uBlendingFactor");
+        this.uFactorLoc = this.gl.getUniformLocation(program, "uFactor");
 
 
         if (!this.gl.getProgramParameter(program, this.gl.LINK_STATUS)) {
@@ -160,8 +156,14 @@ export default class Soul extends Component {
     }
 
     update() {
-        this.gl.uniform1f(this.uTimeLoc, this.time.elapsedTime);
+
+        /**
+         * Update Uniforms
+         */
+        this.gl.uniform1f(this.uTimeLoc, this.time.elapsedTime * 0.0005);
+        this.gl.uniform1f(this.uBlendingFactor, this.params.blendingFactor);
         this.gl.uniform2f(this.uResolutionLoc, this.experience.sizes.width, this.experience.sizes.height);
+        this.gl.uniform1f(this.uFactorLoc, this.params.factor);
     }
 
     draw() {
