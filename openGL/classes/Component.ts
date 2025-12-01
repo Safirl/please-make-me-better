@@ -1,6 +1,5 @@
 import { ExpoWebGLRenderingContext } from 'expo-gl';
 import Experience from "../Experience";
-import Helpers from '../utils/Helpers';
 import Time from '../utils/Time';
 
 
@@ -9,7 +8,6 @@ export default class Component {
     protected experience: Experience
     protected scene: Component[]
     protected gl: ExpoWebGLRenderingContext;
-    protected helpers: Helpers
     protected time: Time
 
 
@@ -19,7 +17,6 @@ export default class Component {
         this.scene = this.experience.scene
         this.gl = this.experience.gl
         this.time = this.experience.time
-        this.helpers = this.experience.helpers
     }
 
     dispose(): void {

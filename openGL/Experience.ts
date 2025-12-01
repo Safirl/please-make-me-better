@@ -3,7 +3,7 @@ import { ExpoWebGLRenderingContext } from 'expo-gl';
 import Component from "./classes/Component";
 import World from "./classes/World";
 
-import Helpers from "./utils/Helpers";
+import Helpers from "../app/utils/Helpers";
 import Renderer from "./utils/Renderer";
 import Sizes from "./utils/Sizes";
 import Time from "./utils/Time";
@@ -18,7 +18,7 @@ export default class Experience {
 
     public scene: Component[];
     public renderer: Renderer;
-    public helpers: Helpers
+    // public helpers: Helpers
 
     public world: World | null = null; // use the genera Page class type
 
@@ -28,7 +28,7 @@ export default class Experience {
         this.scene = []
         this.sizes = new Sizes(this);
         this.time = new Time();
-        this.helpers = new Helpers();
+        // this.helpers = new Helpers();
         this.renderer = new Renderer(this);
 
         this.createWorld(Main)

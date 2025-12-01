@@ -8,7 +8,6 @@ export type parameterType = "PARAMETER_CURSOR" | "PARAMETER_WHEEL" | "PARAMETER_
 
 interface modalProps {
     children: React.ReactNode
-    modalWidth: number
 }
 
 export default function Modal(props: modalProps) {

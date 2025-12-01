@@ -6,14 +6,25 @@ export default class Helpers {
     private GUI: GUI | null = null
     private folders = {} as Folders
     private isDevMode = false
+    private static _instance: Helpers | null = null;
     constructor() {
+        if (Helpers._instance) {
+            return Helpers._instance;
+        }
+
+        Helpers._instance = this;
         this.isDevMode = process.env.EXPO_OS === 'web'
         if (!this.isDevMode) return
 
         this.GUI = new GUI()
     }
 
-
+     public static get instance(): Helpers {
+        if (!this._instance) {
+            new Helpers();
+        }
+        return this._instance as Helpers;
+    }
 
 
     tweak(

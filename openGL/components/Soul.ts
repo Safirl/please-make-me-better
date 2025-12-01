@@ -1,3 +1,4 @@
+import Helpers from "@/app/utils/Helpers";
 import Experience from "../Experience";
 import Component from "../classes/Component";
 import fragment from "./fragment";
@@ -25,7 +26,7 @@ export default class Soul extends Component {
 
         this.createSphere()
 
-        this.helpers.tweak(
+        Helpers.instance.tweak(
             "radius",
             this.params,
             (e: number) => {},
@@ -34,7 +35,7 @@ export default class Soul extends Component {
             0.1,
             HELPER_FOLDER
         )
-        this.helpers.tweak(
+        Helpers.instance.tweak(
             "blendingFactor",
             this.params,
             (e: number) => {},
@@ -43,7 +44,7 @@ export default class Soul extends Component {
             0.1,
             HELPER_FOLDER
         )
-        this.helpers.tweak(
+        Helpers.instance.tweak(
             "factor",
             this.params,
             (e: number) => {},
