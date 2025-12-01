@@ -23,12 +23,14 @@ export const Cursor = (props: cursorProps) => {
   const panGesture = Gesture.Pan()
     .onBegin((e) => {
       position.set(withTiming(e.y, {
-        duration: 200
-      }))
+          duration: 200,
+        }, 
+        () => {props.onValueChanged(position.get()/sizes.height)}
+      ))   
     })
     .onUpdate((e) => {
         position.set(clamp(e.y, 0,viewHeight.get()));
-        props.onValueChanged(position.get())
+        props.onValueChanged(1 - position.get()/sizes.height)
     })
 
   const animatedCursorStyle = useAnimatedStyle(() => ({

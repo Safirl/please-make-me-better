@@ -1,4 +1,5 @@
 import Helpers from "@/app/utils/Helpers";
+import { useSoulStorage } from "@/storage/store";
 import Experience from "../Experience";
 import Component from "../classes/Component";
 import fragment from "./fragment";
@@ -7,11 +8,13 @@ const HELPER_FOLDER = "Sphere"
 
 export default class Soul extends Component {
 
-
+    private paramsFactors = {
+        fluidityFactor: 10
+    }
 
     private params = {
         radius: 1,
-        blendingFactor: 2, //transition radius
+        blendingFactor: useSoulStorage.getState().fluidity * this.paramsFactors.fluidityFactor, //8 is the factor. TODO Change later
         factor: 0.25
     }
 
@@ -53,7 +56,12 @@ export default class Soul extends Component {
             0.01,
             HELPER_FOLDER
         )
+        this.onSoulStorageChanged();
     }
+
+    onSoulStorageChanged = () => {useSoulStorage.subscribe((state) => {
+        this.params.blendingFactor = state.fluidity  * this.paramsFactors.fluidityFactor;
+    })}
 
     createSphere() {
         const vertices = [
