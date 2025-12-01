@@ -3,12 +3,17 @@ import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 import Animated, { clamp, useAnimatedStyle, useSharedValue, withTiming } from "react-native-reanimated";
 
 interface cursorProps {
+  value: number,
   onValueChanged: (newValue: number) => void
 }
 
+const sizes = {
+  width: 50,
+  height: 200
+}
+
 export const Cursor = (props: cursorProps) => {
-  //@TODO Watch reanimated
-  const position = useSharedValue(0)
+  const position = useSharedValue(sizes.height - props.value * sizes.height)
   const viewHeight = useSharedValue(0);
 
   const handleOnLayout = (event: LayoutChangeEvent) => {
@@ -30,7 +35,7 @@ export const Cursor = (props: cursorProps) => {
     top: position.value,
   }));
   const animatedFillStyle = useAnimatedStyle(() => ({
-    height: 200 - position.value,
+    height: sizes.height - position.value,
   }));
 
   return (
@@ -47,22 +52,22 @@ const styles = StyleSheet.create({
   fillBackground: {
     position: "relative",
     backgroundColor: "red",
-    height: 200,
-    width: 50,
+    height: sizes.height,
+    width: sizes.width,
   },
   
   fill: {
     bottom: 0,
     left: 0,
     position: "absolute",
-    height: 100,
-    width: 50,
+    height: sizes.height,
+    width: sizes.width,
     backgroundColor: "green",
   },
 
   cursor: {
     position: "absolute",
-    width: 50,
+    width: sizes.width,
     height: 5,
     left: 0,
     backgroundColor: "yellow"

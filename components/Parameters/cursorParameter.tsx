@@ -7,11 +7,15 @@ export const CursorParameter = () => {
     const blur = useSoulStorage((state: any) => state.fluidity)
     const grain = useSoulStorage((state: any) => state.grain)
 
+    const setFluidity = useSoulStorage((state: any) => {
+        return state.setFluidity
+    })
+
     return (
         <View style={styles.container}>
-            <Cursor />
-            <Cursor />
-            <Cursor />
+            <Cursor value={fluidity} onValueChanged={setFluidity}/>
+            {/* <Cursor />
+            <Cursor /> */}
         </View>
     )
 }
