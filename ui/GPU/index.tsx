@@ -1,12 +1,23 @@
+
 import React from "react";
-import { PixelRatio, StyleSheet, View } from "react-native";
+import { LayoutChangeEvent, PixelRatio, View } from "react-native";
 import { Canvas, CanvasRef } from "react-native-wgpu";
+import {
+  redFragWGSL,
+  triangleVertWGSL
+} from "./triangle";
 
-import { redFragWGSL, triangleVertWGSL } from "./triangle.ts";
 
-export default function GPU() {
+export default function HelloTriangle() {
   const ref = React.useRef<CanvasRef>(null);
+
+  const [containerWidth, setContainerWidth] = React.useState(0)
+  const [containerHeight, setContainerHeight] = React.useState(0)
+  const [isGLReady, setIsGLReady] = React.useState(false)
+  console.log('pass here ? ')
   React.useEffect(() => {
+    console.log('pass here ? ')
+
     const helloTriangle = async () => {
       const adapter = await navigator.gpu.requestAdapter();
       if (!adapter) {
@@ -58,7 +69,7 @@ export default function GPU() {
 
       const textureView = context.getCurrentTexture().createView();
 
-      const renderPassDescriptor: any/*GPURenderPassDescriptor*/ = {
+      const renderPassDescriptor: GPURenderPassDescriptor = {
         colorAttachments: [
           {
             view: textureView,
@@ -71,28 +82,47 @@ export default function GPU() {
 
       const passEncoder = commandEncoder.beginRenderPass(renderPassDescriptor);
       passEncoder.setPipeline(pipeline);
-      passEncoder.draw(3);
+      passEncoder.draw(6);
       passEncoder.end();
 
       device.queue.submit([commandEncoder.finish()]);
 
       context.present();
     };
+
+
     helloTriangle();
+
+
   }, [ref]);
 
+
+  const onLayout = (event: LayoutChangeEvent) => {
+    const { width, height } = event.nativeEvent.layout;
+
+    setContainerWidth(width)
+    setContainerHeight(height)
+    setIsGLReady(true)
+    // experience && experience.resize()
+  }
   return (
-    <View style={style.container}>
-      <Canvas ref={ref} style={style.webgpu} />
+    <View
+      onLayout={onLayout}
+      style={{
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center'
+      }}
+    >
+      {
+        isGLReady && <Canvas
+          ref={ref}
+          style={{
+            width: containerWidth,
+            height: containerHeight
+          }} />
+      }
     </View>
   );
 }
 
-const style = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  webgpu: {
-    flex: 1,
-  },
-});
