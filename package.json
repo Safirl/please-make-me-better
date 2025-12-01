@@ -46,6 +46,7 @@
   "devDependencies": {
     "@types/react": "~19.1.0",
     "@types/three": "^0.166.0",
+    "@webgpu/types": "^0.1.66",
     "eslint": "^9.25.0",
     "eslint-config-expo": "~10.0.0",
     "lil-gui": "^0.21.0",
