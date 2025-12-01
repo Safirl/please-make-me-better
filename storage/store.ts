@@ -9,6 +9,14 @@ export const useStorage = create((set) => ({
   setCurrentParameter: (newParameter: string) => set({ currentParameter: newParameter, isModalOpened: true }),
 }))
 
+export const useSoulStorage = create((set) => ({
+  fluidity: 0,
+  blur: 0,
+  grain: 0,
+
+  setFluidity: (newValue: number) => set({ fluidity: newValue }),
+}))
+
 export const useGameStorage = create((set) => ({
   previousStep: "none",
   currentStep: "intro",

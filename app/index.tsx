@@ -1,5 +1,5 @@
 import Modal from "@/components/Modal/modal";
-import { WheelParameter } from "@/components/Parameters/wheelParameter";
+import { CursorParameter } from "@/components/Parameters/cursorParameter";
 import { Text } from "@react-navigation/elements";
 import { useEffect } from "react";
 import { Pressable, View } from "react-native";
@@ -9,10 +9,11 @@ import Helpers from "./utils/Helpers";
 export default function Index() {
   const currentParameter: string = useStorage((state: any) => state.currentParameter)
   const setCurrentParameter = useStorage((state: any) => state.setCurrentParameter)
-  const gui = Helpers.instance
 
   useEffect(() => {
-    console.log(gui)
+    let root = Helpers.instance.getGUIFolder();
+    let folder = root.addFolder("Parameter");
+    // Helpers.instance.tweak()
   }, [])
 
   return (
@@ -26,7 +27,7 @@ export default function Index() {
     >
       <Modal>
         {
-          currentParameter === "" && <WheelParameter/>
+          currentParameter === "" && <CursorParameter/>
         }
       </Modal>
       <Pressable onPress={() => {setCurrentParameter("")}}>
