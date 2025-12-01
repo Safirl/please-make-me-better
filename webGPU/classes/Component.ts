@@ -30,5 +30,5 @@ export default class Component {
         this.scene.push(this)
     }
     update() { }
-    draw() { }
+    draw(pass: any) { }
 }

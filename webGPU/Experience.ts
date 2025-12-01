@@ -1,4 +1,4 @@
-import { ExpoWebGLRenderingContext } from 'expo-gl';
+import { RNCanvasContext } from "react-native-wgpu";
 
 import Component from "./classes/Component";
 import World from "./classes/World";
@@ -11,31 +11,65 @@ import Main from "./worlds/Main";
 
 export default class Experience {
 
-    public gl: ExpoWebGLRenderingContext;
+    public ctx: RNCanvasContext;
+    public canvas: HTMLCanvasElement;
     public isReady: boolean = false;
     public sizes: Sizes;
     public time: Time;
-
     public scene: Component[];
-    public renderer: Renderer;
+    public renderer: Renderer | null = null;
     public helpers: Helpers
-
     public world: World | null = null; // use the genera Page class type
 
-    constructor(gl: ExpoWebGLRenderingContext) {
+    /**
+     * config
+     */
+    public adapter: any
+    public device: any
+    public presentationFormat: any
 
-        this.gl = gl;
+    constructor(ctx: RNCanvasContext, adapter: any) {
+
+        if (!ctx) {
+            throw new Error("No context");
+        }
+
+
+
+
+        this.ctx = ctx;
+        this.canvas = this.ctx.canvas as HTMLCanvasElement;
         this.scene = []
+
+
+        this.initGPUConfig()
+
         this.sizes = new Sizes(this);
         this.time = new Time();
         this.helpers = new Helpers();
-        this.renderer = new Renderer(this);
 
-        this.createWorld(Main)
 
         this.sizes.on("resize", () => this.resize());
         this.time.on("tick", () => this.update());
         this.time.tick();
+
+    }
+
+    private async initGPUConfig() {
+        this.adapter = await navigator.gpu.requestAdapter()
+
+        if (!this.adapter) {
+            throw new Error("No adapter");
+        }
+
+        this.device = await this.adapter.requestDevice()
+
+
+        this.presentationFormat = navigator.gpu.getPreferredCanvasFormat();
+
+        this.renderer = new Renderer(this);
+        this.createWorld(Main)
+
         this.onReady();
     }
 
@@ -53,11 +87,14 @@ export default class Experience {
     }
 
     public resize(): void {
+        if (!this.renderer) return;
+
         this.renderer.resize();
         if (this.world) this.world.resize();
-       
+
     }
     public update(): void {
+        if (!this.renderer) return;
         if (this.isReady) {
 
             this.world?.update();
