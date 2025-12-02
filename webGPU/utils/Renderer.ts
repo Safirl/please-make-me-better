@@ -1,7 +1,7 @@
 import { RNCanvasContext } from "react-native-wgpu";
 import Experience from "../Experience";
 import Component from "../classes/Component";
-
+import PerformanceChecker from "./PerformanceChecker";
 
 export default class Renderer {
     public experience: Experience;
@@ -9,12 +9,14 @@ export default class Renderer {
     public scene: Component[];
     private ctx: RNCanvasContext;
     private renderPassDescriptor: any
-
+    private performanceChecker: PerformanceChecker
     constructor(experience: Experience) {
         this.experience = experience;
         this.scene = this.experience.scene
         this.sizes = experience.sizes;
         this.ctx = this.experience.ctx
+        this.performanceChecker = new PerformanceChecker(this.experience)
+
 
         if (!this.experience.device || !this.experience.presentationFormat) {
             throw new Error(`${!this.experience.device ? "device" : "presentationFormat"} is not defined`)
@@ -44,7 +46,8 @@ export default class Renderer {
 
     public update(): void {
         if (!this.experience.device) return;
-        
+        this.performanceChecker.startRecordingPerformances()
+
         this.renderPassDescriptor.colorAttachments[0].view = this.ctx.getCurrentTexture().createView();
         const encoder = this.experience.device.createCommandEncoder({ label: 'our encoder' });
         const pass = encoder.beginRenderPass(this.renderPassDescriptor);
@@ -57,6 +60,7 @@ export default class Renderer {
 
         pass.end();
         this.experience.device.queue.submit([encoder.finish()]);
+        this.performanceChecker.endRecodingPerformances()
     }
 
     public resize(): void {
