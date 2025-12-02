@@ -1,5 +1,7 @@
 import Modal from "@/components/Modal/modal";
 import { CursorParameter } from "@/components/Parameters/cursorParameter";
+import { WheelParameter } from "@/components/Parameters/wheelParameter";
+import { WordParameter } from "@/components/Parameters/wordParameter";
 import { Text } from "@react-navigation/elements";
 import { useEffect } from "react";
 import { Pressable, View } from "react-native";
@@ -27,11 +29,19 @@ export default function Index() {
     >
       <Modal>
         {
-          currentParameter === "" && <CursorParameter/>
+          currentParameter === "cursors" && <CursorParameter/> ||
+          currentParameter === "wheel" && <WheelParameter/> ||
+          currentParameter === "words" && <WordParameter/>
         }
       </Modal>
-      <Pressable onPress={() => {setCurrentParameter("")}}>
-        <Text>Open modal</Text>
+      <Pressable onPress={() => {setCurrentParameter("cursors")}}>
+        <Text>Open cursors</Text>
+      </Pressable>
+      <Pressable onPress={() => {setCurrentParameter("wheel")}}>
+        <Text>Open cursors</Text>
+      </Pressable>
+      <Pressable onPress={() => {setCurrentParameter("words")}}>
+        <Text>Open words</Text>
       </Pressable>
     </View>
   );

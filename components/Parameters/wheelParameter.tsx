@@ -1,6 +1,11 @@
 import { useStorage } from "@/storage/store";
 import { useEffect } from "react";
-import { StyleSheet, Text, TextInput, View } from "react-native";
+import { ActivityIndicator, StyleSheet, View } from "react-native";
+// import { Circle } from "./components/circle";
+import React from "react";
+import { AsyncSkia } from "../skiaAsync/async-skia";
+
+const Iridescence = React.lazy(() => import("./components/circle"));
 
 export const WheelParameter = () => {
     const text = useStorage((state: any) => state.text)
@@ -12,13 +17,11 @@ export const WheelParameter = () => {
     return (
         <>
             <View>
-                <TextInput
-                    style={styles.input}
-                    onChangeText={onChangeText}
-                    value={text}
-                />
+                <React.Suspense fallback={<ActivityIndicator />}>
+                    <AsyncSkia/>
+                    <Iridescence/>
+                </React.Suspense>
             </View>
-            <Text>{text}</Text>
         </>
     )
 }

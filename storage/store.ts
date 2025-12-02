@@ -9,12 +9,38 @@ export const useStorage = create((set) => ({
   setCurrentParameter: (newParameter: string) => set({ currentParameter: newParameter, isModalOpened: true }),
 }))
 
+export interface WordParameterState {
+  words: Word[]
+
+  setWord: (newWord: Word) => void
+}
+
+export interface Word {
+  text: string,
+  isSelected?: boolean
+}
+
+export const useWordParameterStorage = create<WordParameterState>((set) => ({
+  words: [
+    {text: "coucou"},
+    {text: "hihi"}
+  ],
+
+  setWord: (newWord: Word) => set((state: any) => ({
+      words: state.words.map((w: Word) =>
+        w.text === newWord.text ? newWord : w
+      ),
+    })),
+}))
+
 export const useSoulStorage = create((set) => ({
   fluidity: 0,
   blur: 0,
   grain: 0,
 
   setFluidity: (newValue: number) => set({ fluidity: newValue }),
+  setGrain: (newValue: number) => set({ grain: newValue }),
+  setBlur: (newValue: number) => set({ blur: newValue }),
 }))
 
 export const useGameStorage = create((set) => ({
@@ -41,5 +67,3 @@ export const useDayStorage = create((set) => ({
     {vigilance: .2},
   ],
 }))
-//Current Order
-//Current Day
