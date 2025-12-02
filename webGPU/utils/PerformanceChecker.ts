@@ -1,5 +1,5 @@
+import { Platform } from "react-native";
 import Experience from "../Experience";
-
 export default class PerformanceChecker {
     private experience: Experience
     private startTime = 0
@@ -10,7 +10,7 @@ export default class PerformanceChecker {
 
     constructor(experience: Experience) {
         this.experience = experience
-        this.isDevMode = process.env.EXPO_OS === 'web'
+        this.isDevMode = __DEV__ && Platform.OS === "web";
         if (!this.isDevMode) return
 
 

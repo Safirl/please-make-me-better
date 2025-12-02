@@ -49,8 +49,9 @@ export default class Experience {
         this.helpers = new Helpers();
 
 
+        this.update = this.update.bind(this)
         this.sizes.on("resize", () => this.resize());
-        this.time.on("tick", () => this.update());
+        this.time.setOnTickCallback(this.update)
         this.time.tick();
 
     }
