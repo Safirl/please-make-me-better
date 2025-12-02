@@ -2,7 +2,10 @@
 import Experience from "@/webGPU/Experience";
 import React from "react";
 import { LayoutChangeEvent, View } from "react-native";
+import { useFrameCallback } from 'react-native-reanimated';
 import { Canvas, CanvasRef } from "react-native-wgpu";
+
+
 
 export default function HelloTriangle() {
   const ref = React.useRef<CanvasRef>(null);
@@ -12,6 +15,11 @@ export default function HelloTriangle() {
   const [containerHeight, setContainerHeight] = React.useState(0)
   const [isGLReady, setIsGLReady] = React.useState(false)
 
+  useFrameCallback((frameInfo) => {
+    if (!experience) return;
+
+    experience.time.tick()
+  });
 
   React.useEffect(() => {
     if (!experience && !isGLReady && (!ref || !ref.current)) return

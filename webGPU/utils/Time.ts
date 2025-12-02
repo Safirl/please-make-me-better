@@ -18,14 +18,14 @@ export default class Time {
         this.isAnimating = true
     }
     tick = () => {
+        if (!this.isAnimating) return
+
         const currentTime = performance.now()
         this.delta = currentTime - this.current
         this.current = currentTime
         this.elapsedTime = this.current - this.start
         this.tickCallback()
-        if (this.isAnimating) {
-            requestAnimationFrame(this.tick)
-        }
+
     }
     setOnTickCallback(cb: () => void) {
         this.tickCallback = cb
@@ -40,6 +40,5 @@ export default class Time {
     }
     animate() {
         this.isAnimating = true
-        requestAnimationFrame(this.tick)
     }
 }
