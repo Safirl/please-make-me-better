@@ -22,8 +22,12 @@ export default class Soul extends Component {
     private bindGroup: GPUBindGroup | undefined;
     private bindGroupLayout: GPUBindGroupLayout | undefined;
     private color: Float32Array<ArrayBuffer> = new Float32Array([0, 1, 0, 1]);
+    private time: Float32Array<ArrayBuffer> = new Float32Array([0]);
 
     private colorBuffer: GPUBuffer | undefined;
+    private timeBuffer: GPUBuffer | undefined;
+
+
     private vertexShader: GPUShaderModule | undefined;
     private fragmentShader: GPUShaderModule | undefined;
 
@@ -33,7 +37,6 @@ export default class Soul extends Component {
         this.loadShaders(SimpleVS, SimpleFS)
         this.confiureBuffers()
         this.configureBindGroup()
-        // this.configureRenderPassDescriptor()
 
         this.helpers.tweak(
             "radius",
@@ -74,7 +77,13 @@ export default class Soul extends Component {
                     binding: 0,
                     visibility: GPUShaderStage.VERTEX | GPUShaderStage.FRAGMENT,
                     buffer: { type: "uniform" }
+                },
+                {
+                    binding: 1,
+                    visibility: GPUShaderStage.VERTEX | GPUShaderStage.FRAGMENT,
+                    buffer: { type: "uniform" }
                 }
+
             ]
         })
 
@@ -106,8 +115,12 @@ export default class Soul extends Component {
     }
 
     private confiureBuffers() {
-        this.configFillColorUniform()
-        this.setFillColor(new Float32Array([0, 1, 1, 1]))
+        this.configColorUniform()
+        this.setColor(new Float32Array([0, 1, 1, 1]))
+
+
+        this.configTimeUniform()
+        this.setTime()
     }
 
     public loadShaders(vertexShader?: string, fragmentShader?: string) {
@@ -158,7 +171,19 @@ export default class Soul extends Component {
         })
     }
 
-    private configFillColorUniform() {
+    private configTimeUniform() {
+        if (!this.experience.device) {
+            throw new Error("Device is not defined")
+        }
+
+        this.timeBuffer = this.experience.device.createBuffer({
+            label: "uTime Uniform Buffer",
+            size: this.time.byteLength, // should be 4 * 4
+            usage: GPUBufferUsage.UNIFORM | GPUBufferUsage.COPY_DST
+        })
+    }
+
+    private configColorUniform() {
         if (!this.experience.device) {
             throw new Error("Device is not defined")
         }
@@ -170,7 +195,20 @@ export default class Soul extends Component {
         })
     }
 
-    public setFillColor(data: Float32Array<ArrayBuffer>) {
+    public setTime(time?: number) {
+        if (!this.timeBuffer) {
+            throw new Error("colorBuffer is not defined")
+        }
+
+        if (!this.experience.device) {
+            throw new Error("Device is not defined")
+        }
+
+
+        this.experience.device.queue.writeBuffer(this.timeBuffer, 0, this.time)
+    }
+
+    public setColor(data: Float32Array<ArrayBuffer>) {
         if (!this.colorBuffer) {
             throw new Error("colorBuffer is not defined")
         }
@@ -204,17 +242,53 @@ export default class Soul extends Component {
         if (!this.bindGroupLayout) {
             throw new Error("bindGroupLayout is not defined")
         }
+        if (!this.timeBuffer) {
+            throw new Error("colorBuffer is not defined")
+        }
 
         this.bindGroup = this.experience.device.createBindGroup({
             label: "Bind Group",
             layout: this.bindGroupLayout,
             entries: [
-                { binding: 0, resource: { buffer: this.colorBuffer } }
+                { binding: 0, resource: { buffer: this.colorBuffer } },
+                { binding: 1, resource: { buffer: this.timeBuffer } },
             ]
         })
+
     }
 
     update() {
+        //Check buffers
+        if (!this.colorBuffer) throw new Error("colorBuffer is not defined")
+        if (!this.timeBuffer) throw new Error("colorBuffer is not defined")
+        //--
+        if (!this.experience.device) throw new Error("device is not defined")
+
+
+
+
+
+        /**
+         * Handle color
+         */
+        this.color[0] = (Math.sin(this.experience.time.elapsedTime * 0.0005) + 1) / 2
+        this.color[1] = (Math.sin(this.experience.time.elapsedTime * 0.0005 + 1 / 2) + 1) / 2
+        this.color[2] = (Math.sin(this.experience.time.elapsedTime * 0.0005 + 2 / 3) + 1) / 2
+
+        this.experience.device.queue.writeBuffer(this.colorBuffer, 0, this.color);
+
+
+
+        /**
+         * Handle time
+         */
+
+        this.time[0] = this.experience.time.elapsedTime;
+        this.experience.device.queue.writeBuffer(this.timeBuffer, 0, this.time);
+
+
+
+        // console.log(this.colorBuffer)
 
         /**
          * Update Uniforms

@@ -1,7 +1,7 @@
 export const Uniforms = /* wgsl */ `
     @group(0) @binding(0) var<uniform> color: vec4f;
+    @group(0) @binding(1) var<uniform> time: f32;
 `
-
 export const SimpleVS = /* wgsl */ `
     ${Uniforms}
 
@@ -22,11 +22,35 @@ export const SimpleVS = /* wgsl */ `
     }
 `
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 export const SimpleFS = /* wgsl */ `
     ${Uniforms}
 
     @fragment
     fn fs() -> @location(0) vec4f {
+
+
+
+
+
+
+
         return color;
     }
 `
