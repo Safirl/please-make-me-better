@@ -13,19 +13,26 @@ export default class Soul extends Component {
         factor: 0.25
     }
 
-    private uTimeLoc: WebGLUniformLocation | null = null;
-    private uResolutionLoc: WebGLUniformLocation | null = null;
-    private uBlendingFactor: WebGLUniformLocation | null = null;
-    private uFactorLoc: WebGLUniformLocation | null = null;
+
     private pipeline: any;
     private pipelineLayout: any;
     private bindGroup: GPUBindGroup | undefined;
     private bindGroupLayout: GPUBindGroupLayout | undefined;
+
+    /**
+     * Uniforms
+     */
     private color: Float32Array<ArrayBuffer> = new Float32Array([0, 1, 0, 1]);
     private uTime: Float32Array<ArrayBuffer> = new Float32Array([0]);
+    private uFactor: Float32Array<ArrayBuffer> = new Float32Array([this.params.factor]);
+    private uResolion: Float32Array<ArrayBuffer> = new Float32Array([0, 0]);
+    private uBlendingFactor: Float32Array<ArrayBuffer> = new Float32Array([this.params.blendingFactor]);
 
     private colorBuffer: GPUBuffer | undefined;
     private timeBuffer: GPUBuffer | undefined;
+    private resolutionBuffer: GPUBuffer | undefined;
+    private factorBuffer: GPUBuffer | undefined;
+    private blendingBuffer: GPUBuffer | undefined;
 
 
     private vertexShader: GPUShaderModule | undefined;
@@ -82,8 +89,22 @@ export default class Soul extends Component {
                     binding: 1,
                     visibility: GPUShaderStage.VERTEX | GPUShaderStage.FRAGMENT,
                     buffer: { type: "uniform" }
+                },
+                {
+                    binding: 2,
+                    visibility: GPUShaderStage.VERTEX | GPUShaderStage.FRAGMENT,
+                    buffer: { type: "uniform" }
+                },
+                {
+                    binding: 3,
+                    visibility: GPUShaderStage.VERTEX | GPUShaderStage.FRAGMENT,
+                    buffer: { type: "uniform" }
+                },
+                {
+                    binding: 4,
+                    visibility: GPUShaderStage.VERTEX | GPUShaderStage.FRAGMENT,
+                    buffer: { type: "uniform" }
                 }
-
             ]
         })
 
@@ -118,9 +139,97 @@ export default class Soul extends Component {
         this.configColorUniform()
         this.setColor(new Float32Array([0, 1, 1, 1]))
 
-
         this.configTimeUniform()
         this.setTime()
+
+        this.configResolutionUniform()
+        this.setResolution()
+
+        this.configFactorUniform()
+        this.setFactor()
+
+        this.configBlendingFactorUniform()
+        this.setBlendingFactor()
+    }
+
+    configResolutionUniform() {
+        if (!this.experience.device) {
+            throw new Error("Device is not defined")
+        }
+
+        this.resolutionBuffer = this.experience.device.createBuffer({
+            label: "uResolution Uniform Buffer",
+            size: this.uResolion.byteLength, // should be 4 * 4
+            usage: GPUBufferUsage.UNIFORM | GPUBufferUsage.COPY_DST
+        })
+    }
+    setResolution() {
+
+        if (!this.resolutionBuffer) {
+            throw new Error("resolutionBuffer is not defined")
+        }
+
+        if (!this.experience.device) {
+            throw new Error("Device is not defined")
+        }
+
+
+        this.experience.device.queue.writeBuffer(this.resolutionBuffer, 0, this.uResolion)
+
+    }
+
+
+    configFactorUniform() {
+        if (!this.experience.device) {
+            throw new Error("Device is not defined")
+        }
+
+        this.factorBuffer = this.experience.device.createBuffer({
+            label: "uResolution Uniform Buffer",
+            size: this.uResolion.byteLength, // should be 4 * 4
+            usage: GPUBufferUsage.UNIFORM | GPUBufferUsage.COPY_DST
+        })
+    }
+    setFactor() {
+
+        if (!this.factorBuffer) {
+            throw new Error("factorBuffer is not defined")
+        }
+
+        if (!this.experience.device) {
+            throw new Error("Device is not defined")
+        }
+
+
+        this.experience.device.queue.writeBuffer(this.factorBuffer, 0, this.uFactor)
+
+    }
+
+
+    configBlendingFactorUniform() {
+        if (!this.experience.device) {
+            throw new Error("Device is not defined")
+        }
+
+        this.blendingBuffer = this.experience.device.createBuffer({
+            label: "uResolution Uniform Buffer",
+            size: this.uBlendingFactor.byteLength, // should be 4 * 4
+            usage: GPUBufferUsage.UNIFORM | GPUBufferUsage.COPY_DST
+        })
+    }
+    setBlendingFactor() {
+
+        if (!this.blendingBuffer) {
+            throw new Error("blendingBuffer is not defined")
+        }
+
+        if (!this.experience.device) {
+            throw new Error("Device is not defined")
+        }
+
+
+        this.experience.device.queue.writeBuffer(this.blendingBuffer, 0, this.uBlendingFactor)
+
     }
 
     public loadShaders(vertexShader?: string, fragmentShader?: string) {
@@ -245,6 +354,15 @@ export default class Soul extends Component {
         if (!this.timeBuffer) {
             throw new Error("colorBuffer is not defined")
         }
+        if (!this.resolutionBuffer) {
+            throw new Error("resolutionBuffer is not defined")
+        }
+        if (!this.factorBuffer) {
+            throw new Error("factorBuffer is not defined")
+        }
+        if (!this.blendingBuffer) {
+            throw new Error("blendingBuffer is not defined")
+        }
 
         this.bindGroup = this.experience.device.createBindGroup({
             label: "Bind Group",
@@ -252,6 +370,9 @@ export default class Soul extends Component {
             entries: [
                 { binding: 0, resource: { buffer: this.colorBuffer } },
                 { binding: 1, resource: { buffer: this.timeBuffer } },
+                { binding: 2, resource: { buffer: this.resolutionBuffer } },
+                { binding: 3, resource: { buffer: this.factorBuffer } },
+                { binding: 4, resource: { buffer: this.blendingBuffer } },
             ]
         })
 
@@ -261,6 +382,9 @@ export default class Soul extends Component {
         //Check buffers
         if (!this.colorBuffer) throw new Error("colorBuffer is not defined")
         if (!this.timeBuffer) throw new Error("colorBuffer is not defined")
+        if (!this.resolutionBuffer) throw new Error("resolutionBuffer is not defined")
+        if (!this.factorBuffer) throw new Error("factorBuffer is not defined")
+        if (!this.blendingBuffer) throw new Error("blendingBuffer is not defined")
         //--
         if (!this.experience.device) throw new Error("device is not defined")
 
@@ -269,7 +393,8 @@ export default class Soul extends Component {
 
 
         /**
-         * Handle color
+         * Updating uniform color
+         * @todo delete this.
          */
         this.color[0] = (Math.sin(this.experience.time.elapsedTime * 0.0005) + 1) / 2
         this.color[1] = (Math.sin(this.experience.time.elapsedTime * 0.0005 + 1 / 2) + 1) / 2
@@ -280,23 +405,37 @@ export default class Soul extends Component {
 
 
         /**
-         * Handle time
+         * Updating uniform time
          */
 
-        this.uTime[0] = this.experience.time.elapsedTime;
+        this.uTime[0] = this.experience.time.elapsedTime * 0.006;
         this.experience.device.queue.writeBuffer(this.timeBuffer, 0, this.uTime);
 
 
+        /**
+         * Updating uniform resolution
+         */
 
-        // console.log(this.colorBuffer)
+        this.uResolion[0] = this.experience.sizes.width;
+        this.uResolion[1] = this.experience.sizes.height;
+        this.experience.device.queue.writeBuffer(this.resolutionBuffer, 0, this.uResolion);
+
 
         /**
-         * Update Uniforms
+         * Updating uniform factor
          */
-        // this.gl.uniform1f(this.uTimeLoc, this.time.elapsedTime * 0.0005);
-        // this.gl.uniform1f(this.uBlendingFactor, this.params.blendingFactor);
-        // this.gl.uniform2f(this.uResolutionLoc, this.experience.sizes.width, this.experience.sizes.height);
-        // this.gl.uniform1f(this.uFactorLoc, this.params.factor);
+
+        this.uFactor[0] = this.params.factor
+        this.experience.device.queue.writeBuffer(this.factorBuffer, 0, this.uFactor);
+
+
+        /**
+         * Updating uniform factor
+         */
+
+        this.uBlendingFactor[0] = this.params.blendingFactor;
+        this.experience.device.queue.writeBuffer(this.blendingBuffer, 0, this.uBlendingFactor);
+
 
     }
 
