@@ -1,9 +1,8 @@
 export const Uniforms = /* wgsl */ `
-    @group(0) @binding(0) var<uniform> color: vec4f;
-    @group(0) @binding(1) var<uniform> time: f32;
-    @group(0) @binding(2) var<uniform> resolution: vec2f;
-    @group(0) @binding(3) var<uniform> uFactor: f32;
-    @group(0) @binding(4) var<uniform> uBlendingFactor: f32;
+    @group(0) @binding(0) var<uniform> time: f32;
+    @group(0) @binding(1) var<uniform> resolution: vec2f;
+    @group(0) @binding(2) var<uniform> uFactor: f32;
+    @group(0) @binding(3) var<uniform> uBlendingFactor: f32;
 `
 export const SimpleVS = /* wgsl */ `
     ${Uniforms}

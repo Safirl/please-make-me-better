@@ -22,13 +22,11 @@ export default class Soul extends Component {
     /**
      * Uniforms
      */
-    private color: Float32Array<ArrayBuffer> = new Float32Array([0, 1, 0, 1]);
     private uTime: Float32Array<ArrayBuffer> = new Float32Array([0]);
     private uFactor: Float32Array<ArrayBuffer> = new Float32Array([this.params.factor]);
     private uResolion: Float32Array<ArrayBuffer> = new Float32Array([0, 0]);
     private uBlendingFactor: Float32Array<ArrayBuffer> = new Float32Array([this.params.blendingFactor]);
 
-    private colorBuffer: GPUBuffer | undefined;
     private timeBuffer: GPUBuffer | undefined;
     private resolutionBuffer: GPUBuffer | undefined;
     private factorBuffer: GPUBuffer | undefined;
@@ -78,7 +76,7 @@ export default class Soul extends Component {
         if (!this.experience.device) throw new Error("Device is undefined");
 
         this.bindGroupLayout = this.experience.device.createBindGroupLayout({
-            label: "Bind Group Layout",
+            label: "Soul Bind Group Layout",
             entries: [
                 {
                     binding: 0,
@@ -100,16 +98,11 @@ export default class Soul extends Component {
                     visibility: GPUShaderStage.VERTEX | GPUShaderStage.FRAGMENT,
                     buffer: { type: "uniform" }
                 },
-                {
-                    binding: 4,
-                    visibility: GPUShaderStage.VERTEX | GPUShaderStage.FRAGMENT,
-                    buffer: { type: "uniform" }
-                }
             ]
         })
 
         this.pipelineLayout = this.experience.device.createPipelineLayout({
-            label: "Pipeline Layout",
+            label: "Soul Pipeline Layout",
             bindGroupLayouts: [
                 this.bindGroupLayout
             ]
@@ -123,7 +116,7 @@ export default class Soul extends Component {
         if (!this.experience.presentationFormat) throw new Error("PresentationFormat shader is undefined");
 
         this.pipeline = this.experience.device.createRenderPipeline({
-            label: "Render Pipeline",
+            label: "Soul Render Pipeline",
             layout: this.pipelineLayout,
             vertex: {
                 module: this.vertexShader,
@@ -136,9 +129,6 @@ export default class Soul extends Component {
     }
 
     private confiureBuffers() {
-        this.configColorUniform()
-        this.setColor(new Float32Array([0, 1, 1, 1]))
-
         this.configTimeUniform()
         this.setTime()
 
@@ -158,7 +148,7 @@ export default class Soul extends Component {
         }
 
         this.resolutionBuffer = this.experience.device.createBuffer({
-            label: "uResolution Uniform Buffer",
+            label: "Soul uResolution Uniform Buffer",
             size: this.uResolion.byteLength, // should be 4 * 4
             usage: GPUBufferUsage.UNIFORM | GPUBufferUsage.COPY_DST
         })
@@ -185,7 +175,7 @@ export default class Soul extends Component {
         }
 
         this.factorBuffer = this.experience.device.createBuffer({
-            label: "uResolution Uniform Buffer",
+            label: "Soul uResolution Uniform Buffer",
             size: this.uResolion.byteLength, // should be 4 * 4
             usage: GPUBufferUsage.UNIFORM | GPUBufferUsage.COPY_DST
         })
@@ -212,7 +202,7 @@ export default class Soul extends Component {
         }
 
         this.blendingBuffer = this.experience.device.createBuffer({
-            label: "uResolution Uniform Buffer",
+            label: "Soul uResolution Uniform Buffer",
             size: this.uBlendingFactor.byteLength, // should be 4 * 4
             usage: GPUBufferUsage.UNIFORM | GPUBufferUsage.COPY_DST
         })
@@ -244,7 +234,7 @@ export default class Soul extends Component {
     private loadVertexShader(shader?: string) {
         if (!this.experience.device) return
         this.vertexShader = this.experience.device.createShaderModule({
-            label: "Vertex Shader",
+            label: "Soul Vertex Shader",
             code: shader ?? /* wgsl */`
                 @vertex
                 fn vs(
@@ -270,7 +260,7 @@ export default class Soul extends Component {
         if (!this.experience.device) return
 
         this.fragmentShader = this.experience.device.createShaderModule({
-            label: "Fragment Shader",
+            label: "Soul Fragment Shader",
             code: shader ?? /* wgsl */`
                 @fragment
                 fn fs() -> @location(0) vec4f {
@@ -286,20 +276,8 @@ export default class Soul extends Component {
         }
 
         this.timeBuffer = this.experience.device.createBuffer({
-            label: "uTime Uniform Buffer",
+            label: "Soul uTime Uniform Buffer",
             size: this.uTime.byteLength, // should be 4 * 4
-            usage: GPUBufferUsage.UNIFORM | GPUBufferUsage.COPY_DST
-        })
-    }
-
-    private configColorUniform() {
-        if (!this.experience.device) {
-            throw new Error("Device is not defined")
-        }
-
-        this.colorBuffer = this.experience.device.createBuffer({
-            label: "Color Fill Uniform Buffer",
-            size: this.color.byteLength, // should be 4 * 4
             usage: GPUBufferUsage.UNIFORM | GPUBufferUsage.COPY_DST
         })
     }
@@ -317,36 +295,11 @@ export default class Soul extends Component {
         this.experience.device.queue.writeBuffer(this.timeBuffer, 0, this.uTime)
     }
 
-    public setColor(data: Float32Array<ArrayBuffer>) {
-        if (!this.colorBuffer) {
-            throw new Error("colorBuffer is not defined")
-        }
-
-        if (!this.experience.device) {
-            throw new Error("Device is not defined")
-        }
-
-        if (data.length != 4) {
-            throw new Error("Data must have 4 elements")
-        }
-
-        data.forEach((entry) => {
-            if (entry < 0 || entry > 1) {
-                throw new Error("Data values must be between 0 and 1")
-            }
-        })
-
-        this.color = data
-        this.experience.device.queue.writeBuffer(this.colorBuffer, 0, this.color)
-    }
 
     private configureBindGroup() {
 
         if (!this.experience.device) {
             throw new Error("Device is not defined")
-        }
-        if (!this.colorBuffer) {
-            throw new Error("colorBuffer is not defined")
         }
         if (!this.bindGroupLayout) {
             throw new Error("bindGroupLayout is not defined")
@@ -365,14 +318,13 @@ export default class Soul extends Component {
         }
 
         this.bindGroup = this.experience.device.createBindGroup({
-            label: "Bind Group",
+            label: "Soul Bind Group",
             layout: this.bindGroupLayout,
             entries: [
-                { binding: 0, resource: { buffer: this.colorBuffer } },
-                { binding: 1, resource: { buffer: this.timeBuffer } },
-                { binding: 2, resource: { buffer: this.resolutionBuffer } },
-                { binding: 3, resource: { buffer: this.factorBuffer } },
-                { binding: 4, resource: { buffer: this.blendingBuffer } },
+                { binding: 0, resource: { buffer: this.timeBuffer } },
+                { binding: 1, resource: { buffer: this.resolutionBuffer } },
+                { binding: 2, resource: { buffer: this.factorBuffer } },
+                { binding: 3, resource: { buffer: this.blendingBuffer } },
             ]
         })
 
@@ -380,27 +332,12 @@ export default class Soul extends Component {
 
     update() {
         //Check buffers
-        if (!this.colorBuffer) throw new Error("colorBuffer is not defined")
         if (!this.timeBuffer) throw new Error("colorBuffer is not defined")
         if (!this.resolutionBuffer) throw new Error("resolutionBuffer is not defined")
         if (!this.factorBuffer) throw new Error("factorBuffer is not defined")
         if (!this.blendingBuffer) throw new Error("blendingBuffer is not defined")
         //--
         if (!this.experience.device) throw new Error("device is not defined")
-
-
-
-
-
-        /**
-         * Updating uniform color
-         * @todo delete this.
-         */
-        this.color[0] = (Math.sin(this.experience.time.elapsedTime * 0.0005) + 1) / 2
-        this.color[1] = (Math.sin(this.experience.time.elapsedTime * 0.0005 + 1 / 2) + 1) / 2
-        this.color[2] = (Math.sin(this.experience.time.elapsedTime * 0.0005 + 2 / 3) + 1) / 2
-
-        this.experience.device.queue.writeBuffer(this.colorBuffer, 0, this.color);
 
 
 
