@@ -16,6 +16,10 @@ export default class Renderer {
         this.sizes = experience.sizes;
         this.ctx = this.experience.ctx
 
+        if (!this.experience.device || !this.experience.presentationFormat) {
+            throw new Error(`${!this.experience.device ? "device" : "presentationFormat"} is not defined`)
+        }
+
 
         this.ctx.configure({
             device: this.experience.device,
@@ -39,6 +43,8 @@ export default class Renderer {
 
 
     public update(): void {
+        if (!this.experience.device) return;
+        
         this.renderPassDescriptor.colorAttachments[0].view = this.ctx.getCurrentTexture().createView();
         const encoder = this.experience.device.createCommandEncoder({ label: 'our encoder' });
         const pass = encoder.beginRenderPass(this.renderPassDescriptor);

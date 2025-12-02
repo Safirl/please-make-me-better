@@ -1,6 +1,7 @@
+// import { GPUBufferUsage } from "react-native-wgpu";
 import Experience from "../Experience";
 import Component from "../classes/Component";
-
+import { SimpleFS, SimpleVS } from "./shdertest";
 const HELPER_FOLDER = "Sphere"
 export default class Soul extends Component {
 
@@ -12,16 +13,27 @@ export default class Soul extends Component {
         factor: 0.25
     }
 
-    private uTimeLoc: WebGLUniformLocation | null = null
-    private uResolutionLoc: WebGLUniformLocation | null = null
-    private uBlendingFactor: WebGLUniformLocation | null = null
-    private uFactorLoc: WebGLUniformLocation | null = null
+    private uTimeLoc: WebGLUniformLocation | null = null;
+    private uResolutionLoc: WebGLUniformLocation | null = null;
+    private uBlendingFactor: WebGLUniformLocation | null = null;
+    private uFactorLoc: WebGLUniformLocation | null = null;
     private pipeline: any;
+    private pipelineLayout: any;
+    private bindGroup: GPUBindGroup | undefined;
+    private bindGroupLayout: GPUBindGroupLayout | undefined;
+    private color: Float32Array<ArrayBuffer> = new Float32Array([0, 1, 0, 1]);
+
+    private colorBuffer: GPUBuffer | undefined;
+    private vertexShader: GPUShaderModule | undefined;
+    private fragmentShader: GPUShaderModule | undefined;
 
     constructor(experience: Experience) {
         super(experience)
 
-        this.createSphere()
+        this.loadShaders(SimpleVS, SimpleFS)
+        this.confiureBuffers()
+        this.configureBindGroup()
+        // this.configureRenderPassDescriptor()
 
         this.helpers.tweak(
             "radius",
@@ -52,12 +64,68 @@ export default class Soul extends Component {
         )
     }
 
-    createSphere() {
+    private configureBindGroupLayout() {
+        if (!this.experience.device) throw new Error("Device is undefined");
 
-        const module = this.experience.device.createShaderModule({
-            label: 'our hardcoded red triangle shaders',
-            code: /* wgsl */ `
-                @vertex fn vs(
+        this.bindGroupLayout = this.experience.device.createBindGroupLayout({
+            label: "Bind Group Layout",
+            entries: [
+                {
+                    binding: 0,
+                    visibility: GPUShaderStage.VERTEX | GPUShaderStage.FRAGMENT,
+                    buffer: { type: "uniform" }
+                }
+            ]
+        })
+
+        this.pipelineLayout = this.experience.device.createPipelineLayout({
+            label: "Pipeline Layout",
+            bindGroupLayouts: [
+                this.bindGroupLayout
+            ]
+        })
+    }
+
+    private configurePipeline() {
+        if (!this.experience.device) throw new Error("Device is undefined");
+        if (!this.vertexShader) throw new Error("Vertex shader is undefined");
+        if (!this.fragmentShader) throw new Error("Vertex shader is undefined");
+        if (!this.experience.presentationFormat) throw new Error("PresentationFormat shader is undefined");
+
+        this.pipeline = this.experience.device.createRenderPipeline({
+            label: "Render Pipeline",
+            layout: this.pipelineLayout,
+            vertex: {
+                module: this.vertexShader,
+            },
+            fragment: {
+                module: this.fragmentShader,
+                targets: [{ format: this.experience.presentationFormat }]
+            }
+        })
+    }
+
+    private confiureBuffers() {
+        this.configFillColorUniform()
+        this.setFillColor(new Float32Array([0, 1, 1, 1]))
+    }
+
+    public loadShaders(vertexShader?: string, fragmentShader?: string) {
+        this.loadVertexShader(vertexShader)
+        this.loadFragmentShader(fragmentShader)
+
+        this.configureBindGroupLayout()
+        this.configurePipeline()
+    }
+
+
+    private loadVertexShader(shader?: string) {
+        if (!this.experience.device) return
+        this.vertexShader = this.experience.device.createShaderModule({
+            label: "Vertex Shader",
+            code: shader ?? /* wgsl */`
+                @vertex
+                fn vs(
                     @builtin(vertex_index) vertexIndex : u32
                 ) -> @builtin(position) vec4f {
                     let pos = array(
@@ -72,28 +140,78 @@ export default class Soul extends Component {
             
                     return vec4f(pos[vertexIndex], 0.0, 1.0);
                 }
-            
-                @fragment fn fs() -> @location(0) vec4f {
+            `
+        })
+    }
+
+    private loadFragmentShader(shader?: string) {
+        if (!this.experience.device) return
+
+        this.fragmentShader = this.experience.device.createShaderModule({
+            label: "Fragment Shader",
+            code: shader ?? /* wgsl */`
+                @fragment
+                fn fs() -> @location(0) vec4f {
                     return vec4f(1.0, 0.0, 0.0, 1.0);
                 }
             `,
-        });
+        })
+    }
 
+    private configFillColorUniform() {
+        if (!this.experience.device) {
+            throw new Error("Device is not defined")
+        }
 
-        this.pipeline = this.experience.device.createRenderPipeline({
-            label: 'our hardcoded red triangle pipeline',
-            layout: 'auto',
-            vertex: {
-                entryPoint: 'vs',
-                module,
-            },
-            fragment: {
-                entryPoint: 'fs',
-                module,
-                targets: [{ format: this.experience.presentationFormat }],
-            },
-        });
+        this.colorBuffer = this.experience.device.createBuffer({
+            label: "Color Fill Uniform Buffer",
+            size: this.color.byteLength, // should be 4 * 4
+            usage: GPUBufferUsage.UNIFORM | GPUBufferUsage.COPY_DST
+        })
+    }
 
+    public setFillColor(data: Float32Array<ArrayBuffer>) {
+        if (!this.colorBuffer) {
+            throw new Error("colorBuffer is not defined")
+        }
+
+        if (!this.experience.device) {
+            throw new Error("Device is not defined")
+        }
+
+        if (data.length != 4) {
+            throw new Error("Data must have 4 elements")
+        }
+
+        data.forEach((entry) => {
+            if (entry < 0 || entry > 1) {
+                throw new Error("Data values must be between 0 and 1")
+            }
+        })
+
+        this.color = data
+        this.experience.device.queue.writeBuffer(this.colorBuffer, 0, this.color)
+    }
+
+    private configureBindGroup() {
+
+        if (!this.experience.device) {
+            throw new Error("Device is not defined")
+        }
+        if (!this.colorBuffer) {
+            throw new Error("colorBuffer is not defined")
+        }
+        if (!this.bindGroupLayout) {
+            throw new Error("bindGroupLayout is not defined")
+        }
+
+        this.bindGroup = this.experience.device.createBindGroup({
+            label: "Bind Group",
+            layout: this.bindGroupLayout,
+            entries: [
+                { binding: 0, resource: { buffer: this.colorBuffer } }
+            ]
+        })
     }
 
     update() {
@@ -105,13 +223,16 @@ export default class Soul extends Component {
         // this.gl.uniform1f(this.uBlendingFactor, this.params.blendingFactor);
         // this.gl.uniform2f(this.uResolutionLoc, this.experience.sizes.width, this.experience.sizes.height);
         // this.gl.uniform1f(this.uFactorLoc, this.params.factor);
-        
+
     }
 
-    draw(pass: any) {
+    draw(pass: GPURenderPassEncoder) {
         if (!this.pipeline) return
-        pass.setPipeline(this.pipeline);
-        pass.draw(6);
+
+
+        pass.setPipeline(this.pipeline)
+        pass.setBindGroup(0, this.bindGroup)
+        pass.draw(6)
 
     }
 }
