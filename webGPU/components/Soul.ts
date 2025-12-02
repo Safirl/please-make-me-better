@@ -22,7 +22,7 @@ export default class Soul extends Component {
     private bindGroup: GPUBindGroup | undefined;
     private bindGroupLayout: GPUBindGroupLayout | undefined;
     private color: Float32Array<ArrayBuffer> = new Float32Array([0, 1, 0, 1]);
-    private time: Float32Array<ArrayBuffer> = new Float32Array([0]);
+    private uTime: Float32Array<ArrayBuffer> = new Float32Array([0]);
 
     private colorBuffer: GPUBuffer | undefined;
     private timeBuffer: GPUBuffer | undefined;
@@ -178,7 +178,7 @@ export default class Soul extends Component {
 
         this.timeBuffer = this.experience.device.createBuffer({
             label: "uTime Uniform Buffer",
-            size: this.time.byteLength, // should be 4 * 4
+            size: this.uTime.byteLength, // should be 4 * 4
             usage: GPUBufferUsage.UNIFORM | GPUBufferUsage.COPY_DST
         })
     }
@@ -205,7 +205,7 @@ export default class Soul extends Component {
         }
 
 
-        this.experience.device.queue.writeBuffer(this.timeBuffer, 0, this.time)
+        this.experience.device.queue.writeBuffer(this.timeBuffer, 0, this.uTime)
     }
 
     public setColor(data: Float32Array<ArrayBuffer>) {
@@ -283,8 +283,8 @@ export default class Soul extends Component {
          * Handle time
          */
 
-        this.time[0] = this.experience.time.elapsedTime;
-        this.experience.device.queue.writeBuffer(this.timeBuffer, 0, this.time);
+        this.uTime[0] = this.experience.time.elapsedTime;
+        this.experience.device.queue.writeBuffer(this.timeBuffer, 0, this.uTime);
 
 
 

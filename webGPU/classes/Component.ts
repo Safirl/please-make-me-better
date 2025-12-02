@@ -1,14 +1,13 @@
-import { ExpoWebGLRenderingContext } from 'expo-gl';
+import { RNCanvasContext } from "react-native-wgpu";
 import Experience from "../Experience";
 import Helpers from '../utils/Helpers';
 import Time from '../utils/Time';
-
 
 export default class Component {
     public id: string
     protected experience: Experience
     protected scene: Component[]
-    protected gl: ExpoWebGLRenderingContext;
+    protected ctx: RNCanvasContext;
     protected helpers: Helpers
     protected time: Time
 
@@ -17,7 +16,7 @@ export default class Component {
         this.id = Math.random().toString(36).substring(2, 10);
         this.experience = experience
         this.scene = this.experience.scene
-        this.gl = this.experience.gl
+        this.ctx = this.experience.ctx
         this.time = this.experience.time
         this.helpers = this.experience.helpers
     }
