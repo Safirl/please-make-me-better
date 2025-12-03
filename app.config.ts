@@ -13,7 +13,7 @@ export default ({ config }: ConfigContext): ExpoConfig => {
     name: "please-make-me-better",
     owner: "ecni2027",
    
-    "slug": "please-make-me-better",
+    "slug": "groupe8",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
