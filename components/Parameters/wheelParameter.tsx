@@ -4,7 +4,6 @@ import React, { useRef } from "react";
 import { useSharedValue } from "react-native-reanimated";
 import Circle from "./components/circle";
 
-// const Circle = React.lazy(() => import("./components/circle"));
 
 export const WheelParameter = () => {
     const viewRef = useRef(null)
@@ -13,7 +12,6 @@ export const WheelParameter = () => {
 
     const onLayout = (event: LayoutChangeEvent) => {
         console.log("event", event)
-        // setDimensions({width: event.nativeEvent.layout.width, height: event.nativeEvent.layout.height})
         width.set(event.nativeEvent.layout.width)
         height.set(event.nativeEvent.layout.height)
     }

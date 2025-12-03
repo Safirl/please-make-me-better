@@ -8,14 +8,7 @@ import {
 } from "@shopify/react-native-skia";
 import React from "react";
 import { LayoutChangeEvent, StyleSheet, View } from "react-native";
-import { SharedValue, useDerivedValue, useSharedValue } from "react-native-reanimated";
-
-console.log("skia ", Skia)
-
-interface CircleProps {
-  width: SharedValue<number>;
-  height: SharedValue<number>;
-}
+import { useDerivedValue, useSharedValue } from "react-native-reanimated";
 
 export default function Circle() {
 
@@ -91,7 +84,6 @@ half4 main(vec2 fragCoord) {
       iResolution: [width.get(), height.get()],
       iTime: clock.get() / 1000,
     }
-    console.log("value, ", value)
     return value;
   }, [clock, width, height]);
 
