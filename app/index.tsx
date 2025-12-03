@@ -38,7 +38,7 @@ export default function Index() {
         <Text>Open cursors</Text>
       </Pressable>
       <Pressable onPress={() => {setCurrentParameter("wheel")}}>
-        <Text>Open cursors</Text>
+        <Text>Open wheel</Text>
       </Pressable>
       <Pressable onPress={() => {setCurrentParameter("words")}}>
         <Text>Open words</Text>

@@ -8,24 +8,6 @@ export const WordParameter = () => {
     const setWord = useWordParameterStorage((state: WordParameterState) => {
             return state.setWord
     })
-    
-    // const handleWordClicked = (text: string) => {
-    //     let isWordSelected = selectedWords.find((word) => word.text === text)
-    //     if (isWordSelected) {
-    //         setSelectedWords(l => l.filter(item => item.text !== text));
-    //         setUnselectedWords(prev => ([
-    //             ...prev,
-    //             {text}
-    //         ]));
-    //     }
-    //     else {
-    //         setUnselectedWords(l => l.filter(item => item !== text));
-    //         setSelectedWords(prev => ([
-    //             ...prev,
-    //             text
-    //         ]));
-    //     }
-    // }
 
     return (
         <View style={styles.container}>

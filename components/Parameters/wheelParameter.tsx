@@ -1,36 +1,35 @@
-import { useStorage } from "@/storage/store";
-import { useEffect } from "react";
-import { ActivityIndicator, StyleSheet, View } from "react-native";
+import { LayoutChangeEvent, StyleSheet, View } from "react-native";
 // import { Circle } from "./components/circle";
-import React from "react";
-import { AsyncSkia } from "../skiaAsync/async-skia";
+import React, { useRef } from "react";
+import { useSharedValue } from "react-native-reanimated";
+import Circle from "./components/circle";
 
-const Iridescence = React.lazy(() => import("./components/circle"));
+// const Circle = React.lazy(() => import("./components/circle"));
 
 export const WheelParameter = () => {
-    const text = useStorage((state: any) => state.text)
-    useEffect(() => {
-    })
-    const onChangeText = useStorage((state: any) => {
-        return state.updateText
-    })
+    const viewRef = useRef(null)
+    const width = useSharedValue(0)
+    const height = useSharedValue(0)
+
+    const onLayout = (event: LayoutChangeEvent) => {
+        console.log("event", event)
+        // setDimensions({width: event.nativeEvent.layout.width, height: event.nativeEvent.layout.height})
+        width.set(event.nativeEvent.layout.width)
+        height.set(event.nativeEvent.layout.height)
+    }
+
     return (
         <>
-            <View>
-                <React.Suspense fallback={<ActivityIndicator />}>
-                    <AsyncSkia/>
-                    <Iridescence/>
-                </React.Suspense>
+            <View onLayout={onLayout} style={styles.container}>
+                    {/* <AsyncSkia/> */}
+                    <Circle/>
             </View>
         </>
     )
 }
 
 const styles = StyleSheet.create({
-  input: {
-    height: 40,
-    margin: 12,
-    borderWidth: 1,
-    padding: 10,
-  },
+    container: {
+        height: 200
+    }
 });
