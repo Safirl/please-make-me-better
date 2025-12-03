@@ -3,6 +3,31 @@ import Experience from "../Experience";
 import Component from "../classes/Component";
 import { SimpleFS, SimpleVS } from "./shdertest";
 const HELPER_FOLDER = "Sphere"
+
+type UniformType = {
+    visibility: number;
+    buffer: {
+        type: GPUBufferBindingType;
+    };
+}
+
+type EntriesType = {
+    buffer?: GPUBuffer | undefined;
+    value?: Float32Array<ArrayBuffer>;
+    entryType?: GPUBufferBindingType;
+    name?: SoulUniformsEntryTypes;
+}
+
+type SoulUniformsEntryTypes = "uTime" | "uFactor" | "uResolution" | "uBlendingFactor";
+
+type EntryObjectType = {
+    [entryName in SoulUniformsEntryTypes]?: EntriesType
+}
+
+const uniformEntryTemplate = {
+    visibility: GPUShaderStage.VERTEX | GPUShaderStage.FRAGMENT,
+    buffer: { type: "uniform" as GPUBufferBindingType }
+}
 export default class Soul extends Component {
 
 
@@ -22,6 +47,8 @@ export default class Soul extends Component {
     /**
      * Uniforms
      */
+
+    private uniforms: EntryObjectType = {}
     private uTime: Float32Array<ArrayBuffer> = new Float32Array([0]);
     private uFactor: Float32Array<ArrayBuffer> = new Float32Array([this.params.factor]);
     private uResolion: Float32Array<ArrayBuffer> = new Float32Array([0, 0]);
@@ -39,8 +66,10 @@ export default class Soul extends Component {
     constructor(experience: Experience) {
         super(experience)
 
-        this.loadShaders(SimpleVS, SimpleFS)
         this.confiureBuffers()
+        this.configureBindGroupLayout()
+        this.loadShaders(SimpleVS, SimpleFS)
+        this.configurePipeline()
         this.configureBindGroup()
 
         this.helpers.tweak(
@@ -75,30 +104,25 @@ export default class Soul extends Component {
     private configureBindGroupLayout() {
         if (!this.experience.device) throw new Error("Device is undefined");
 
+        const entries: GPUBindGroupLayoutEntry[] = []
+        let index = 0
+        for (const uniform of Object.keys(this.uniforms)) {
+
+            if (!this.uniforms[uniform as SoulUniformsEntryTypes]!.buffer) {
+                throw new Error(`${uniform} buffer is not defined`)
+            }
+
+            entries.push({
+                binding: index,
+                ...uniformEntryTemplate,
+            })
+
+            index++
+        }
+
         this.bindGroupLayout = this.experience.device.createBindGroupLayout({
             label: "Soul Bind Group Layout",
-            entries: [
-                {
-                    binding: 0,
-                    visibility: GPUShaderStage.VERTEX | GPUShaderStage.FRAGMENT,
-                    buffer: { type: "uniform" }
-                },
-                {
-                    binding: 1,
-                    visibility: GPUShaderStage.VERTEX | GPUShaderStage.FRAGMENT,
-                    buffer: { type: "uniform" }
-                },
-                {
-                    binding: 2,
-                    visibility: GPUShaderStage.VERTEX | GPUShaderStage.FRAGMENT,
-                    buffer: { type: "uniform" }
-                },
-                {
-                    binding: 3,
-                    visibility: GPUShaderStage.VERTEX | GPUShaderStage.FRAGMENT,
-                    buffer: { type: "uniform" }
-                },
-            ]
+            entries
         })
 
         this.pipelineLayout = this.experience.device.createPipelineLayout({
@@ -129,105 +153,65 @@ export default class Soul extends Component {
     }
 
     private confiureBuffers() {
-        this.configTimeUniform()
-        this.setTime()
-
-        this.configResolutionUniform()
-        this.setResolution()
-
-        this.configFactorUniform()
-        this.setFactor()
-
-        this.configBlendingFactorUniform()
-        this.setBlendingFactor()
-    }
-
-    configResolutionUniform() {
         if (!this.experience.device) {
             throw new Error("Device is not defined")
         }
+        /**
+         * @Important : Uniforms must be in the same order as binds are declared in the shader.
+         */
+        const buffersToInit: {
+            defaultValue: Float32Array<ArrayBuffer>;
+            name: SoulUniformsEntryTypes;
+            entry: "uniform"
+        }[] = [
+                {
+                    defaultValue: new Float32Array([this.experience.time.elapsedTime]),
+                    entry: "uniform" as const,
+                    name: "uTime"
+                },
+                {
+                    defaultValue: new Float32Array([this.experience.sizes.width, this.experience.sizes.height]),
+                    entry: "uniform" as const,
+                    name: "uResolution"
+                },
+                {
+                    defaultValue: new Float32Array([this.params.factor]),
+                    entry: "uniform" as const,
+                    name: "uFactor"
+                },
+                {
+                    defaultValue: new Float32Array([this.params.blendingFactor]),
+                    entry: "uniform" as const,
+                    name: "uBlendingFactor"
+                },
+            ]
 
-        this.resolutionBuffer = this.experience.device.createBuffer({
-            label: "Soul uResolution Uniform Buffer",
-            size: this.uResolion.byteLength, // should be 4 * 4
-            usage: GPUBufferUsage.UNIFORM | GPUBufferUsage.COPY_DST
-        })
-    }
-    setResolution() {
+        for (const bufferToInit of buffersToInit) {
 
-        if (!this.resolutionBuffer) {
-            throw new Error("resolutionBuffer is not defined")
+            const { name, defaultValue, entry } = bufferToInit
+
+            this.uniforms[name] = {}
+            this.uniforms[name].value = defaultValue;
+            this.uniforms[name].name = name
+            this.uniforms[name].entryType = entry;
+
+            this.uniforms[name]!.buffer = this.experience.device.createBuffer({
+                label: `Soul ${name} Uniform Buffer`,
+                size: defaultValue.byteLength * 8, // always 16 bytes minimum for a uniform binding
+                usage: GPUBufferUsage.UNIFORM | GPUBufferUsage.COPY_DST
+            })
+
+            this.experience.device.queue.writeBuffer(this.uniforms[name]!.buffer, 0, this.uniforms[name]!.value!)
         }
 
-        if (!this.experience.device) {
-            throw new Error("Device is not defined")
-        }
-
-
-        this.experience.device.queue.writeBuffer(this.resolutionBuffer, 0, this.uResolion)
-
-    }
-
-
-    configFactorUniform() {
-        if (!this.experience.device) {
-            throw new Error("Device is not defined")
-        }
-
-        this.factorBuffer = this.experience.device.createBuffer({
-            label: "Soul uResolution Uniform Buffer",
-            size: this.uResolion.byteLength, // should be 4 * 4
-            usage: GPUBufferUsage.UNIFORM | GPUBufferUsage.COPY_DST
-        })
-    }
-    setFactor() {
-
-        if (!this.factorBuffer) {
-            throw new Error("factorBuffer is not defined")
-        }
-
-        if (!this.experience.device) {
-            throw new Error("Device is not defined")
-        }
-
-
-        this.experience.device.queue.writeBuffer(this.factorBuffer, 0, this.uFactor)
-
-    }
-
-
-    configBlendingFactorUniform() {
-        if (!this.experience.device) {
-            throw new Error("Device is not defined")
-        }
-
-        this.blendingBuffer = this.experience.device.createBuffer({
-            label: "Soul uResolution Uniform Buffer",
-            size: this.uBlendingFactor.byteLength, // should be 4 * 4
-            usage: GPUBufferUsage.UNIFORM | GPUBufferUsage.COPY_DST
-        })
-    }
-    setBlendingFactor() {
-
-        if (!this.blendingBuffer) {
-            throw new Error("blendingBuffer is not defined")
-        }
-
-        if (!this.experience.device) {
-            throw new Error("Device is not defined")
-        }
-
-
-        this.experience.device.queue.writeBuffer(this.blendingBuffer, 0, this.uBlendingFactor)
 
     }
+
+
 
     public loadShaders(vertexShader?: string, fragmentShader?: string) {
         this.loadVertexShader(vertexShader)
         this.loadFragmentShader(fragmentShader)
-
-        this.configureBindGroupLayout()
-        this.configurePipeline()
     }
 
 
@@ -270,31 +254,6 @@ export default class Soul extends Component {
         })
     }
 
-    private configTimeUniform() {
-        if (!this.experience.device) {
-            throw new Error("Device is not defined")
-        }
-
-        this.timeBuffer = this.experience.device.createBuffer({
-            label: "Soul uTime Uniform Buffer",
-            size: this.uTime.byteLength, // should be 4 * 4
-            usage: GPUBufferUsage.UNIFORM | GPUBufferUsage.COPY_DST
-        })
-    }
-
-    public setTime(time?: number) {
-        if (!this.timeBuffer) {
-            throw new Error("colorBuffer is not defined")
-        }
-
-        if (!this.experience.device) {
-            throw new Error("Device is not defined")
-        }
-
-
-        this.experience.device.queue.writeBuffer(this.timeBuffer, 0, this.uTime)
-    }
-
 
     private configureBindGroup() {
 
@@ -304,76 +263,73 @@ export default class Soul extends Component {
         if (!this.bindGroupLayout) {
             throw new Error("bindGroupLayout is not defined")
         }
-        if (!this.timeBuffer) {
-            throw new Error("colorBuffer is not defined")
-        }
-        if (!this.resolutionBuffer) {
-            throw new Error("resolutionBuffer is not defined")
-        }
-        if (!this.factorBuffer) {
-            throw new Error("factorBuffer is not defined")
-        }
-        if (!this.blendingBuffer) {
-            throw new Error("blendingBuffer is not defined")
+
+        const entries: GPUBindGroupEntry[] = []
+        let index = 0
+
+        for (const uniform of Object.keys(this.uniforms)) {
+
+            if (!this.uniforms[uniform as SoulUniformsEntryTypes]!.buffer) {
+                throw new Error(`${uniform} buffer is not defined`)
+            }
+
+            entries.push({
+                binding: index,
+                resource: { buffer: this.uniforms[uniform as SoulUniformsEntryTypes]!.buffer as GPUBuffer }
+            })
+
+            index++
         }
 
         this.bindGroup = this.experience.device.createBindGroup({
             label: "Soul Bind Group",
             layout: this.bindGroupLayout,
-            entries: [
-                { binding: 0, resource: { buffer: this.timeBuffer } },
-                { binding: 1, resource: { buffer: this.resolutionBuffer } },
-                { binding: 2, resource: { buffer: this.factorBuffer } },
-                { binding: 3, resource: { buffer: this.blendingBuffer } },
-            ]
+            entries
         })
 
     }
 
     update() {
         //Check buffers
-        if (!this.timeBuffer) throw new Error("colorBuffer is not defined")
-        if (!this.resolutionBuffer) throw new Error("resolutionBuffer is not defined")
-        if (!this.factorBuffer) throw new Error("factorBuffer is not defined")
-        if (!this.blendingBuffer) throw new Error("blendingBuffer is not defined")
+        if (!this.uniforms.uTime?.buffer) throw new Error("colorBuffer is not defined")
+        if (!this.uniforms.uResolution?.buffer) throw new Error("resolutionBuffer is not defined")
+        if (!this.uniforms.uFactor?.buffer) throw new Error("factorBuffer is not defined")
+        if (!this.uniforms.uBlendingFactor?.buffer) throw new Error("blendingBuffer is not defined")
         //--
         if (!this.experience.device) throw new Error("device is not defined")
-
 
 
         /**
          * Updating uniform time
          */
 
-        this.uTime[0] = this.experience.time.elapsedTime * 0.006;
-        this.experience.device.queue.writeBuffer(this.timeBuffer, 0, this.uTime);
+        this.uniforms.uTime.value![0] = this.experience.time.elapsedTime * 0.006;
+        this.experience.device.queue.writeBuffer(this.uniforms.uTime.buffer, 0, this.uniforms.uTime.value!);
 
 
         /**
          * Updating uniform resolution
          */
 
-        this.uResolion[0] = this.experience.sizes.width;
-        this.uResolion[1] = this.experience.sizes.height;
-        this.experience.device.queue.writeBuffer(this.resolutionBuffer, 0, this.uResolion);
+        this.uniforms.uResolution.value![0] = this.experience.sizes.width;
+        this.uniforms.uResolution.value![1] = this.experience.sizes.height;
+        this.experience.device.queue.writeBuffer(this.uniforms.uResolution.buffer, 0, this.uniforms.uResolution.value!);
 
 
         /**
          * Updating uniform factor
          */
 
-        this.uFactor[0] = this.params.factor
-        this.experience.device.queue.writeBuffer(this.factorBuffer, 0, this.uFactor);
+        this.uniforms.uFactor.value![0] = this.params.factor
+        this.experience.device.queue.writeBuffer(this.uniforms.uFactor.buffer, 0, this.uniforms.uFactor.value!);
 
 
         /**
          * Updating uniform factor
          */
 
-        this.uBlendingFactor[0] = this.params.blendingFactor;
-        this.experience.device.queue.writeBuffer(this.blendingBuffer, 0, this.uBlendingFactor);
-
-
+        this.uniforms.uBlendingFactor.value![0] = this.params.blendingFactor;
+        this.experience.device.queue.writeBuffer(this.uniforms.uBlendingFactor.buffer, 0, this.uniforms.uBlendingFactor.value!);
     }
 
     draw(pass: GPURenderPassEncoder) {
