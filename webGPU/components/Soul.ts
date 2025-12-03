@@ -38,27 +38,12 @@ export default class Soul extends Component {
         factor: 0.25
     }
 
-
     private pipeline: any;
     private pipelineLayout: any;
     private bindGroup: GPUBindGroup | undefined;
     private bindGroupLayout: GPUBindGroupLayout | undefined;
 
-    /**
-     * Uniforms
-     */
-
     private uniforms: EntryObjectType = {}
-    private uTime: Float32Array<ArrayBuffer> = new Float32Array([0]);
-    private uFactor: Float32Array<ArrayBuffer> = new Float32Array([this.params.factor]);
-    private uResolion: Float32Array<ArrayBuffer> = new Float32Array([0, 0]);
-    private uBlendingFactor: Float32Array<ArrayBuffer> = new Float32Array([this.params.blendingFactor]);
-
-    private timeBuffer: GPUBuffer | undefined;
-    private resolutionBuffer: GPUBuffer | undefined;
-    private factorBuffer: GPUBuffer | undefined;
-    private blendingBuffer: GPUBuffer | undefined;
-
 
     private vertexShader: GPUShaderModule | undefined;
     private fragmentShader: GPUShaderModule | undefined;
