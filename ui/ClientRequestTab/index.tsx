@@ -5,6 +5,7 @@ import {
     Pressable, Text, StyleSheet
 } from "react-native";
 
+
 interface CustomButtonProps extends PressableProps {
     isSelected: boolean;
     title: string;
@@ -17,7 +18,7 @@ const titleFont = {
     // height: 12,
     lineHeight: 12,
     fontWeight: "700" as const,
-    fontFamily: "JetBrain Mono",
+    fontFamily: "JetBrainsMono",
     letterSpacing: 0,
 
 }
@@ -26,7 +27,7 @@ const paragraphFont = {
     // height: 12,
     lineHeight: 12,
     fontWeight: "400" as const,
-    fontFamily: "JetBrain Mono",
+    fontFamily: "JetBrainsMono",
     letterSpacing: 0,
     width: 270,
 
