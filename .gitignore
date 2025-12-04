@@ -44,6 +44,5 @@ yarn-error.*
 /android
 
 # storybook
-.storybook
 *storybook.log
 storybook-static
