@@ -28,7 +28,7 @@ export default class Sizes extends EventEmitter {
         this.viewHeight = 0
 
         /**
-         * IMPORTANT : Set canvas Height
+         * @Important : Set canvas Height
          */
         this.experience.canvas.width = this.experience.canvas.clientWidth * this.pixelRatio;
         this.experience.canvas.height = this.experience.canvas.clientHeight * this.pixelRatio;

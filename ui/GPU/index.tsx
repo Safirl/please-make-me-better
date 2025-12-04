@@ -7,7 +7,7 @@ import { Canvas, CanvasRef } from "react-native-wgpu";
 
 
 
-export default function HelloTriangle() {
+export default function WebGPU() {
   const ref = React.useRef<CanvasRef>(null);
 
   const [experience, setExperience] = React.useState<Experience | null>(null)
