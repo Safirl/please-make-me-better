@@ -2,26 +2,28 @@ import type {
     PressableProps,
 } from "react-native";
 import {
-    Pressable
+    Pressable, Text
 } from "react-native";
 
 interface CustomButtonProps extends PressableProps {
-    type?: '';
+    type?: string;
+    label?: string;
     subtype?: 'default' | 'danger' | 'neutral'
     children?: React.ReactNode;
 }
 
 const buttonStyle = {
-    
+
 }
 
 
-const CustomButton: React.FC<CustomButtonProps> = (props) => {
+const Button: React.FC<CustomButtonProps> = (props) => {
 
     const {
         type,
         subtype,
         children,
+        label,
         ...rest
     } = props
 
@@ -29,7 +31,11 @@ const CustomButton: React.FC<CustomButtonProps> = (props) => {
     return <Pressable
         {...rest}
     >
-        {children}
+        {
+            label
+                ? <Text>{label}</Text>
+                : children
+        }
     </Pressable>
 }
-export default CustomButton 
+export default Button 
