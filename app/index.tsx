@@ -1,6 +1,5 @@
 import Modal from "@/components/Modal/modal";
 import { CursorParameter } from "@/components/Parameters/cursorParameter";
-import { WheelParameter } from "@/components/Parameters/wheelParameter";
 import { WordParameter } from "@/components/Parameters/wordParameter";
 import { Text } from "@react-navigation/elements";
 import { useEffect } from "react";
@@ -13,6 +12,7 @@ export default function Index() {
   const setCurrentParameter = useStorage((state: any) => state.setCurrentParameter)
 
   useEffect(() => {
+    if (!Helpers.isDevMode) return;
     let root = Helpers.instance.getGUIFolder();
     let folder = root.addFolder("Parameter");
     // Helpers.instance.tweak()
@@ -30,16 +30,16 @@ export default function Index() {
       <Modal>
         {
           currentParameter === "cursors" && <CursorParameter/> ||
-          currentParameter === "wheel" && <WheelParameter/> ||
+          // currentParameter === "wheel" && <WheelParameter/> ||
           currentParameter === "words" && <WordParameter/>
         }
       </Modal>
       <Pressable onPress={() => {setCurrentParameter("cursors")}}>
         <Text>Open cursors</Text>
       </Pressable>
-      <Pressable onPress={() => {setCurrentParameter("wheel")}}>
+      {/* <Pressable onPress={() => {setCurrentParameter("wheel")}}>
         <Text>Open wheel</Text>
-      </Pressable>
+      </Pressable> */}
       <Pressable onPress={() => {setCurrentParameter("words")}}>
         <Text>Open words</Text>
       </Pressable>

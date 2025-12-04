@@ -5,7 +5,7 @@ type Folders = { [key: string]: GUI }
 export default class Helpers {
     private GUI: GUI | null = null
     private folders = {} as Folders
-    private isDevMode = false
+    public isDevMode = false
     private static _instance: Helpers | null = null;
     constructor() {
         if (Helpers._instance) {

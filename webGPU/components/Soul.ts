@@ -24,39 +24,35 @@ type EntryObjectType = {
     [entryName in SoulUniformsEntryTypes]?: EntriesType
 }
 
-const uniformEntryTemplate = {
-    visibility: GPUShaderStage.VERTEX | GPUShaderStage.FRAGMENT,
-    buffer: { type: "uniform" as GPUBufferBindingType }
-}
 export default class Soul extends Component {
-
-
-
+    
+    
+    
     private params = {
         radius: 1,
         blendingFactor: 2, //transition radius
         factor: 0.25
     }
-
+    
     private pipeline: any;
     private pipelineLayout: any;
     private bindGroup: GPUBindGroup | undefined;
     private bindGroupLayout: GPUBindGroupLayout | undefined;
-
+    
     private uniforms: EntryObjectType = {}
-
+    
     private vertexShader: GPUShaderModule | undefined;
     private fragmentShader: GPUShaderModule | undefined;
-
+    
     constructor(experience: Experience) {
         super(experience)
-
+        
         this.confiureBuffers()
         this.configureBindGroupLayout()
         this.loadShaders(SimpleVS, SimpleFS)
         this.configurePipeline()
         this.configureBindGroup()
-
+        
         this.helpers.tweak(
             "radius",
             this.params,
@@ -85,31 +81,36 @@ export default class Soul extends Component {
             HELPER_FOLDER
         )
     }
-
+    
     private configureBindGroupLayout() {
         if (!this.experience.device) throw new Error("Device is undefined");
-
+        
+        const uniformEntryTemplate = {
+            visibility: GPUShaderStage.VERTEX | GPUShaderStage.FRAGMENT,
+            buffer: { type: "uniform" as GPUBufferBindingType }
+        }
+        
         const entries: GPUBindGroupLayoutEntry[] = []
         let index = 0
         for (const uniform of Object.keys(this.uniforms)) {
-
+            
             if (!this.uniforms[uniform as SoulUniformsEntryTypes]!.buffer) {
                 throw new Error(`${uniform} buffer is not defined`)
             }
-
+            
             entries.push({
                 binding: index,
                 ...uniformEntryTemplate,
             })
-
+            
             index++
         }
-
+        
         this.bindGroupLayout = this.experience.device.createBindGroupLayout({
             label: "Soul Bind Group Layout",
             entries
         })
-
+        
         this.pipelineLayout = this.experience.device.createPipelineLayout({
             label: "Soul Pipeline Layout",
             bindGroupLayouts: [
@@ -117,13 +118,13 @@ export default class Soul extends Component {
             ]
         })
     }
-
+    
     private configurePipeline() {
         if (!this.experience.device) throw new Error("Device is undefined");
         if (!this.vertexShader) throw new Error("Vertex shader is undefined");
         if (!this.fragmentShader) throw new Error("Vertex shader is undefined");
         if (!this.experience.presentationFormat) throw new Error("PresentationFormat shader is undefined");
-
+        
         this.pipeline = this.experience.device.createRenderPipeline({
             label: "Soul Render Pipeline",
             layout: this.pipelineLayout,
