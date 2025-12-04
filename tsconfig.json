@@ -1,6 +1,10 @@
 {
   "extends": "expo/tsconfig.base",
   "compilerOptions": {
+    "types": [
+      "@webgpu/types",
+      "@types/node"
+    ],
     "strict": true,
     "paths": {
       "@/*": [
@@ -13,6 +17,6 @@
     "**/*.tsx",
     ".expo/types/**/*.ts",
     "expo-env.d.ts",
-     "storage/store.ts"
+    "storage/store.ts"
   ]
 }

@@ -1,98 +1,69 @@
+
+import Experience from "@/webGPU/Experience";
 import React from "react";
-import { PixelRatio, StyleSheet, View } from "react-native";
+import { LayoutChangeEvent, View } from "react-native";
+import { useFrameCallback } from 'react-native-reanimated';
 import { Canvas, CanvasRef } from "react-native-wgpu";
 
-import { redFragWGSL, triangleVertWGSL } from "./triangle.ts";
 
-export default function GPU() {
+
+export default function WebGPU() {
   const ref = React.useRef<CanvasRef>(null);
+
+  const [experience, setExperience] = React.useState<Experience | null>(null)
+  const [containerWidth, setContainerWidth] = React.useState(0)
+  const [containerHeight, setContainerHeight] = React.useState(0)
+  const [isGLReady, setIsGLReady] = React.useState(false)
+
+  useFrameCallback((frameInfo) => {
+    if (!experience) return;
+
+    experience.time.tick()
+  });
+
   React.useEffect(() => {
-    const helloTriangle = async () => {
-      const adapter = await navigator.gpu.requestAdapter();
-      if (!adapter) {
-        throw new Error("No adapter");
-      }
-      const device = await adapter.requestDevice();
-      const presentationFormat = navigator.gpu.getPreferredCanvasFormat();
+    if (!experience && !isGLReady && (!ref || !ref.current)) return
+
+
+    const initExp = async () => {
 
       const context = ref.current!.getContext("webgpu")!;
-      const canvas = context.canvas as HTMLCanvasElement;
-      canvas.width = canvas.clientWidth * PixelRatio.get();
-      canvas.height = canvas.clientHeight * PixelRatio.get();
+      const adapter = await navigator.gpu.requestAdapter();
+      setExperience(new Experience(context, adapter));
 
-      if (!context) {
-        throw new Error("No context");
-      }
+    }
 
-      context.configure({
-        device,
-        format: presentationFormat,
-        alphaMode: "opaque",
-      });
+    initExp()
 
-      const pipeline = device.createRenderPipeline({
-        layout: "auto",
-        vertex: {
-          module: device.createShaderModule({
-            code: triangleVertWGSL,
-          }),
-          entryPoint: "main",
-        },
-        fragment: {
-          module: device.createShaderModule({
-            code: redFragWGSL,
-          }),
-          entryPoint: "main",
-          targets: [
-            {
-              format: presentationFormat,
-            },
-          ],
-        },
-        primitive: {
-          topology: "triangle-list",
-        },
-      });
+  }, [isGLReady]);
 
-      const commandEncoder = device.createCommandEncoder();
 
-      const textureView = context.getCurrentTexture().createView();
+  const onLayout = (event: LayoutChangeEvent) => {
+    const { width, height } = event.nativeEvent.layout;
 
-      const renderPassDescriptor: any/*GPURenderPassDescriptor*/ = {
-        colorAttachments: [
-          {
-            view: textureView,
-            clearValue: [0, 0, 0, 1],
-            loadOp: "clear",
-            storeOp: "store",
-          },
-        ],
-      };
-
-      const passEncoder = commandEncoder.beginRenderPass(renderPassDescriptor);
-      passEncoder.setPipeline(pipeline);
-      passEncoder.draw(3);
-      passEncoder.end();
-
-      device.queue.submit([commandEncoder.finish()]);
-
-      context.present();
-    };
-    helloTriangle();
-  }, [ref]);
-
+    setContainerWidth(width)
+    setContainerHeight(height)
+    setIsGLReady(true)
+    // experience && experience.resize()
+  }
   return (
-    <View style={style.container}>
-      <Canvas ref={ref} style={style.webgpu} />
+    <View
+      onLayout={onLayout}
+      style={{
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center'
+      }}
+    >
+      {
+        isGLReady && <Canvas
+          ref={ref}
+          style={{
+            width: containerWidth,
+            height: containerHeight
+          }} />
+      }
     </View>
   );
 }
 
-const style = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  webgpu: {
-    flex: 1,
-  },
-});
