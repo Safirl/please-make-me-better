@@ -21,7 +21,7 @@ const meta = {
     parameters: {
         design: {
             type: 'figma',
-            url: 'https://www.figma.com/design/5VGPGRjnfdWU60rwAdXXPe/Maquette-App-Configurateur?node-id=526-2122&t=WELEg4XJp0E2GD5j-1'
+            url: 'https://www.figma.com/design/5VGPGRjnfdWU60rwAdXXPe/Maquette-App-Configurateur?node-id=526-1641&t=WELEg4XJp0E2GD5j-1'
         }
     }
 } satisfies Meta<typeof ClientRequestTab>;
