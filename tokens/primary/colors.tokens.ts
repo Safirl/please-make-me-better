@@ -17,7 +17,7 @@ export const primaryColorTokens = {
 
     "color-warning-high": "#FFA45B",
 
-    "color-white": "#F1F1F1",
+    "color-white": "#F1F1F1", // SEmantic text-primary
 
 
 
