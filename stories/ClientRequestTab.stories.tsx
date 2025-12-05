@@ -18,6 +18,12 @@ const meta = {
     tags: ['autodocs'],
     // Use `fn` to spy on the onPress arg, which will appear in the actions panel once invoked: https://storybook.js.org/docs/essentials/actions#story-args
     args: {onPress: fn()},
+    parameters: {
+        design: {
+            type: 'figma',
+            url: 'https://www.figma.com/design/5VGPGRjnfdWU60rwAdXXPe/Maquette-App-Configurateur?node-id=526-2122&t=WELEg4XJp0E2GD5j-1'
+        }
+    }
 } satisfies Meta<typeof ClientRequestTab>;
 
 export default meta;
