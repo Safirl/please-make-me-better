@@ -18,6 +18,12 @@ const meta = {
     tags: ['autodocs'],
     // Use `fn` to spy on the onPress arg, which will appear in the actions panel once invoked: https://storybook.js.org/docs/essentials/actions#story-args
     args: {onPress: fn()},
+    argTypes: {
+        selectColor: {
+            options: ["primary", "secondary", "tertiary", undefined],
+            control: {type: "radio"},
+        },
+    },
     parameters: {
         design: {
             type: 'figma',
@@ -30,11 +36,14 @@ export default meta;
 
 type Story = StoryObj<typeof meta>;
 
-export const Primary: Story = {
+export const Primary
+    :
+    Story = {
     args: {
-        isSelected: false,
+        selectColor: "secondary",
         title: "NIEL MUSK",
         paragraph: "Je veux être perçu comme un leader"
     },
+
 };
 

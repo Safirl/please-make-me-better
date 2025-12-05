@@ -8,7 +8,7 @@ import {
 import {primaryColorTokens} from "@/tokens/primary/colors.tokens";
 
 interface CustomButtonProps extends PressableProps {
-    isSelected: boolean;
+    selectColor?: "primary" | "secondary" | "tertiary";
     title: string;
     paragraph: string;
     onPress: () => void;
@@ -31,7 +31,7 @@ const paragraphFont = {
     width: 270,
     color: primaryColorTokens["color-tertiary-lower"]
 }
-const main = {
+const main = (selectColor?: "primary" | "secondary" | "tertiary") => ({
     gap: 12,
     borderWidth: 1,
     paddingTop: 8,
@@ -39,9 +39,9 @@ const main = {
     paddingLeft: 32,
     paddingBottom: 16,
     borderRadius: 5,
-    borderColor: primaryColorTokens["color-secondary-high"],
+    borderColor: selectColor ? primaryColorTokens[`color-${selectColor}-high`] : "transparent",
     backgroundColor: primaryColorTokens["color-tertiary-medium"]
-}
+})
 
 const borderTop = {
     position: "absolute" as const,
@@ -51,8 +51,8 @@ const borderTop = {
     transform: [{translateY: -11.5}, {translateX: -1}],
 }
 
-const Style = StyleSheet.create({
-    main,
+const createStyle = (selectColor?: "primary" | "secondary" | "tertiary") => StyleSheet.create({
+    main: main(selectColor),
     titleFont,
     paragraphFont,
     borderTop
@@ -62,13 +62,14 @@ const Style = StyleSheet.create({
 const ClientRequestTab: React.FC<CustomButtonProps> = (props) => {
 
     const {
-        isSelected,
+        selectColor,
         title,
         paragraph,
         onPress,
         ...rest
     } = props
 
+    const Style = createStyle(selectColor);
 
     return <Pressable
         style={Style.main}
@@ -83,8 +84,9 @@ const ClientRequestTab: React.FC<CustomButtonProps> = (props) => {
                     fill={primaryColorTokens["color-tertiary-medium"]}/>
                 <path
                     d="M5 0V1H150.791V0H5ZM153.661 0.906113L153.087 1.72489L165.386 10.3482L165.96 9.52943L153.661 0.906113ZM165.96 9.52943L165.386 10.3482C166.395 11.0559 167.598 11.4355 168.83 11.4355V10.4355C168.008 10.4355 166.633 10.0012 165.96 9.52943ZM150.791 0V1C151.613 1 152.414 1.2531 153.087 1.72489L153.661 0.906113C152.651 0.198432 152.024 0 150.791 0ZM5 0C1.68629 0 0 1.68629 0 5H1C1 2.79086 2.79086 1 5 1V0Z"
-                    fill={primaryColorTokens["color-secondary-high"]}/>
-                <path d="M1 5H0V18.4355H1V5Z" fill={primaryColorTokens["color-secondary-high"]}/>
+                    fill={selectColor ? primaryColorTokens[`color-${selectColor}-medium`] : primaryColorTokens[`color-tertiary-medium`]}/>
+                <path d="M1 5H0V18.4355H1V5Z"
+                      fill={selectColor ? primaryColorTokens[`color-${selectColor}-medium`] : primaryColorTokens[`color-tertiary-medium`]}/>
             </svg>
 
 
