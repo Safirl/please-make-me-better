@@ -22,9 +22,18 @@ export const paragraphFontTokens = {
     "font-paragraph-letterSpacing": 0 as const,
 }
 
+export const bodyBoldFontTokens = {
+    "font-body-bold-size": 12 as const,
+    "font-body-bold-weight": "800" as const,
+    "font-body-bold-family": primaryFontTokens["font-family-primary"],
+    "font-body-bold-line": 12 as const,
+    "font-body-bold-letterSpacing": 0 as const,
+}
+
 export const fontTokens = {
     primary: primaryFontTokens,
     ...subTitleFontTokens,
     ...paragraphFontTokens,
+    ...bodyBoldFontTokens,
 }
 
