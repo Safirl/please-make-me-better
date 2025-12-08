@@ -8,6 +8,7 @@ import {
     clientRequestCardTokens,
 } from "./tokens"
 
+const outOfFlowOffset = 10
 
 const main = (selectColor: "primary" | "secondary" | "tertiary") => ({
     gap: 16,
@@ -31,6 +32,8 @@ export const createStyle = (selectColor: "primary" | "secondary" | "tertiary" = 
         paddingBottom: 7,
         paddingLeft: 10,
         paddingRight: 10,
+
+        marginTop: -outOfFlowOffset,
 
         borderRadius: 4,
         borderWidth: 1,

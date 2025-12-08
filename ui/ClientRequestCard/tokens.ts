@@ -16,7 +16,7 @@ export const clientRequestCardTokens = {
 
 
     [`${COMPONENT_NAME}-main-text-primary`]: primaryColorTokens["color-white"],
-    [`${COMPONENT_NAME}-main-background-color`]: primaryColorTokens["color-tertiary-medium"],
+    [`${COMPONENT_NAME}-main-background-color`]: primaryColorTokens["color-tertiary-high"],
 
     /*
             [`${COMPONENT_NAME}-title-color`]: primaryColorTokens["color-white"],
