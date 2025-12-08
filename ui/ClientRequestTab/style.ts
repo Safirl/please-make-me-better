@@ -1,23 +1,20 @@
-import { StyleSheet } from "react-native";
+import {StyleSheet} from "react-native";
 
 import {primaryColorTokens} from "@/tokens/primary/colors.tokens";
+import {primaryFontTokens} from "@/tokens/primary/font.tokens";
+import Fonts from "@/assets/styles/fonts"
+import {
+    COMPONENT_NAME,
+    clientRequestTabTokens,
+} from "./clientRequestTabTokens.tokens"
 
 const titleFont = {
-    fontSize: 14,
-    lineHeight: 12,
-    fontWeight: "700" as const,
-    fontFamily: "JetBrainsMono",
-    letterSpacing: 0,
-    color: primaryColorTokens["color-white"]
+    ...Fonts.subTitle,
 }
 const paragraphFont = {
-    fontSize: 12,
-    lineHeight: 12,
-    fontWeight: "400" as const,
-    fontFamily: "JetBrainsMono",
-    letterSpacing: 0,
+    ...Fonts.paragraph,
     width: 270,
-    color: primaryColorTokens["color-tertiary-lower"]
+    color: primaryFontTokens["font-color-secondary"]
 }
 const main = (selectColor?: "primary" | "secondary" | "tertiary") => ({
     gap: 12,
@@ -27,8 +24,8 @@ const main = (selectColor?: "primary" | "secondary" | "tertiary") => ({
     paddingLeft: 32,
     paddingBottom: 16,
     borderRadius: 5,
-    borderColor: selectColor ? primaryColorTokens[`color-${selectColor}-high`] : "transparent",
-    backgroundColor: primaryColorTokens["color-tertiary-medium"]
+    borderColor: selectColor ? clientRequestTabTokens[`${COMPONENT_NAME}-main-border-color-${selectColor}`] : clientRequestTabTokens[`${COMPONENT_NAME}-main-border-color-tertiary`],
+    backgroundColor: clientRequestTabTokens[`${COMPONENT_NAME}-main-background-color`]
 })
 
 const borderTop = {
