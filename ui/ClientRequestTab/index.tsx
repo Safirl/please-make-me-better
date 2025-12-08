@@ -17,7 +17,7 @@ interface CustomButtonProps extends ViewProps {
 const ClientRequestTab: React.FC<CustomButtonProps> = (props) => {
 
     const {
-        selectColor,
+        selectColor = "tertiary",
         title,
         paragraph,
         ...rest
@@ -38,9 +38,9 @@ const ClientRequestTab: React.FC<CustomButtonProps> = (props) => {
                     fill={clientRequestTabTokens[`${COMPONENT_NAME}-main-border-color-tertiary`]}/>
                 <path
                     d="M5 0V1H150.791V0H5ZM153.661 0.906113L153.087 1.72489L165.386 10.3482L165.96 9.52943L153.661 0.906113ZM165.96 9.52943L165.386 10.3482C166.395 11.0559 167.598 11.4355 168.83 11.4355V10.4355C168.008 10.4355 166.633 10.0012 165.96 9.52943ZM150.791 0V1C151.613 1 152.414 1.2531 153.087 1.72489L153.661 0.906113C152.651 0.198432 152.024 0 150.791 0ZM5 0C1.68629 0 0 1.68629 0 5H1C1 2.79086 2.79086 1 5 1V0Z"
-                    fill={selectColor ? clientRequestTabTokens[`${COMPONENT_NAME}-main-border-color-${selectColor}`] : clientRequestTabTokens[`${COMPONENT_NAME}-main-border-color-tertiary`]}/>
+                    fill={clientRequestTabTokens[`${COMPONENT_NAME}-main-border-color-${selectColor}`]}/>
                 <path d="M1 5H0V18.4355H1V5Z"
-                      fill={selectColor ? clientRequestTabTokens[`${COMPONENT_NAME}-main-border-color-${selectColor}`] : clientRequestTabTokens[`${COMPONENT_NAME}-main-border-color-tertiary`]}/>
+                      fill={clientRequestTabTokens[`${COMPONENT_NAME}-main-border-color-${selectColor}`]}/>
             </svg>
 
 

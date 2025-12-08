@@ -19,7 +19,7 @@ interface CustomButtonProps extends ViewProps {
 const ClientRequestCard: React.FC<CustomButtonProps> = (props) => {
 
     const {
-        selectColor,
+        selectColor = "tertiary",
         title,
         paragraph,
         count,

@@ -16,7 +16,7 @@ const paragraphFont = {
     width: 270,
     color: primaryFontTokens["font-color-secondary"]
 }
-const main = (selectColor?: "primary" | "secondary" | "tertiary") => ({
+const main = (selectColor: "primary" | "secondary" | "tertiary" = "tertiary") => ({
     gap: 12,
     borderWidth: 1,
     paddingTop: 8,
@@ -24,7 +24,7 @@ const main = (selectColor?: "primary" | "secondary" | "tertiary") => ({
     paddingLeft: 32,
     paddingBottom: 16,
     borderRadius: 5,
-    borderColor: selectColor ? clientRequestTabTokens[`${COMPONENT_NAME}-main-border-color-${selectColor}`] : clientRequestTabTokens[`${COMPONENT_NAME}-main-border-color-tertiary`],
+    borderColor: clientRequestTabTokens[`${COMPONENT_NAME}-main-border-color-${selectColor}`],
     backgroundColor: clientRequestTabTokens[`${COMPONENT_NAME}-main-background-color`]
 })
 
@@ -36,7 +36,7 @@ const borderTop = {
     transform: [{translateY: -11.5}, {translateX: -1}],
 }
 
-export const createStyle = (selectColor?: "primary" | "secondary" | "tertiary") => StyleSheet.create({
+export const createStyle = (selectColor: "primary" | "secondary" | "tertiary" = "tertiary") => StyleSheet.create({
     main: main(selectColor),
     titleFont,
     paragraphFont,
