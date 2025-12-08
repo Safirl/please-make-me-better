@@ -12,7 +12,7 @@ import {
 const main = (selectColor?: "primary" | "secondary" | "tertiary") => ({
     gap: 16,
     backgroundColor: clientRequestCardTokens[`${COMPONENT_NAME}-main-background-color`],
-    flexDirection: "row",
+    flexDirection: "row" as const,
 })
 
 
@@ -27,8 +27,8 @@ export const createStyle = (selectColor: "primary" | "secondary" | "tertiary" = 
         backgroundColor: clientRequestCardTokens[`${COMPONENT_NAME}-color-accent-${selectColor}`]
     },
     countIndicator: {
-        paddingTop: 2,
-        paddingBottom: 2,
+        paddingTop: 7,
+        paddingBottom: 7,
         paddingLeft: 10,
         paddingRight: 10,
 
