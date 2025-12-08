@@ -1,17 +1,16 @@
 import type {
-    PressableProps,
+    ViewProps,
 } from "react-native";
 import {
     Pressable, Text, StyleSheet, View
 } from "react-native";
 import {createStyle} from "./style";
-import {clientRequestTabTokens, COMPONENT_NAME} from "./clientRequestTabTokens.tokens";
+import {clientRequestTabTokens, COMPONENT_NAME} from "./tokens";
 
-interface CustomButtonProps extends PressableProps {
+interface CustomButtonProps extends ViewProps {
     selectColor?: "primary" | "secondary" | "tertiary";
     title: string;
     paragraph: string;
-    onPress: () => void;
 }
 
 
@@ -21,7 +20,6 @@ const ClientRequestTab: React.FC<CustomButtonProps> = (props) => {
         selectColor,
         title,
         paragraph,
-        onPress,
         ...rest
     } = props
 

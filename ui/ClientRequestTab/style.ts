@@ -6,7 +6,7 @@ import Fonts from "@/assets/styles/fonts"
 import {
     COMPONENT_NAME,
     clientRequestTabTokens,
-} from "./clientRequestTabTokens.tokens"
+} from "./tokens"
 
 const titleFont = {
     ...Fonts.subTitle,
