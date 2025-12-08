@@ -9,7 +9,7 @@ import {
 } from "./tokens"
 
 
-const main = (selectColor?: "primary" | "secondary" | "tertiary") => ({
+const main = (selectColor: "primary" | "secondary" | "tertiary") => ({
     gap: 16,
     backgroundColor: clientRequestCardTokens[`${COMPONENT_NAME}-main-background-color`],
     flexDirection: "row" as const,
