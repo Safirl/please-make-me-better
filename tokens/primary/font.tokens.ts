@@ -30,10 +30,18 @@ export const bodyBoldFontTokens = {
     "font-body-bold-letterSpacing": 0 as const,
 }
 
+export const h1FontTokens = {
+    "font-h1-line": 22 as const,
+    "font-h1-weight": "400" as const,
+    "font-h1-family": primaryFontTokens["font-family-primary"],
+    "font-h1-size": 18 as const,
+    "font-h1-letterSpacing": 0 as const,
+}
 export const fontTokens = {
     primary: primaryFontTokens,
     ...subTitleFontTokens,
     ...paragraphFontTokens,
     ...bodyBoldFontTokens,
+    ...h1FontTokens,
 }
 

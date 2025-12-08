@@ -1,6 +1,6 @@
 import {fontTokens} from "@/tokens/primary/font.tokens";
 
-const createFont = (style: "paragraph" | "subTitle" | "body-bold") => {
+const createFont = (style: "paragraph" | "subTitle" | "body-bold" | "h1") => {
     return {
         fontSize: fontTokens[`font-${style}-size`],
         lineHeight: fontTokens[`font-${style}-line`],
@@ -21,5 +21,8 @@ export default {
     },
     bodyBold: {
         ...createFont("body-bold")
+    },
+    "h1": {
+        ...createFont("h1")
     }
 }
