@@ -13,35 +13,64 @@ export default class Soul extends Component {
     }
 
     private params = {
-        radius: 1,
         blendingFactor: useSoulStorage.getState().fluidity * this.paramsFactors.fluidityFactor, //8 is the factor. TODO Change later
-        factor: 0.25
+        factor: 0.25,
+
+
+        /**
+        * Sphere color
+        */
+        redIntenisty: 1,
+        greenIntenisty: 1,
+        blueIntenisty: 1,
+        yellowIntenisty: 1,
+        globalLightIntensity: 0.5,
+
+        /**
+         * Sphere shape
+         */
+        radius: 1,
+        form: 1,
+        noiseFactor: 2.02,
+        noiseScale: 0.5
     }
 
     private uTimeLoc: WebGLUniformLocation | null = null
     private uResolutionLoc: WebGLUniformLocation | null = null
     private uBlendingFactor: WebGLUniformLocation | null = null
     private uFactorLoc: WebGLUniformLocation | null = null
+    private uNoise: WebGLUniformLocation | null = null
 
+    /**
+     * Sphere color
+     */
+    private uRedIntenisty: WebGLUniformLocation | null = null
+    private uGreenIntenisty: WebGLUniformLocation | null = null
+    private uBlueIntenisty: WebGLUniformLocation | null = null
+    private uYellowIntenisty: WebGLUniformLocation | null = null
+    private uGlobalLightIntensity: WebGLUniformLocation | null = null
+
+    /**
+     * Sphere shape
+     */
+    private uForm: WebGLUniformLocation | null = null
+    private uRadius: WebGLUniformLocation | null = null
+    private uNoiseFactor: WebGLUniformLocation | null = null
+    private uNoiseScale: WebGLUniformLocation | null = null
+
+
+    private texture: WebGLTexture | undefined
 
     constructor(experience: Experience) {
         super(experience)
 
         this.createSphere()
 
-        Helpers.instance.tweak(
-            "radius",
-            this.params,
-            (e: number) => {},
-            0,
-            2,
-            0.1,
-            HELPER_FOLDER
-        )
+
         Helpers.instance.tweak(
             "blendingFactor",
             this.params,
-            (e: number) => {},
+            (e: number) => { },
             0,
             10,
             0.1,
@@ -50,18 +79,86 @@ export default class Soul extends Component {
         Helpers.instance.tweak(
             "factor",
             this.params,
-            (e: number) => {},
+            (e: number) => { },
             0,
             10,
             0.01,
             HELPER_FOLDER
+        );
+
+        /**
+         * Sphere color
+         */
+        [
+            "redIntenisty",
+            "greenIntenisty",
+            "blueIntenisty",
+            "yellowIntenisty",
+            "globalLightIntensity",
+        ].map((color) => {
+            Helpers.instance.tweak(
+                color,
+                this.params,
+                (e: number) => { },
+                0,
+                1,
+                0.01,
+                "SPHERE COLOR"
+            )
+        })
+
+        /**
+         * Sphere shape
+         */
+        Helpers.instance.tweak(
+            "radius",
+            this.params,
+            (e: number) => { },
+            0,
+            2,
+            0.1,
+            "SPHERE SHAPE"
         )
+        Helpers.instance.tweak(
+            "form",
+            this.params,
+            (e: number) => { },
+            0,
+            5,
+            0.01,
+            "SPHERE SHAPE"
+        )
+        Helpers.instance.tweak(
+            "noiseFactor",
+            this.params,
+            (e: number) => { },
+            0,
+            50,
+            0.01,
+            "SPHERE SHAPE"
+        )
+        Helpers.instance.tweak(
+            "noiseScale",
+            this.params,
+            (e: number) => { },
+            0,
+            1000,
+            0.01,
+            "SPHERE SHAPE"
+        )
+
+
+
+
+
         this.onSoulStorageChanged();
     }
 
-    onSoulStorageChanged = () => {useSoulStorage.subscribe((state) => {
-        this.params.blendingFactor = state.fluidity  * this.paramsFactors.fluidityFactor;
-    })}
+    onSoulStorageChanged = () => {
+        useSoulStorage.subscribe((state) => {
+            this.params.blendingFactor = state.fluidity * this.paramsFactors.fluidityFactor;
+        })
+    }
 
     createSphere() {
         const vertices = [
@@ -147,16 +244,41 @@ export default class Soul extends Component {
 
 
 
-
-
-
-
         // Create Uniforms : 
         this.uTimeLoc = this.gl.getUniformLocation(program, "uTime");
         this.uResolutionLoc = this.gl.getUniformLocation(program, "uResolution");
         this.uBlendingFactor = this.gl.getUniformLocation(program, "uBlendingFactor");
         this.uFactorLoc = this.gl.getUniformLocation(program, "uFactor");
+        this.uNoise = this.gl.getUniformLocation(program, "uNoise");
 
+        /**
+         * Sphere color
+         */
+        this.uRedIntenisty = this.gl.getUniformLocation(program, "uRedIntenisty")
+        this.uGreenIntenisty = this.gl.getUniformLocation(program, "uGreenIntenisty")
+        this.uBlueIntenisty = this.gl.getUniformLocation(program, "uBlueIntenisty")
+        this.uYellowIntenisty = this.gl.getUniformLocation(program, "uYellowIntenisty")
+        this.uGlobalLightIntensity = this.gl.getUniformLocation(program, "uGlobalLightIntensity")
+
+        /**
+         * Sphere shape
+         */
+        this.uForm = this.gl.getUniformLocation(program, "uForm")
+        this.uRadius = this.gl.getUniformLocation(program, "uRadius")
+        this.uNoiseFactor = this.gl.getUniformLocation(program, "uNoiseFactor")
+        this.uNoiseScale = this.gl.getUniformLocation(program, "uNoiseScale")
+
+
+
+        this.texture = this.gl.createTexture();
+        this.gl.bindTexture(this.gl.TEXTURE_2D, this.texture);
+        this.gl.pixelStorei(this.gl.UNPACK_FLIP_Y_WEBGL, true);
+        this.gl.texImage2D(this.gl.TEXTURE_2D, 0, this.gl.RGBA, this.gl.RGBA, this.gl.UNSIGNED_BYTE, this.experience.ressources.items.pmb_noise);
+        this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_MIN_FILTER, this.gl.LINEAR);
+        this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_MAG_FILTER, this.gl.LINEAR);
+        this.gl.activeTexture(this.gl.TEXTURE0);
+        this.gl.bindTexture(this.gl.TEXTURE_2D, this.texture)
+        this.gl.uniform1i(this.uNoise, 0);
 
         if (!this.gl.getProgramParameter(program, this.gl.LINK_STATUS)) {
             const info = this.gl.getProgramInfoLog(program);
@@ -169,10 +291,28 @@ export default class Soul extends Component {
         /**
          * Update Uniforms
          */
+
         this.gl.uniform1f(this.uTimeLoc, this.time.elapsedTime * 0.0005);
         this.gl.uniform1f(this.uBlendingFactor, this.params.blendingFactor);
         this.gl.uniform2f(this.uResolutionLoc, this.experience.sizes.width, this.experience.sizes.height);
         this.gl.uniform1f(this.uFactorLoc, this.params.factor);
+
+
+        /** 
+         * SPHERE COLOR VALUES */
+        this.gl.uniform1f(this.uRedIntenisty, this.params.redIntenisty);
+        this.gl.uniform1f(this.uGreenIntenisty, this.params.greenIntenisty);
+        this.gl.uniform1f(this.uBlueIntenisty, this.params.blueIntenisty);
+        this.gl.uniform1f(this.uYellowIntenisty, this.params.yellowIntenisty);
+        this.gl.uniform1f(this.uGlobalLightIntensity, this.params.globalLightIntensity);
+
+        /** 
+         * Sphere shape
+         */
+        this.gl.uniform1f(this.uForm, this.params.form);
+        this.gl.uniform1f(this.uRadius, this.params.radius);
+        this.gl.uniform1f(this.uNoiseFactor, this.params.noiseFactor);
+        this.gl.uniform1f(this.uNoiseScale, this.params.noiseScale);
     }
 
     draw() {
