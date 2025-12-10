@@ -37,19 +37,24 @@ const createStyles = (type: 'primary' | 'secondary' | 'tertiary' | 'back') => {
             borderRadius: 4,
         },
 
-        border: {
-            position: "absolute",
-            top: 0,
-            bottom: 0,
-            left: 0,
-            right: 0,
-            borderRadius: 5,
-        },
+    border: {
+        position: "absolute",
+        top: 0,
+        bottom: 0,
+        left: 0,
+        right: 0,
+        borderRadius: 5,
+    },
 
-        content: {
-            userSelect: "none",
-            ...Font.paragraph
-        },
+    content: {
+        color: primaryColorTokens['color-white'],
+        userSelect: "none",
+    },
+
+        // content: {
+        //     userSelect: "none",
+        //     ...Font.paragraph
+        // },
 
         contentSecondary: {
             color: primaryColorTokens['color-secondary-medium'],
@@ -59,6 +64,7 @@ const createStyles = (type: 'primary' | 'secondary' | 'tertiary' | 'back') => {
         contentDisabled: {
             color: primaryColorTokens['color-tertiary-lower'],
         },
+
 
         pressable: {
             position: "relative",

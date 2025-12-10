@@ -1,4 +1,4 @@
-import { Button } from '@/ui/Button/index';
+import Button from '@/ui/Button/index';
 import type { Meta, StoryObj } from '@storybook/react-native-web-vite';
 import { Text, View } from "react-native";
 import { fn } from 'storybook/test';
