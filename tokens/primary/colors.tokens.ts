@@ -25,8 +25,8 @@ export const primaryColorTokens = {
 
 
 
-    "color-tertiary": "rgba(134, 112, 249, 1)", // Should be removed
-    "radius-nl": "4px",
+    "color-tertiary": "rgba(134, 112, 249, 1)" as const, // Should be removed
+    "radius-nl": "4px" as const,
 
     // "gradient-border-1": "linear-gradient(180deg, #6B6B6B 0%, rgba(153, 153, 153, 0) 100%)" as ColorValue,
     "gradient-border-1": ['rgba(191, 191, 191, 1)', 'rgba(153, 153, 153, 0)'] as [ColorValue, ColorValue],
