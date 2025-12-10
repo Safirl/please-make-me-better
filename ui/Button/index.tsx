@@ -38,7 +38,7 @@ const styles = StyleSheet.create({
         right: 0,
         borderRadius: 5,
     },
-    
+
     content: {
         color: primaryColorTokens['color-white'],
         userSelect: "none",
@@ -53,7 +53,7 @@ const styles = StyleSheet.create({
         color: primaryColorTokens['color-tertiary-lower'],
     },
 
-    pressable:{
+    pressable: {
         position: "relative",
         padding: 1,
         borderRadius: 5,
@@ -90,7 +90,7 @@ const styles = StyleSheet.create({
     },
 })
 
-const ButtonPrimary: React.FC<CustomButtonProps> = (props) => {
+const Button: React.FC<CustomButtonProps> = (props) => {
     const [isPressed, setIsPressed] = useState(false)
 
     const {
@@ -103,87 +103,87 @@ const ButtonPrimary: React.FC<CustomButtonProps> = (props) => {
     } = props
 
     const iconColor = state === "disabled"
-    ? styles.contentDisabled.color : state === "active" ? 
-    styles.contentSecondary.color : styles.content.color
+        ? styles.contentDisabled.color : state === "active" ?
+            styles.contentSecondary.color : styles.content.color
 
     const borderGradient = type === "back"
-    ? primaryColorTokens["gradient-border-2"] : type === "tertiary" && state === "active"
-    ? primaryColorTokens["gradient-border-3"] : type === "tertiary" ? primaryColorTokens["gradient-border-4"] : primaryColorTokens["gradient-border-1"]
+        ? primaryColorTokens["gradient-border-2"] : type === "tertiary" && state === "active"
+            ? primaryColorTokens["gradient-border-3"] : type === "tertiary" ? primaryColorTokens["gradient-border-4"] : primaryColorTokens["gradient-border-1"]
 
-    console.log("border ", borderGradient)
-    
+
     return <Pressable
-    onPressIn={() => {setIsPressed(true)}}
-    onPressOut={() => {setIsPressed(false)}}
-    style={[
-        styles.pressable, 
-        type === "primary" && 
-        [
-            styles.primary,
-            isPressed && styles.primaryPressed,
-            state == "disabled" && styles.primaryDisabled
-        ],
-        type === "secondary" && [
-            styles.secondary,
-            isPressed && styles.secondaryPressed,
-            state == "disabled" && styles.secondaryDisabled
-        ],
-        type === "back" && [
-            styles.secondary,
-            isPressed && styles.secondaryPressed,
-            state == "disabled" && styles.secondaryDisabled
-        ],
-        type === "tertiary" && [
-            styles.tertiary,
-        ]
-    ]}
-    {...rest}
+        onPressIn={() => { setIsPressed(true) }}
+        onPressOut={() => { setIsPressed(false) }}
+        style={[
+            styles.pressable,
+            type === "primary" &&
+            [
+                styles.primary,
+                isPressed && styles.primaryPressed,
+                state == "disabled" && styles.primaryDisabled
+            ],
+            type === "secondary" && [
+                styles.secondary,
+                isPressed && styles.secondaryPressed,
+                state == "disabled" && styles.secondaryDisabled
+            ],
+            type === "back" && [
+                styles.secondary,
+                isPressed && styles.secondaryPressed,
+                state == "disabled" && styles.secondaryDisabled
+            ],
+            type === "tertiary" && [
+                styles.tertiary,
+            ]
+        ]}
+        {...rest}
     >
-            <LinearGradient 
-                colors={borderGradient}
-                style={styles.border}
-            />
-            <View
-                style={[
-                    styles.layout,
-                    type === "primary" && [
-                        styles.primary,
-                        isPressed && styles.primaryPressed,
-                        state == "disabled" && styles.primaryDisabled
-                    ],
-                    type === "secondary" && [
-                        styles.secondary,
-                        isPressed && styles.secondaryPressed,
-                        state == "disabled" && styles.secondaryDisabled
-                    ],
-                    type === "back" && [
-                        styles.secondary,
-                        isPressed && styles.secondaryPressed,
-                        state == "disabled" && styles.secondaryDisabled
-                    ],
-                    type === "tertiary" && [
-                        styles.tertiary,
-                    ],
-                ]}
-            >
-                {
-                    iconName && <SvgComponent 
-                        color={iconColor}
-                        name={iconName.name}/>
-                }
-                {
-                    label
-                        ? <Text style={[
-                                styles.content,
-                                state == "disabled" && styles.contentDisabled,
-                                state == "active" && styles.contentSecondary,
-                            ]}
-                        >{label}</Text>
-                        : children
-                }
-            </View>
+        <LinearGradient
+            colors={borderGradient}
+            style={styles.border}
+        />
+        <View
+            style={[
+                styles.layout,
+                type === "primary" && [
+                    styles.primary,
+                    isPressed && styles.primaryPressed,
+                    state == "disabled" && styles.primaryDisabled
+                ],
+                type === "secondary" && [
+                    styles.secondary,
+                    isPressed && styles.secondaryPressed,
+                    state == "disabled" && styles.secondaryDisabled
+                ],
+                type === "back" && [
+                    styles.secondary,
+                    isPressed && styles.secondaryPressed,
+                    state == "disabled" && styles.secondaryDisabled
+                ],
+                type === "tertiary" && [
+                    styles.tertiary,
+                ],
+            ]}
+        >
+            {
+                iconName && <SvgComponent
+                    color={iconColor}
+                    name={iconName.name} />
+            }
+            {
+                label
+                    ? <Text style={[
+                        styles.content,
+                        state == "disabled" && styles.contentDisabled,
+                        state == "active" && styles.contentSecondary,
+                    ]}
+                    >{label}</Text>
+                    : children
+            }
+        </View>
     </Pressable>
 }
 
-export { ButtonPrimary };
+export default Button
+export { Button };
 
