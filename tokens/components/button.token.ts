@@ -1,3 +1,4 @@
+import { ColorValue } from "react-native"
 import { primaryTokens } from "../primary/primary.token"
 /**
  * This file include the component token for buntton
@@ -12,7 +13,7 @@ import { primaryTokens } from "../primary/primary.token"
 
 const tokensBase = {
     "button-border-radius": primaryTokens["radius-nl"],
-    "button-border-gradient": primaryTokens["gradient-semantic2define-1"]
+    "button-border-gradient": primaryTokens["gradient-border-1"]
 }
 const primaryBase = {
     "button-primary-text": primaryTokens["color-white"],
@@ -20,7 +21,7 @@ const primaryBase = {
 
 }
 const primaryDefault = {
-    "button-primary-background": primaryTokens["color-primary-medium"],
+    "button-primary-background": primaryTokens["color-primary-medium"] as ColorValue,
 
 }
 const primaryHover = {
@@ -39,7 +40,7 @@ const tokensDanger = {
 
 
 
-const tokens = {
+export const tokens = {
     base: tokensBase,
     primary: {
         base: primaryBase,
