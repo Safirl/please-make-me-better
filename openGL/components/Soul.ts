@@ -15,6 +15,7 @@ export default class Soul extends Component {
     private params = {
         blendingFactor: useSoulStorage.getState().fluidity * this.paramsFactors.fluidityFactor, //8 is the factor. TODO Change later
         factor: 0.25,
+        speed: 0.25,
 
 
         /**
@@ -40,6 +41,7 @@ export default class Soul extends Component {
     private uBlendingFactor: WebGLUniformLocation | null = null
     private uFactorLoc: WebGLUniformLocation | null = null
     private uNoise: WebGLUniformLocation | null = null
+    private uSpeed: WebGLUniformLocation | null = null
 
     /**
      * Sphere color
@@ -67,6 +69,15 @@ export default class Soul extends Component {
         this.createSphere()
 
 
+        Helpers.instance.tweak(
+            "speed",
+            this.params,
+            (e: number) => { },
+            0,
+            10,
+            0.1,
+            HELPER_FOLDER
+        )
         Helpers.instance.tweak(
             "blendingFactor",
             this.params,
@@ -250,6 +261,7 @@ export default class Soul extends Component {
         this.uBlendingFactor = this.gl.getUniformLocation(program, "uBlendingFactor");
         this.uFactorLoc = this.gl.getUniformLocation(program, "uFactor");
         this.uNoise = this.gl.getUniformLocation(program, "uNoise");
+        this.uSpeed = this.gl.getUniformLocation(program, "uSpeed");
 
         /**
          * Sphere color
@@ -296,6 +308,7 @@ export default class Soul extends Component {
         this.gl.uniform1f(this.uBlendingFactor, this.params.blendingFactor);
         this.gl.uniform2f(this.uResolutionLoc, this.experience.sizes.width, this.experience.sizes.height);
         this.gl.uniform1f(this.uFactorLoc, this.params.factor);
+        this.gl.uniform1f(this.uSpeed, this.params.speed);
 
 
         /** 
