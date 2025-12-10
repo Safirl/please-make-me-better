@@ -1,12 +1,12 @@
-import ClientRequestTab from '@/ui/ClientRequestTab/index';
+import ClientRequestCard from '@/ui/ClientRequestCard/index';
 import type {Meta, StoryObj} from '@storybook/react-native-web-vite';
 import {Text, View} from "react-native";
 import {fn} from 'storybook/test';
 
 
 const meta = {
-    title: 'UI/ClientRequestTab',
-    component: ClientRequestTab,
+    title: 'UI/ClientRequestCard',
+    component: ClientRequestCard,
     decorators: [
         (Story) => (
             <View style={{flex: 1, alignItems: 'flex-start'}}>
@@ -17,7 +17,7 @@ const meta = {
     // This component will have an automatically generated Autodocs entry: https://storybook.js.org/docs/writing-docs/autodocs
     tags: ['autodocs'],
     // Use `fn` to spy on the onPress arg, which will appear in the actions panel once invoked: https://storybook.js.org/docs/essentials/actions#story-args
-    args: {},
+    args: {onPress: fn()},
     argTypes: {
         selectColor: {
             options: ["primary", "secondary", "tertiary", undefined],
@@ -27,10 +27,10 @@ const meta = {
     parameters: {
         design: {
             type: 'figma',
-            url: 'https://www.figma.com/design/5VGPGRjnfdWU60rwAdXXPe/Maquette-App-Configurateur?node-id=526-1641&t=WELEg4XJp0E2GD5j-1'
+            url: 'https://www.figma.com/design/5VGPGRjnfdWU60rwAdXXPe/Maquette-App-Configurateur?node-id=526-1662&m=dev'
         }
     }
-} satisfies Meta<typeof ClientRequestTab>;
+} satisfies Meta<typeof ClientRequestCard>;
 
 export default meta;
 
@@ -42,7 +42,8 @@ export const Primary
     args: {
         selectColor: "secondary",
         title: "NIEL MUSK",
-        paragraph: "Je veux être perçu comme un leader"
+        paragraph: "Je veux être perçu comme un leader",
+        count: "D#"
     },
 
 };

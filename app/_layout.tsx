@@ -1,5 +1,5 @@
 // import GL from "@/ui/GL";
-import GPU from "@/ui/GPU";
+import GPU from "@/ui/GL";
 import {Stack} from "expo-router";
 import {View} from "react-native";
 import {useFonts} from "expo-font";
