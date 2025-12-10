@@ -114,6 +114,7 @@ precision mediump float;
 uniform float uTime;
 uniform vec2 uResolution;
 uniform sampler2D uNoise;
+uniform float uSpeed;
 
 // SPHERE SHAPE
 uniform float uForm;
@@ -147,7 +148,7 @@ float noise( in vec3 x ) {
 }
 
 float fbm(vec3 p) {
-  vec3 q = p + uTime * 0.5 * vec3(1.0, -0.2, -1.0); // Speed
+  vec3 q = p + uTime * 0.5 * vec3(1.0, -0.2, -1.0) * uSpeed; // Speed
   float g = noise(q);
 
   float f = 0.0;
@@ -196,37 +197,40 @@ vec4 raymarch(vec3 rayOrigin, vec3 rayDirection) {
 
       float red_light_intensity = uRedIntenisty;
       vec3 red_light_color = vec3(1.,0.,0.);
-      vec3 red_light_position = vec3(-1.,0.,0.);
+      vec3 red_light_position = vec3(-1.,0.,2.);
       vec3 red_light_direction = normalize(red_light_position);;
 
       float green_light_intensity = uGreenIntenisty;
       vec3 green_light_color = vec3(0.,1.,0.);
-      vec3 green_light_position = vec3(0.,-1.,0.);
+      vec3 green_light_position = vec3(0.,-1.,2.);
       vec3 green_light_direction =  normalize(green_light_position);
 
       float blue_light_intensity = uBlueIntenisty;
       vec3 blue_light_color = vec3(0.,0.,1.);
-      vec3 blue_light_position = vec3(1.,0.,0.);
+      vec3 blue_light_position = vec3(1.,0.,2.);
       vec3 blue_light_direction =  normalize(blue_light_position);
 
       float yellow_light_intensity = uYellowIntenisty;
       vec3 yellow_light_color = vec3(1.,166./255.,0.);
-      vec3 yellow_light_position = vec3(.0,1.,0.);
+      vec3 yellow_light_position = vec3(.0,1.,2.);
       vec3 yellow_light_direction =  normalize(yellow_light_position);
 
 
 
+      vec3 lin = vec3(0.60,0.60,0.75) * 1.1;
+
+
       float diffuse = clamp((scene(p) - scene(p + 0.3 * red_light_direction)) / 0.3, 0.0, 1.0 );
-      vec3 lin = vec3(0.60,0.60,0.75) * 1.1 + /*0.8 **/ red_light_color * diffuse * red_light_intensity;
+      lin += red_light_color * diffuse * red_light_intensity;
 
       diffuse = clamp((scene(p) - scene(p + 0.3 * blue_light_direction)) / 0.3, 0.0, 1.0 );
-      lin += vec3(0.60,0.60,0.75) * 1.1 + /*0.8 **/ blue_light_color * diffuse * blue_light_intensity;
+      lin += blue_light_color * diffuse * blue_light_intensity;
 
       diffuse = clamp((scene(p) - scene(p + 0.3 * green_light_direction)) / 0.3, 0.0, 1.0 );
-      lin += vec3(0.60,0.60,0.75) * 1.1 + /*0.8 **/ green_light_color * diffuse * green_light_intensity;
+      lin += green_light_color * diffuse * green_light_intensity;
    
       diffuse = clamp((scene(p) - scene(p + 0.3 * yellow_light_direction)) / 0.3, 0.0, 1.0 );
-      lin += vec3(0.60,0.60,0.75) * 1.1 + /*0.8 **/ yellow_light_color * diffuse * yellow_light_intensity;
+      lin += yellow_light_color * diffuse * yellow_light_intensity;
 
 
 
