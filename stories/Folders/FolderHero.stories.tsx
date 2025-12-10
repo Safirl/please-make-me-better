@@ -20,7 +20,7 @@ const meta = {
     tags: ['autodocs'],
     // Use `fn` to spy on the onPress arg, which will appear in the actions panel once invoked: https://storybook.js.org/docs/essentials/actions#story-args
     args: {
-        onPress: fn()
+        configure: fn()
     },
     // argTypes: {
     //     selectColor: {
