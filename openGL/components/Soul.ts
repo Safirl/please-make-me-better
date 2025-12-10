@@ -22,9 +22,9 @@ export default class Soul extends Component {
         * Sphere color
         */
         redIntenisty: 1,
-        greenIntenisty: 1,
+        greenIntenisty: 0,
         blueIntenisty: 1,
-        yellowIntenisty: 1,
+        yellowIntenisty: 0,
         globalLightIntensity: 0.5,
 
         /**
@@ -33,7 +33,8 @@ export default class Soul extends Component {
         radius: 1,
         form: 1,
         noiseFactor: 2.02,
-        noiseScale: 0.5
+        noiseScale: 0.5,
+        filaments: 1,
     }
 
     private uTimeLoc: WebGLUniformLocation | null = null
@@ -45,7 +46,7 @@ export default class Soul extends Component {
 
     /**
      * Sphere color
-     */
+    */
     private uRedIntenisty: WebGLUniformLocation | null = null
     private uGreenIntenisty: WebGLUniformLocation | null = null
     private uBlueIntenisty: WebGLUniformLocation | null = null
@@ -54,11 +55,12 @@ export default class Soul extends Component {
 
     /**
      * Sphere shape
-     */
+    */
     private uForm: WebGLUniformLocation | null = null
     private uRadius: WebGLUniformLocation | null = null
     private uNoiseFactor: WebGLUniformLocation | null = null
     private uNoiseScale: WebGLUniformLocation | null = null
+    private uFilament: WebGLUniformLocation | null = null
 
 
     private texture: WebGLTexture | undefined
@@ -154,6 +156,16 @@ export default class Soul extends Component {
             (e: number) => { },
             0,
             1000,
+            0.01,
+            "SPHERE SHAPE"
+        )
+
+        Helpers.instance.tweak(
+            "filaments",
+            this.params,
+            (e: number) => { },
+            0,
+            1,
             0.01,
             "SPHERE SHAPE"
         )
@@ -279,6 +291,7 @@ export default class Soul extends Component {
         this.uRadius = this.gl.getUniformLocation(program, "uRadius")
         this.uNoiseFactor = this.gl.getUniformLocation(program, "uNoiseFactor")
         this.uNoiseScale = this.gl.getUniformLocation(program, "uNoiseScale")
+        this.uFilament = this.gl.getUniformLocation(program, "uFilament")
 
 
 
@@ -326,6 +339,7 @@ export default class Soul extends Component {
         this.gl.uniform1f(this.uRadius, this.params.radius);
         this.gl.uniform1f(this.uNoiseFactor, this.params.noiseFactor);
         this.gl.uniform1f(this.uNoiseScale, this.params.noiseScale);
+        this.gl.uniform1f(this.uFilament, this.params.filaments);
     }
 
     draw() {

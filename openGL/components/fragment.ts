@@ -121,6 +121,7 @@ uniform float uForm;
 uniform float uRadius;
 uniform float uNoiseFactor;
 uniform float uNoiseScale;
+uniform float uFilament;
 
 //Sphere color
 uniform float uRedIntenisty;
@@ -166,10 +167,10 @@ float fbm(vec3 p) {
 }
 
 float scene(vec3 p) {
-  float distance = sdSphere(p, uRadius);
-
+  float displacement = noise(p) * .65 * sin(uTime * 2.) * cos(uTime * 2.);
+  float distance = sdSphere(p, uRadius) + displacement;
   float f = fbm(p);
-
+  
   return -distance + f;
 }
 
@@ -190,7 +191,7 @@ vec4 raymarch(vec3 rayOrigin, vec3 rayDirection) {
     float density = scene(p);
 
     // We only draw the density if it's greater than 0
-    if (density > .0) { /// &&  density < 0.15*/ -> create strokes
+    if (density > .0 && density < uFilament) { /// &&  density < 0.15*/ -> create strokes
       // Directional derivative
       // For fast diffuse lighting
 
