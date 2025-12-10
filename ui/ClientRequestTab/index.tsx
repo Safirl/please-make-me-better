@@ -2,11 +2,12 @@ import type {
     ViewProps,
 } from "react-native";
 import {
-    Pressable, Text, StyleSheet, View
+    Text,
+    View
 } from "react-native";
-import {createStyle} from "./style";
-import {clientRequestTabTokens, COMPONENT_NAME} from "./tokens";
 import Svg, { Path } from 'react-native-svg';
+import { createStyle } from "./style";
+import { clientRequestTabTokens, COMPONENT_NAME } from "./tokens";
 
 interface CustomButtonProps extends ViewProps {
     selectColor?: "primary" | "secondary" | "tertiary";
@@ -26,7 +27,7 @@ const ClientRequestTab: React.FC<CustomButtonProps> = (props) => {
 
     const Style = createStyle(selectColor);
 
-    return <Pressable
+    return <View
         style={Style.main}
         {...rest}
     >
@@ -50,6 +51,6 @@ const ClientRequestTab: React.FC<CustomButtonProps> = (props) => {
         {title && <Text style={Style.titleFont}>{title} // </Text>}
         {paragraph && <Text style={Style.paragraphFont}>{paragraph}</Text>}
 
-    </Pressable>
+    </View>
 }
 export default ClientRequestTab

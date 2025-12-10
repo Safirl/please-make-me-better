@@ -1,18 +1,19 @@
+import ClientRequestTab from "@/ui/ClientRequestTab";
 import type {
-    ViewProps,
+    PressableProps,
 } from "react-native";
 import {
-    Pressable, View, Text,
+    Pressable,
+    Text,
+    View,
 } from "react-native";
-import {createStyle} from "./style";
-import ClientRequestTab from "@/ui/ClientRequestTab";
+import { createStyle } from "./style";
 
-interface CustomButtonProps extends ViewProps {
+interface CustomButtonProps extends PressableProps {
     selectColor?: "primary" | "secondary" | "tertiary";
     title: string;
     paragraph: string;
     count: string
-    onPress: () => void;
 }
 
 
@@ -23,7 +24,6 @@ const ClientRequestCard: React.FC<CustomButtonProps> = (props) => {
         title,
         paragraph,
         count,
-        onPress,
         ...rest
     } = props
 
@@ -31,7 +31,6 @@ const ClientRequestCard: React.FC<CustomButtonProps> = (props) => {
 
     return <Pressable
         style={Style.main}
-        onPress={onPress}
         {...rest}
     >
         <View style={Style.indicators}>

@@ -1,7 +1,7 @@
 import ClientRequestCard from '@/ui/ClientRequestCard/index';
-import type {Meta, StoryObj} from '@storybook/react-native-web-vite';
-import {Text, View} from "react-native";
-import {fn} from 'storybook/test';
+import type { Meta, StoryObj } from '@storybook/react-native-web-vite';
+import { View } from "react-native";
+import { fn } from 'storybook/test';
 
 
 const meta = {
