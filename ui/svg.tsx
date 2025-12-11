@@ -5,7 +5,7 @@ import Svg, { Circle, ClipPath, Defs, G, Path, SvgProps } from "react-native-svg
 </svg>
 
 export interface SvgComponentProps extends SvgProps {
-    name: 'Brain-circuit' | 'emotion' | 'personality' | 'memory' | 'circle',
+    name: 'Brain-circuit' | 'emotion' | 'personality' | 'memory',
 }
 
 const SvgComponent = (props: SvgComponentProps) => {
@@ -59,11 +59,6 @@ const SvgComponent = (props: SvgComponentProps) => {
                             </ClipPath>
                         </Defs>
                     </>
-
-                    ||
-
-                    name === "circle" && 
-                    <Circle cx={25} cy={25} r={24.5} stroke={rest.color ? rest.color : "#fff"} />
                 }
         </Svg>
     )

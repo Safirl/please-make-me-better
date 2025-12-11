@@ -1,10 +1,11 @@
 import { primaryColorTokens } from "@/tokens/primary/colors.tokens";
 import SvgComponent from "@/ui/svg";
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import { BlurView } from 'expo-blur';
 import { Dimensions, Pressable, StyleSheet, View } from "react-native";
 import { Gesture, GestureDetector } from "react-native-gesture-handler";
-import Animated, { useAnimatedStyle, useSharedValue, withTiming } from "react-native-reanimated";
-import { Path, Svg } from "react-native-svg";
+import Animated, { useAnimatedStyle, useSharedValue, withSpring, withTiming } from "react-native-reanimated";
+import { Circle, Path, Svg } from "react-native-svg";
 
 let sizes = Dimensions.get("screen");
 
@@ -15,7 +16,6 @@ const GunCursor = () => {
     const left = useSharedValue(sizes.width/2)
     const cursorRef = useRef<View>(null);
 
-
     useLayoutEffect(() => {
         height.set(cursorRef.current?.getBoundingClientRect().height);
         width.set(cursorRef.current?.getBoundingClientRect().width);
@@ -23,31 +23,51 @@ const GunCursor = () => {
 
     const panGesture = Gesture.Pan()
         .onBegin((e) => {
-            top.value = withTiming(e.absoluteY, {
+            top.set(withSpring(e.absoluteY, {
                 duration: 200,
                 },
-            )
-            left.set(withTiming(e.absoluteX, {
+            ))
+            left.set(withSpring(e.absoluteX, {
                 duration: 200
             }))   
         })
         .onUpdate((e) => {
-            top.set(e.absoluteY) 
-            left.set(e.absoluteX)
+            top.set(withSpring(e.absoluteY, {
+                duration: 200,
+                },
+            )) 
+            left.set(withSpring(e.absoluteX, {
+                duration: 200,
+                },
+            ))
             console.log("width: ", width, " height: ", height)
         })
 
     const animatedCursorStyle = useAnimatedStyle(() => ({
         top: top.get() - height.get()/2,
         left: left.get() - width.get()/2,
-      }));
+    }));
 
     return (
         <GestureDetector gesture={panGesture}>
             <Animated.View style={[styles.cursorContainer, animatedCursorStyle]} ref={cursorRef}>
-                <View style={styles.cursor}>
-                    <SvgComponent name="circle"></SvgComponent>
-                </View>
+
+                <View style={styles.lineLeft}/>
+                <View style={styles.lineRight}/>
+                <View style={styles.lineTop}/>
+                <View style={styles.lineBottom}/>
+
+                <BlurView intensity={100} style={styles.cursor}>
+                    <Svg
+                        // xmlns="http://www.w3.org/2000/svg"
+                        width={50}
+                        height={50}
+                        fill="none"
+                        // {...props}
+                    >
+                        <Circle cx={25} cy={25} r={24.5} stroke="#F1F1F1" />
+                    </Svg>
+                </BlurView>
             </Animated.View>
         </GestureDetector>
     )
@@ -57,6 +77,7 @@ export default GunCursor;
 
 const styles = StyleSheet.create({
     cursorContainer: {
+        zIndex: 100,
         position: "absolute",
         padding: 8,
         borderColor: primaryColorTokens["color-white"],
@@ -72,6 +93,40 @@ const styles = StyleSheet.create({
         height: "auto",
         padding: 24,
         borderRadius: 3,
-        backgroundColor: "#39393D",
+        backgroundColor: primaryColorTokens["color-tertiary-low"],
+        opacity: .8,
     },
+
+   lineRight: {
+        position: "absolute",
+        top: "50%",
+        right: "100%",
+        width: 800,
+        height: 1,
+        backgroundColor: primaryColorTokens["color-tertiary-lower"]
+    },
+    lineLeft: {
+        position: "absolute",
+        top: "50%",
+        left: "100%",
+        width: 800,
+        height: 1,
+        backgroundColor: primaryColorTokens["color-tertiary-lower"]
+    },
+    lineTop: {
+        position: "absolute",
+        left: "50%",
+        bottom: "100%",
+        width: 1,
+        height: 800,
+        backgroundColor: primaryColorTokens["color-tertiary-lower"]
+    },
+    lineBottom: {
+        position: "absolute",
+        left: "50%",
+        top: "100%",
+        width: 1,
+        height: 800,
+        backgroundColor: primaryColorTokens["color-tertiary-lower"]
+    }
 })
