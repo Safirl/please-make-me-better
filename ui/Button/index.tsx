@@ -1,3 +1,4 @@
+import Font from "@/assets/styles/fonts";
 import { primaryColorTokens } from "@/tokens/primary/colors.tokens";
 import { LinearGradient } from "expo-linear-gradient";
 import React, { useState } from "react";
@@ -17,78 +18,81 @@ interface CustomButtonProps extends PressableProps {
     icon?: SvgComponentProps,
 }
 
-const styles = StyleSheet.create({
-    layout: {
-        position: "relative",
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        paddingVertical: 12,
-        paddingHorizontal: 32,
-        gap: 8,
-        flexDirection: "row",
-        borderRadius: 4,
-    },
+const createStyles = (type: 'primary' | 'secondary' | 'tertiary' | 'back') => {
+    return StyleSheet.create({
+        layout: {
+            position: "relative",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            paddingVertical: type === "back" ? 8 : 12,
+            paddingHorizontal: type === "back" ? 16 : 32,
+            gap: 8,
+            flexDirection: "row",
+            borderRadius: 4,
+        },
 
-    border: {
-        position: "absolute",
-        top: 0,
-        bottom: 0,
-        left: 0,
-        right: 0,
-        borderRadius: 5,
-    },
+        border: {
+            position: "absolute",
+            top: 0,
+            bottom: 0,
+            left: 0,
+            right: 0,
+            borderRadius: 5,
+        },
 
-    content: {
-        color: primaryColorTokens['color-white'],
-        userSelect: "none",
-    },
+        content: {
+            color: primaryColorTokens['color-white'],
+            userSelect: "none",
+            ...Font.paragraph
+        },
 
-    contentSecondary: {
-        color: primaryColorTokens['color-secondary-medium'],
-        userSelect: "none",
-    },
+        contentSecondary: {
+            color: primaryColorTokens['color-secondary-medium'],
+            userSelect: "none",
+        },
 
-    contentDisabled: {
-        color: primaryColorTokens['color-tertiary-lower'],
-    },
+        contentDisabled: {
+            color: primaryColorTokens['color-tertiary-lower'],
+        },
 
-    pressable: {
-        position: "relative",
-        padding: 1,
-        borderRadius: 5,
-    },
+        pressable: {
+            position: "relative",
+            padding: 1,
+            borderRadius: 5,
+        },
 
-    //Style modifiers
+        //Style modifiers
 
-    primary: {
-        backgroundColor: primaryColorTokens["color-primary-medium"],
-    },
+        primary: {
+            backgroundColor: primaryColorTokens["color-primary-medium"],
+        },
 
-    primaryPressed: {
-        backgroundColor: primaryColorTokens["color-primary-high"],
-    },
+        primaryPressed: {
+            backgroundColor: primaryColorTokens["color-primary-high"],
+        },
 
-    primaryDisabled: {
-        backgroundColor: primaryColorTokens["color-tertiary-low"],
-    },
+        primaryDisabled: {
+            backgroundColor: primaryColorTokens["color-tertiary-low"],
+        },
 
-    secondary: {
-        backgroundColor: primaryColorTokens["color-tertiary-low"],
-    },
+        secondary: {
+            backgroundColor: primaryColorTokens["color-tertiary-low"],
+        },
 
-    secondaryPressed: {
-        backgroundColor: primaryColorTokens["color-tertiary-medium"],
-    },
+        secondaryPressed: {
+            backgroundColor: primaryColorTokens["color-tertiary-medium"],
+        },
 
-    secondaryDisabled: {
-        backgroundColor: primaryColorTokens["color-tertiary-medium"],
-    },
+        secondaryDisabled: {
+            backgroundColor: primaryColorTokens["color-tertiary-medium"],
+        },
 
-    tertiary: {
-        backgroundColor: primaryColorTokens["color-tertiary-medium"],
-    },
-})
+        tertiary: {
+            backgroundColor: primaryColorTokens["color-tertiary-medium"],
+        },
+    })
+}
 
 const Button: React.FC<CustomButtonProps> = (props) => {
     const [isPressed, setIsPressed] = useState(false)
@@ -102,6 +106,8 @@ const Button: React.FC<CustomButtonProps> = (props) => {
         ...rest
     } = props
 
+    const styles = createStyles(type)
+
     const iconColor = state === "disabled"
         ? styles.contentDisabled.color : state === "active" ?
             styles.contentSecondary.color : styles.content.color
@@ -112,8 +118,12 @@ const Button: React.FC<CustomButtonProps> = (props) => {
 
 
     return <Pressable
-        onPressIn={() => { setIsPressed(true) }}
-        onPressOut={() => { setIsPressed(false) }}
+        onPressIn={() => {
+            setIsPressed(true)
+        }}
+        onPressOut={() => {
+            setIsPressed(false)
+        }}
         style={[
             styles.pressable,
             type === "primary" &&
