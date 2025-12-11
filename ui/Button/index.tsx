@@ -37,20 +37,20 @@ const createStyles = (type: 'primary' | 'secondary' | 'tertiary' | 'back') => {
             borderRadius: 4,
         },
 
-    border: {
-        position: "absolute",
-        top: 0,
-        bottom: 0,
-        left: 0,
-        right: 0,
-        borderRadius: 5,
-    },
+        border: {
+            position: "absolute",
+            top: 0,
+            bottom: 0,
+            left: 0,
+            right: 0,
+            borderRadius: 5,
+        },
 
-    content: {
-        color: primaryColorTokens['color-white'],
-        userSelect: "none",
-    },
-
+        content: {
+            // color: primaryColorTokens['color-white'],
+            userSelect: "none",
+            ...Font.paragraph
+        },
         // content: {
         //     userSelect: "none",
         //     ...Font.paragraph
@@ -97,6 +97,7 @@ const createStyles = (type: 'primary' | 'secondary' | 'tertiary' | 'back') => {
         secondaryDisabled: {
             backgroundColor: primaryColorTokens["color-tertiary-medium"],
         },
+
 
         tertiary: {
             backgroundColor: primaryColorTokens["color-tertiary-medium"],
