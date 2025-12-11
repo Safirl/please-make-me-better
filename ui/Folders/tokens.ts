@@ -8,7 +8,7 @@ export const clientRequestTabTokens = {
     [`${COMPONENT_NAME}-main-border-color-primary`]: primaryColorTokens[`color-primary-medium`],
     [`${COMPONENT_NAME}-main-border-color-secondary`]: primaryColorTokens[`color-secondary-medium`],
     [`${COMPONENT_NAME}-main-border-color-tertiary`]: primaryColorTokens[`color-tertiary-medium`],
-    
+
     [`${COMPONENT_NAME}-tab-selected-color`]: primaryColorTokens[`color-tertiary-low`],
     [`${COMPONENT_NAME}-tab-not-selected-color`]: primaryColorTokens[`color-tertiary-medium`],
 
@@ -16,5 +16,5 @@ export const clientRequestTabTokens = {
     [`${COMPONENT_NAME}-tab-selected-index`]: 1,
 
 
-
+    [`${COMPONENT_NAME}-folderSection-background-color`]: primaryColorTokens["color-tertiary-high"]
 }

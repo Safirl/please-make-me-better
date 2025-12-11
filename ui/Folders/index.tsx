@@ -1,23 +1,32 @@
-import React from "react";
-import type {
-    ViewProps,
-} from "react-native";
-import {
-    Pressable,
-    Text,
-    View
-} from "react-native";
+import React, { Dispatch, SetStateAction } from "react";
+import type { ViewProps } from "react-native";
+import { GestureResponderEvent, Pressable, Text, View } from "react-native";
 import Svg, { Path } from "react-native-svg";
 import Button from "../Button";
+import ContentGrid from "./ContentGrid";
+import FolderHero from "./FolderHero";
 import { createStyle } from "./style";
-import {
-    clientRequestTabTokens,
-    COMPONENT_NAME
-} from "./tokens";
+import { clientRequestTabTokens, COMPONENT_NAME } from "./tokens";
 interface CustomModalProps extends ViewProps {
     selectColor?: "primary" | "secondary" | "tertiary";
     type: '' | ''
     tabs: ('Dossier' | "Lore")[]
+    client: {
+        name: string
+        request: string
+        work: string
+        age: string
+        profilePicture: string
+    }
+    gridContent: {
+        name: string
+        labels: {
+            label: string
+            status: "locked" | "neutral"
+        }[]
+    }[]
+
+    configure: (event: GestureResponderEvent) => void
 }
 
 
@@ -26,6 +35,9 @@ const Modal: React.FC<CustomModalProps> = (props) => {
     const {
         selectColor = "tertiary",
         tabs,
+        client,
+        gridContent,
+        configure,
         ...rest
     } = props
 
@@ -49,8 +61,8 @@ const Modal: React.FC<CustomModalProps> = (props) => {
                 transform: [{ translateY: -(backButtonHeight || 0) - 5 }]
             }]}
             onLayout={(e) => {
-                if (!backButtonWidth) setBackButtonWidth(e.nativeEvent.layout.width);
-                if (!backButtonHeight) setBackButtonHeight(e.nativeEvent.layout.height);
+                if (!backButtonWidth) setBackButtonWidth(e.nativeEvent.layout.width as any);
+                if (!backButtonHeight) setBackButtonHeight(e.nativeEvent.layout.height as any);
             }}
         >
             <Button
@@ -76,6 +88,19 @@ const Modal: React.FC<CustomModalProps> = (props) => {
         <View
             style={Style.main}
         >
+            {
+                selectedTab === "Dossier" && <View
+                    style={Style.folderSection}
+                >
+                    <FolderHero
+                        client={client}
+                        configure={configure}
+                    />
+                    <ContentGrid
+                        content={gridContent}
+                    />
+                </View>
+            }
         </View>
 
     </View >
@@ -85,7 +110,13 @@ export default Modal
 
 
 
-const Tab = ({ Style, label, index, selected, offset, setSelectedTab }: { Style: any, label: string, index: number, selected: boolean, offset: number, setSelectedTab: (v: string) => string }) => {
+const Tab = (
+    { Style, label, index, selected, offset, setSelectedTab }:
+        {
+            Style: any, label: "Dossier" | "Lore", index: number, selected: boolean, offset: number,
+            setSelectedTab: Dispatch<SetStateAction<"Dossier" | "Lore">>
+        }
+) => {
 
 
     const [labelWidth, setLabelWidth] = React.useState(null);
@@ -94,8 +125,8 @@ const Tab = ({ Style, label, index, selected, offset, setSelectedTab }: { Style:
 
     return <Pressable
         onLayout={(e) => {
-            if (!buttonWidth) setButtonWidth(e.nativeEvent.layout.width);
-            if (!buttonHeight) setButtonHeight(e.nativeEvent.layout.height);
+            if (!buttonWidth) setButtonWidth(e.nativeEvent.layout.width as any);
+            if (!buttonHeight) setButtonHeight(e.nativeEvent.layout.height as any);
         }}
         onPress={() => setSelectedTab(label)}
         style={[{
@@ -104,7 +135,7 @@ const Tab = ({ Style, label, index, selected, offset, setSelectedTab }: { Style:
             position: "absolute" as const,
 
             top: 0,
-            left: labelWidth ? offset + index * buttonWidth - (index + 1) * 3 : 0,
+            left: labelWidth ? offset + index * (buttonWidth || 0) - (index + 1) * 3 : 0,
             transform: [{ translateY: - (buttonHeight || 0) + 1 }],
             flexDirection: "row",
         }]}
@@ -112,7 +143,7 @@ const Tab = ({ Style, label, index, selected, offset, setSelectedTab }: { Style:
 
         <Text
             onLayout={(e) => {
-                if (!labelWidth) setLabelWidth(e.nativeEvent.layout.width);
+                if (!labelWidth) setLabelWidth(e.nativeEvent.layout.width as any);
             }}
             style={
                 [Style.btnLabel,
