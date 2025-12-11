@@ -80,6 +80,7 @@ const Modal: React.FC<CustomModalProps> = (props) => {
                     selected={selectedTab === tab}
                     setSelectedTab={setSelectedTab}
                     offset={backButtonWidth || 0}
+                    selectColor={selectColor}
                 />
             })
         }
@@ -111,9 +112,9 @@ export default Modal
 
 
 const Tab = (
-    { Style, label, index, selected, offset, setSelectedTab }:
+    { Style, label, index, selected, offset, selectColor, setSelectedTab }:
         {
-            Style: any, label: "Dossier" | "Lore", index: number, selected: boolean, offset: number,
+            Style: any, label: "Dossier" | "Lore", index: number, selected: boolean, offset: number, selectColor: "primary" | "secondary" | "tertiary";
             setSelectedTab: Dispatch<SetStateAction<"Dossier" | "Lore">>
         }
 ) => {
@@ -174,7 +175,10 @@ const Tab = (
                         : clientRequestTabTokens[`${COMPONENT_NAME}-tab-not-selected-color`]
                 }
             />
-            <Path d="M174.938 35.4C171.736 35.3999 168.897 33.339 167.903 30.2945L159.635 4.95272C158.749 2.23735 156.217 0.400039 153.36 0.399994H15.1221C11.477 0.399994 8.52247 3.35452 8.52247 6.9996V27.9996C8.52247 32.0865 5.20897 35.4 1.12207 35.4" stroke="#6FFFB0" stroke-width="0.8" />
+            <Path
+                d="M174.938 35.4C171.736 35.3999 168.897 33.339 167.903 30.2945L159.635 4.95272C158.749 2.23735 156.217 0.400039 153.36 0.399994H15.1221C11.477 0.399994 8.52247 3.35452 8.52247 6.9996V27.9996C8.52247 32.0865 5.20897 35.4 1.12207 35.4"
+                stroke={clientRequestTabTokens[`${COMPONENT_NAME}-main-border-color-${selectColor}`]}
+                stroke-width="0.8" />
         </Svg>
     </Pressable>
 }
