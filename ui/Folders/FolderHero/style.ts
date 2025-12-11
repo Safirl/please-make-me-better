@@ -14,6 +14,7 @@ const paragraphFont = {
 }
 const main = () => ({
     flexDirection: "row" as const,
+    justifyContent: "space-between" as const,
     gap: 32,
     alignItems: "center" as const
 })
