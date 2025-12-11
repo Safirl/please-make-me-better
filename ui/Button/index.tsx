@@ -90,7 +90,7 @@ const styles = StyleSheet.create({
     },
 })
 
-const ButtonPrimary: React.FC<CustomButtonProps> = (props) => {
+const Button: React.FC<CustomButtonProps> = (props) => {
     const [isPressed, setIsPressed] = useState(false)
 
     const {
@@ -185,5 +185,5 @@ const ButtonPrimary: React.FC<CustomButtonProps> = (props) => {
     </Pressable>
 }
 
-export { ButtonPrimary };
+export default Button;
 

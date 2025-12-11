@@ -24,7 +24,7 @@ export default class PerformanceChecker {
         this.el.style.color = "#fff"
         this.el.style.background = "#000"
 
-        document.body.appendChild(this.el)
+        // document.body.appendChild(this.el)
 
     }
 
@@ -46,7 +46,7 @@ export default class PerformanceChecker {
 
 
 
-        this.el && (this.el.innerHTML = `${this.fps.toFixed(1)}fps </br> ${this.runTime.toFixed(1)}ms`)
+        // this.el && (this.el.innerHTML = `${this.fps.toFixed(1)}fps </br> ${this.runTime.toFixed(1)}ms`)
 
     }
 }

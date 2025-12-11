@@ -2,9 +2,11 @@ import Modal from "@/components/Modal/modal";
 import { CursorParameter } from "@/components/Parameters/cursorParameter";
 import { WordParameter } from "@/components/Parameters/wordParameter";
 import { Text } from "@react-navigation/elements";
+import { Link, router } from "expo-router";
 import { useEffect } from "react";
 import { Pressable, View } from "react-native";
 import { useStorage } from "../storage/store";
+import Button from "@/ui/Button";
 import Helpers from "./utils/Helpers";
 
 export default function Index() {
@@ -37,6 +39,10 @@ export default function Index() {
       <Pressable onPress={() => {setCurrentParameter("cursors")}}>
         <Text>Open cursors</Text>
       </Pressable>
+      <Button type="tertiary" label="Open memories" icon={{name: "personality"}} onPress={() => router.navigate("/memoriesPage")}>
+        {/* <Link href={"/memoriesPage"}>Open memories</Link> */}
+      </Button>
+      {/* </Pressable> */}
       {/* <Pressable onPress={() => {setCurrentParameter("wheel")}}>
         <Text>Open wheel</Text>
       </Pressable> */}
