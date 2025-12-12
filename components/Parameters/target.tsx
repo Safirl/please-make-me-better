@@ -9,6 +9,7 @@ interface targetProps {
     x: number,
     y: number
     label: string
+    type: 'dashed' | 'filled'
 }
 
 const Target = (props: targetProps) => {
@@ -18,7 +19,7 @@ const Target = (props: targetProps) => {
     return(
         <View style={styles.container}>
             <Text style={styles.text}>{props.label}</Text>
-            <Pressable style={styles.button}>
+            <Pressable style={[styles.buttonBase, props.type === "filled" && styles.buttonFilled, props.type === "dashed" && styles.buttonDashed]}>
                 <Text style={styles.text}>X</Text>
             </Pressable>
         </View>
@@ -34,14 +35,20 @@ const styles = StyleSheet.create({
         left: 200,
     },
 
-    button: {
-        // position: "absolute",
+    buttonBase: {
         marginTop: 8,
         padding: 32,
         borderColor: primaryColorTokens["color-white"],
+        width: "auto"
+    },
+    
+    buttonFilled: {
+        borderWidth: 1,
+    },
+
+    buttonDashed: {
         borderWidth: 1,
         borderStyle: "dashed",
-        width: "auto"
     },
     
     text: {  

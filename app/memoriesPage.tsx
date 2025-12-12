@@ -6,7 +6,7 @@ import { StyleSheet, View } from "react-native";
 const MemoriesParameters = () => (
     <View style={styles.container}>
         <GunCursor />
-        <Target x={100} y={200} label="lorem ipsum"/>
+        <Target x={100} y={200} type="dashed" label="lorem ipsum"/>
     </View>
 )
 

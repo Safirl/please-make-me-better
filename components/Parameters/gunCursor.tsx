@@ -57,17 +57,15 @@ const GunCursor = () => {
                 <View style={styles.lineTop}/>
                 <View style={styles.lineBottom}/>
 
-                <BlurView intensity={100} style={styles.cursor}>
+                <View style={styles.cursor}>
                     <Svg
-                        // xmlns="http://www.w3.org/2000/svg"
                         width={50}
                         height={50}
                         fill="none"
-                        // {...props}
                     >
-                        <Circle cx={25} cy={25} r={24.5} stroke="#F1F1F1" />
+                    <Circle cx={25} cy={25} r={24.5} stroke="#F1F1F1" />
                     </Svg>
-                </BlurView>
+                </View>
             </Animated.View>
         </GestureDetector>
     )
@@ -94,7 +92,6 @@ const styles = StyleSheet.create({
         padding: 24,
         borderRadius: 3,
         backgroundColor: primaryColorTokens["color-tertiary-low"],
-        opacity: .8,
     },
 
    lineRight: {
