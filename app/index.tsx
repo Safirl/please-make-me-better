@@ -1,6 +1,5 @@
-import Modal from "@/components/Modal/modal";
-import { CursorParameter } from "@/components/Parameters/cursorParameter";
-import { WordParameter } from "@/components/Parameters/wordParameter";
+import { CursorParameter } from "@/ui/Parameters/cursorParameter";
+import { WordParameter } from "@/ui/Parameters/wordParameter";
 import { Text } from "@react-navigation/elements";
 import { Link, router } from "expo-router";
 import { useEffect } from "react";

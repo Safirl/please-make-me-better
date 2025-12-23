@@ -1,3 +1,4 @@
+import { characters, memory } from '@/data/characters'
 import { create } from 'zustand'
 
 //@TODO We should split in multiple storage according to the complexity of the project
@@ -9,29 +10,10 @@ export const useStorage = create((set) => ({
   setCurrentParameter: (newParameter: string) => set({ currentParameter: newParameter, isModalOpened: true }),
 }))
 
-export interface WordParameterState {
-  words: Word[]
-
-  setWord: (newWord: Word) => void
-}
-
 export interface Word {
   text: string,
   isSelected?: boolean
 }
-
-export const useWordParameterStorage = create<WordParameterState>((set) => ({
-  words: [
-    {text: "coucou"},
-    {text: "hihi"}
-  ],
-
-  setWord: (newWord: Word) => set((state: any) => ({
-      words: state.words.map((w: Word) =>
-        w.text === newWord.text ? newWord : w
-      ),
-    })),
-}))
 
 export const useSoulStorage = create((set) => ({
   fluidity: 0,
@@ -41,6 +23,19 @@ export const useSoulStorage = create((set) => ({
   setFluidity: (newValue: number) => set({ fluidity: newValue }),
   setGrain: (newValue: number) => set({ grain: newValue }),
   setBlur: (newValue: number) => set({ blur: newValue }),
+}))
+
+interface MemoryState {
+  memories: memory[]
+  pushMemory: (newMemory: memory) => void
+  removeMemory: (oldMemory: memory) => void
+}
+
+export const useMemoryStorage = create<MemoryState>((set) => ({
+  memories: characters[0].memories,
+
+  pushMemory: (newMemory: memory) => set((state) => ({memories: [...state.memories, newMemory]})),
+  removeMemory: (oldMemory: memory) => set((state) => ({memories: state.memories.filter((i: memory) => i !== oldMemory)}))
 }))
 
 export const useGameStorage = create((set) => ({

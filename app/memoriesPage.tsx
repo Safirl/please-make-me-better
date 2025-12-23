@@ -1,6 +1,6 @@
 import fonts from "@/assets/styles/fonts";
-import GunCursor from "@/components/Parameters/gunCursor";
-import Target from "@/components/Parameters/target";
+import GunCursor from "@/ui/Parameters/gunCursor";
+import Target from "@/ui/Parameters/target";
 import { primaryBackgroundTokens } from "@/tokens/primary/backgrounds.tokens";
 import { primaryColorTokens } from "@/tokens/primary/colors.tokens";
 import { fontTokens } from "@/tokens/primary/font.tokens";

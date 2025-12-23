@@ -1,6 +1,6 @@
 import { useWordParameterStorage, Word, WordParameterState } from "@/storage/store";
 import { StyleSheet, View } from "react-native";
-import { WordLabel } from "./components/wordLabel";
+import { WordLabel } from "./wordLabel";
 
 export const WordParameter = () => {
     const words: Word[] = useWordParameterStorage((state: WordParameterState) => state.words)

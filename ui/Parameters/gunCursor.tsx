@@ -41,6 +41,9 @@ const GunCursor = () => {
                 },
             ))
         })
+        .onEnd((e) => {
+            
+        })
 
     const animatedCursorStyle = useAnimatedStyle(() => ({
         top: top.get() - height.get()/2,
