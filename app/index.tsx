@@ -9,7 +9,7 @@ import Button from "@/ui/Button";
 import Helpers from "./utils/Helpers";
 import Svg, { Circle } from "react-native-svg";
 import { StyleSheet } from "react-native";
-
+import { Href } from "expo-router";
 
 const dimensions = Dimensions.get("window")
 
@@ -17,13 +17,23 @@ export default function Index() {
   const currentParameter: string = useStorage((state: any) => state.currentParameter)
   const setCurrentParameter = useStorage((state: any) => state.setCurrentParameter)
 
-  console.log("dimensions", dimensions.width)
+
   useEffect(() => {
     if (!Helpers.isDevMode) return;
     let root = Helpers.instance.getGUIFolder();
     let folder = root.addFolder("Parameter");
     // Helpers.instance.tweak()
   }, [])
+
+  const buttons = [
+    { label: "Memories", icon: "memory" as const, route: "/memoriesPage" as Href, style: styles.button1 },
+    { label: "Emotions", icon: "emotion" as const, route: "/memoriesPage" as Href, style: styles.button2 },
+    { label: "Personality", icon: "personality" as const, route: "/memoriesPage" as Href, style: styles.button3 },
+  ];
+
+  const handleNavigate = (route: Href) => {
+    router.navigate(route)
+  }
 
   return (
     <View
@@ -34,18 +44,22 @@ export default function Index() {
         overflow: "hidden"
       }}
     >
-      <View style={styles.button1}>
-        <Button type="tertiary" label="Memories" icon={{name: "memory"}} onPress={() => router.navigate("/memoriesPage")}/>
-      </View>
 
-      <View style={styles.button2}>
-        <Button type="tertiary" label="Emotions" icon={{name: "emotion"}} onPress={() => router.navigate("/memoriesPage")}/>
-      </View> 
 
-      <View style={styles.button3}>
-        <Button type="tertiary" label="Personality" icon={{name: "personality"}} onPress={() => router.navigate("/memoriesPage")}/>
-      </View>     
-      
+      {
+        buttons.map(({ label, icon, route, style }) => (
+          <View key={label} style={style}>
+            <Button
+              type="tertiary"
+              label={label}
+              icon={{ name: icon }}
+              onPress={() => handleNavigate(route)}
+            />
+          </View>
+        ))
+      }
+
+
       <Svg
         style={styles.circle}
         width={490}
@@ -55,7 +69,7 @@ export default function Index() {
         <Circle
           cx={245}
           cy={197}
-          r={(dimensions.width/2)*.7}
+          r={(dimensions.width / 2) * .7}
           stroke="#969696"
           strokeDasharray="11 11"
         />
