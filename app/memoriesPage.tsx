@@ -30,6 +30,7 @@ const MemoriesParameters = () => {
             {memories.map((memory) => (
                 <Target key={memory.id} x={memory.posX} y={memory.posY} type={memory.type} label={memory.label}/>
             ))}
+            {/* <Target x={memories[0].posX} y={memories[0].posY} type={memories[0].type} label={memories[0].label}/> */}
             
         </View>
     )

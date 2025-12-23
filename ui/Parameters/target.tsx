@@ -1,10 +1,13 @@
 import { primaryColorTokens } from "@/tokens/primary/colors.tokens";
 import { primaryFontTokens } from "@/tokens/primary/font.tokens";
 import { primaryTextTokens } from "@/tokens/primary/text.tokens";
-import { View, Text, Pressable, StyleSheet, LayoutChangeEvent } from "react-native";
+import { View, Text, Pressable, StyleSheet, LayoutChangeEvent, Dimensions } from "react-native";
 import fonts from "@/assets/styles/fonts";
 import Animated, { useAnimatedStyle, useSharedValue } from "react-native-reanimated";
 import Svg, { Rect } from "react-native-svg";
+import { useMemoryStorage } from "@/storage/store";
+
+const dimensions = Dimensions.get("screen");
 
 interface targetProps {
     x: number,
@@ -14,6 +17,7 @@ interface targetProps {
 }
 
 const Target = (props: targetProps) => {
+    const gunPosition = useMemoryStorage((state) => state.gunPosition)
     const positionX = useSharedValue(props.x)
     const positionY = useSharedValue(props.y)
     const width = useSharedValue(0)
@@ -24,14 +28,23 @@ const Target = (props: targetProps) => {
         height.value = e.nativeEvent.layout.height;
     }
 
+    const getParallaxDisplacement = (): {x: number, y: number} => {        
+        const xDiff = gunPosition.x/dimensions.width - .5
+        const yDiff = gunPosition.y/dimensions.height - .5
+
+        const distance = Math.sqrt(Math.pow((positionX.value - gunPosition.x), 2) + Math.pow((positionY.value - gunPosition.y), 2))
+        return {x:-xDiff* distance * .1,y:-yDiff* distance  * .1}
+    } 
+
     const positionStyle = useAnimatedStyle(() => ({
         top: positionY.value,
         left: positionX.value,
         transform: [
-            { translateX: -width.value / 2 },
-            { translateY: -height.value / 2 },
+            { translateX: (-width.value / 2) + getParallaxDisplacement().x },
+            { translateY: (-height.value / 2) + getParallaxDisplacement().y },
     ],
     }))
+
 
     return(
         <Animated.View style={[styles.container, positionStyle]} onLayout={onLayoutHandler}>

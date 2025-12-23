@@ -6,6 +6,7 @@ import { Dimensions, Pressable, StyleSheet, View } from "react-native";
 import { Gesture, GestureDetector } from "react-native-gesture-handler";
 import Animated, { useAnimatedStyle, useSharedValue, withSpring, withTiming } from "react-native-reanimated";
 import { Circle, Path, Svg } from "react-native-svg";
+import { useMemoryStorage } from "@/storage/store";
 
 interface gunCursorProps {
     onDragEnded: (posX: number, posY: number) => void
@@ -14,6 +15,8 @@ interface gunCursorProps {
 let sizes = Dimensions.get("screen");
 
 const GunCursor = (props: gunCursorProps) => {
+    const setGunPosition = useMemoryStorage((state) => state.setGunPosition)
+    
     const width = useSharedValue(0)
     const height = useSharedValue(0)
     const top = useSharedValue(sizes.height/2)
@@ -33,7 +36,8 @@ const GunCursor = (props: gunCursorProps) => {
             ))
             left.set(withSpring(e.absoluteX, {
                 duration: 200
-            }))   
+            }))
+            setGunPosition({x: left.value, y: top.value})   
         })
         .onUpdate((e) => {
             top.set(withSpring(e.absoluteY, {
@@ -44,6 +48,7 @@ const GunCursor = (props: gunCursorProps) => {
                 duration: 200,
                 },
             ))
+            setGunPosition({x: left.value, y: top.value})   
         })
         .onEnd((e) => {
             props.onDragEnded(left.value, top.value)
