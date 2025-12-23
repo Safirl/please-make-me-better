@@ -40,7 +40,6 @@ const GunCursor = () => {
                 duration: 200,
                 },
             ))
-            console.log("width: ", width, " height: ", height)
         })
 
     const animatedCursorStyle = useAnimatedStyle(() => ({
@@ -91,7 +90,7 @@ const styles = StyleSheet.create({
         height: "auto",
         padding: 24,
         borderRadius: 3,
-        backgroundColor: primaryColorTokens["color-tertiary-low"],
+        backgroundColor: primaryColorTokens["color-tertiary-low-transparent"],
     },
 
    lineRight: {
