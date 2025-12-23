@@ -1,4 +1,4 @@
-import {ConfigContext, ExpoConfig} from 'expo/config';
+import { ConfigContext, ExpoConfig } from 'expo/config';
 
 // const NAME = "groupe8";
 // const SCHEME = "groupe8";
@@ -15,7 +15,7 @@ export default ({config}: ConfigContext): ExpoConfig => {
 
         "slug": "groupe8",
         "version": "1.0.0",
-        "orientation": "portrait",
+        "orientation": "landscape",
         "icon": "./assets/images/icon.png",
         "scheme": "pleasemakemebetter",
         "userInterfaceStyle": "automatic",
@@ -23,6 +23,7 @@ export default ({config}: ConfigContext): ExpoConfig => {
         "ios": {
             "supportsTablet": true,
             "bundleIdentifier": identifier,
+            'requireFullScreen': true,
         },
         "android": {
             "package": identifier,
@@ -33,7 +34,7 @@ export default ({config}: ConfigContext): ExpoConfig => {
                 "monochromeImage": "./assets/images/android-icon-monochrome.png"
             },
             "edgeToEdgeEnabled": true,
-            "predictiveBackGestureEnabled": false
+            "predictiveBackGestureEnabled": false,
         },
         "web": {
             "output": "single",
@@ -57,6 +58,12 @@ export default ({config}: ConfigContext): ExpoConfig => {
                 "expo-font",
                 {
                     "fonts": ["./assets/fonts/JetBrainsMono/JetBrainsMono[wght].ttf"],
+                }
+            ],
+            [
+                "expo-screen-orientation",
+                {
+                    "initialOrientation": "LANDSCAPE"
                 }
             ]
         ],
