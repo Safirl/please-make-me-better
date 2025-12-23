@@ -7,8 +7,11 @@ export interface character {
 }
 
 export interface memory {
-    type: string,
+    id: number,
+    type: 'dashed' | 'filled' | 'dashedNoCursor',
     label: string,
+    posX: number,
+    posY: number
 }
 
 export const characters = [
@@ -22,16 +25,25 @@ export const characters = [
         ],
         memories: [
             {
-                type: "filled",
-                label: "Harcèlement scolaire"
+                id: 0,
+                type: 'filled',
+                label: "Harcèlement scolaire",
+                posX: 120,
+                posY: 150,
             },
             {
-                type: "dashed",
-                label: "Cookies avec la grand-mère"
+                id: 1,
+                type: 'dashed',
+                label: "Cookies avec la grand-mère",
+                posX: 500,
+                posY: 50,
             },
             {
-                type: "dashedNoCursor",
-                label: "Dispute avec les parents"
+                id: 3,
+                type: 'dashedNoCursor',
+                label: "Dispute avec les parents",
+                posX: 300,
+                posY: 250,
             }
         ] 
     },

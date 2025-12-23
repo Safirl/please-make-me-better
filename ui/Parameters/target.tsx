@@ -1,7 +1,7 @@
 import { primaryColorTokens } from "@/tokens/primary/colors.tokens";
 import { primaryFontTokens } from "@/tokens/primary/font.tokens";
 import { primaryTextTokens } from "@/tokens/primary/text.tokens";
-import { View, Text, Pressable, StyleSheet } from "react-native";
+import { View, Text, Pressable, StyleSheet, LayoutChangeEvent } from "react-native";
 import fonts from "@/assets/styles/fonts";
 import Animated, { useAnimatedStyle, useSharedValue } from "react-native-reanimated";
 import Svg, { Rect } from "react-native-svg";
@@ -16,14 +16,25 @@ interface targetProps {
 const Target = (props: targetProps) => {
     const positionX = useSharedValue(props.x)
     const positionY = useSharedValue(props.y)
+    const width = useSharedValue(0)
+    const height = useSharedValue(0)
+
+    const onLayoutHandler = (e: LayoutChangeEvent) => {
+        width.value = e.nativeEvent.layout.width;
+        height.value = e.nativeEvent.layout.height;
+    }
 
     const positionStyle = useAnimatedStyle(() => ({
         top: positionY.value,
         left: positionX.value,
+        transform: [
+            { translateX: -width.value / 2 },
+            { translateY: -height.value / 2 },
+    ],
     }))
 
     return(
-        <Animated.View style={[styles.container, positionStyle]}>
+        <Animated.View style={[styles.container, positionStyle]} onLayout={onLayoutHandler}>
             <Text style={styles.text}>{props.label || "lorem ipsum"}</Text>
             <Pressable style={[styles.buttonBase, props.type === "filled" && styles.buttonFilled]}>
                 {
@@ -59,7 +70,8 @@ const styles = StyleSheet.create({
     container: {
         position: "absolute",
         display: "flex",
-        alignItems: "center"
+        alignItems: "center",
+        textAlign: "center"
     },
 
     buttonBase: {

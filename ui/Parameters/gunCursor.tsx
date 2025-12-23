@@ -7,9 +7,13 @@ import { Gesture, GestureDetector } from "react-native-gesture-handler";
 import Animated, { useAnimatedStyle, useSharedValue, withSpring, withTiming } from "react-native-reanimated";
 import { Circle, Path, Svg } from "react-native-svg";
 
+interface gunCursorProps {
+    onDragEnded: (posX: number, posY: number) => void
+}
+
 let sizes = Dimensions.get("screen");
 
-const GunCursor = () => {
+const GunCursor = (props: gunCursorProps) => {
     const width = useSharedValue(0)
     const height = useSharedValue(0)
     const top = useSharedValue(sizes.height/2)
@@ -42,7 +46,7 @@ const GunCursor = () => {
             ))
         })
         .onEnd((e) => {
-            
+            props.onDragEnded(left.value, top.value)
         })
 
     const animatedCursorStyle = useAnimatedStyle(() => ({

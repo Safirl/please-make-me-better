@@ -32,7 +32,7 @@ interface MemoryState {
 }
 
 export const useMemoryStorage = create<MemoryState>((set) => ({
-  memories: characters[0].memories,
+  memories: characters[0].memories as memory[],
 
   pushMemory: (newMemory: memory) => set((state) => ({memories: [...state.memories, newMemory]})),
   removeMemory: (oldMemory: memory) => set((state) => ({memories: state.memories.filter((i: memory) => i !== oldMemory)}))

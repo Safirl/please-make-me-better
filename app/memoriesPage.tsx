@@ -5,19 +5,35 @@ import { primaryBackgroundTokens } from "@/tokens/primary/backgrounds.tokens";
 import { primaryColorTokens } from "@/tokens/primary/colors.tokens";
 import { fontTokens } from "@/tokens/primary/font.tokens";
 import { StyleSheet, View, Text } from "react-native";
+import { useMemoryStorage } from "@/storage/store";
 
-const MemoriesParameters = () => (
-    <View style={styles.container}>
-        <View style={styles.titleContainer}>
-            <Text style={styles.text}>Souvenirs</Text>
-            <Text style={[styles.text, styles.instructionText]}>Trier sa mémoire</Text>
+const MemoriesParameters = () => {
+    const memories = useMemoryStorage((state) => state.memories)
+    const shootMemory = useMemoryStorage((state) => state.removeMemory)
+
+    const shoot = (posX:number,posY:number) => {
+        memories.forEach((memory)=> {
+            const distance = Math.sqrt(Math.pow((posX - memory.posX), 2) + Math.pow((posY - memory.posY), 2))
+            if (distance < 75) {
+                shootMemory(memory)
+            }
+        })
+    }
+
+    return (
+        <View style={styles.container}>
+            <View style={styles.titleContainer}>
+                <Text style={styles.text}>Souvenirs</Text>
+                <Text style={[styles.text, styles.instructionText]}>Trier sa mémoire</Text>
+            </View>
+            <GunCursor onDragEnded={shoot}/>
+            {memories.map((memory) => (
+                <Target key={memory.id} x={memory.posX} y={memory.posY} type={memory.type} label={memory.label}/>
+            ))}
+            
         </View>
-        <GunCursor />
-        <Target x={500} y={200} type="filled" label=""/>
-        <Target x={200} y={220} type="dashed" label=""/>
-        <Target x={250} y={50} type="dashedNoCursor" label=""/>
-    </View>
-)
+    )
+}
 
 export default MemoriesParameters;
 
