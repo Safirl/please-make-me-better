@@ -1,4 +1,5 @@
 // import GL from "@/ui/GL";
+import { primaryBackgroundTokens } from "@/tokens/primary/backgrounds.tokens";
 import GPU from "@/ui/GPU";
 import { useTheme } from "@react-navigation/native";
 import { useFonts } from "expo-font";
@@ -11,7 +12,7 @@ export default function RootLayout() {
     });
 
     const { colors } = useTheme();
-    colors.background = 'transparent';  
+    colors.background = 'transparent';
 
     return <>
         <View
@@ -20,25 +21,26 @@ export default function RootLayout() {
                 zIndex: -1,
                 width: "100%",
                 height: "100%",
+                backgroundColor: primaryBackgroundTokens["background-secondary"]
             }}
         >
             {/* <GPU/> */}
         </View>
         <Stack screenOptions={{
-            contentStyle: { backgroundColor: 'transparent'},
+            contentStyle: { backgroundColor: 'transparent' },
             headerStyle: { backgroundColor: 'transparent' },
-            headerTransparent: true 
-            }}>
+            headerTransparent: true
+        }}>
             <Stack.Screen name="index" options={{ title: 'Configurator', headerShown: false, }} />
-            <Stack.Screen name="memoriesPage" options={{title: '', headerStyle: styles.headerStyle}} />
+            <Stack.Screen name="memoriesPage" options={{ title: '', headerStyle: styles.headerStyle }} />
         </Stack>
     </>;
 }
 
 
 const styles = StyleSheet.create({
-  headerStyle: {
-    backgroundColor: "rgba(0,0,0,0)",
-    borderWidth: 0,
-  },
+    headerStyle: {
+        backgroundColor: "rgba(0,0,0,0)",
+        borderWidth: 0,
+    },
 }) 
