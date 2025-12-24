@@ -1,3 +1,5 @@
+import { characters, memory } from '@/data/characters'
+import { Vec3, Vector } from '@shopify/react-native-skia'
 import { create } from 'zustand'
 
 //@TODO We should split in multiple storage according to the complexity of the project
@@ -9,29 +11,10 @@ export const useStorage = create((set) => ({
   setCurrentParameter: (newParameter: string) => set({ currentParameter: newParameter, isModalOpened: true }),
 }))
 
-export interface WordParameterState {
-  words: Word[]
-
-  setWord: (newWord: Word) => void
-}
-
 export interface Word {
   text: string,
   isSelected?: boolean
 }
-
-export const useWordParameterStorage = create<WordParameterState>((set) => ({
-  words: [
-    {text: "coucou"},
-    {text: "hihi"}
-  ],
-
-  setWord: (newWord: Word) => set((state: any) => ({
-      words: state.words.map((w: Word) =>
-        w.text === newWord.text ? newWord : w
-      ),
-    })),
-}))
 
 export const useSoulStorage = create((set) => ({
   fluidity: 0,
@@ -41,6 +24,23 @@ export const useSoulStorage = create((set) => ({
   setFluidity: (newValue: number) => set({ fluidity: newValue }),
   setGrain: (newValue: number) => set({ grain: newValue }),
   setBlur: (newValue: number) => set({ blur: newValue }),
+}))
+
+interface MemoryState {
+  memories: memory[]
+  gunPosition: {x: number, y: number}
+  setGunPosition: (newPosition: {x: number, y: number}) => void
+
+  pushMemory: (newMemory: memory) => void
+  removeMemory: (oldMemory: memory) => void
+}
+
+export const useMemoryStorage = create<MemoryState>((set) => ({
+  memories: characters[0].memories as memory[],
+  gunPosition: {x:0,y:0},
+  setGunPosition: (newPosition) => set((state) => ({gunPosition: newPosition})),
+  pushMemory: (newMemory: memory) => set((state) => ({memories: [...state.memories, newMemory]})),
+  removeMemory: (oldMemory: memory) => set((state) => ({memories: state.memories.filter((i: memory) => i !== oldMemory)}))
 }))
 
 export const useGameStorage = create((set) => ({

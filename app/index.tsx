@@ -1,15 +1,22 @@
-import Modal from "@/components/Modal/modal";
-import { CursorParameter } from "@/components/Parameters/cursorParameter";
-import { WordParameter } from "@/components/Parameters/wordParameter";
+import { CursorParameter } from "@/ui/Parameters/cursorParameter";
+import { WordParameter } from "@/ui/Parameters/wordParameter";
 import { Text } from "@react-navigation/elements";
+import { Link, router } from "expo-router";
 import { useEffect } from "react";
-import { Pressable, View } from "react-native";
+import { Dimensions, Pressable, View } from "react-native";
 import { useStorage } from "../storage/store";
+import Button from "@/ui/Button";
 import Helpers from "./utils/Helpers";
+import Svg, { Circle } from "react-native-svg";
+import { StyleSheet } from "react-native";
+import { Href } from "expo-router";
+
+const dimensions = Dimensions.get("window")
 
 export default function Index() {
   const currentParameter: string = useStorage((state: any) => state.currentParameter)
   const setCurrentParameter = useStorage((state: any) => state.setCurrentParameter)
+
 
   useEffect(() => {
     if (!Helpers.isDevMode) return;
@@ -17,6 +24,16 @@ export default function Index() {
     let folder = root.addFolder("Parameter");
     // Helpers.instance.tweak()
   }, [])
+
+  const buttons = [
+    { label: "Memories", icon: "memory" as const, route: "/memoriesPage" as Href, style: styles.button1 },
+    { label: "Emotions", icon: "emotion" as const, route: "/memoriesPage" as Href, style: styles.button2 },
+    { label: "Personality", icon: "personality" as const, route: "/memoriesPage" as Href, style: styles.button3 },
+  ];
+
+  const handleNavigate = (route: Href) => {
+    router.navigate(route)
+  }
 
   return (
     <View
@@ -27,22 +44,60 @@ export default function Index() {
         overflow: "hidden"
       }}
     >
-      <Modal>
-        {
-          currentParameter === "cursors" && <CursorParameter/> ||
-          // currentParameter === "wheel" && <WheelParameter/> ||
-          currentParameter === "words" && <WordParameter/>
-        }
-      </Modal>
-      <Pressable onPress={() => {setCurrentParameter("cursors")}}>
-        <Text>Open cursors</Text>
-      </Pressable>
-      {/* <Pressable onPress={() => {setCurrentParameter("wheel")}}>
-        <Text>Open wheel</Text>
-      </Pressable> */}
-      <Pressable onPress={() => {setCurrentParameter("words")}}>
-        <Text>Open words</Text>
-      </Pressable>
+
+
+      {
+        buttons.map(({ label, icon, route, style }) => (
+          <View key={label} style={style}>
+            <Button
+              type="tertiary"
+              label={label}
+              icon={{ name: icon }}
+              onPress={() => handleNavigate(route)}
+            />
+          </View>
+        ))
+      }
+
+
+      <Svg
+        style={styles.circle}
+        width={490}
+        height={394}
+        fill="none"
+      >
+        <Circle
+          cx={245}
+          cy={197}
+          r={(dimensions.width / 2) * .7}
+          stroke="#969696"
+          strokeDasharray="11 11"
+        />
+      </Svg>
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  circle: {
+    position: "absolute",
+    zIndex: -1
+  },
+
+  button1: {
+    position: "absolute",
+    left: "10%",
+    top: 20
+  },
+
+  button2: {
+    position: "absolute",
+    left: "10%",
+    top: 300
+  },
+
+  button3: {
+    position: "absolute",
+    right: "10%",
+  }
+})

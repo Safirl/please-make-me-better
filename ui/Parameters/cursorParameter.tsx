@@ -1,6 +1,6 @@
 import { useSoulStorage } from "@/storage/store";
 import { StyleSheet, View } from "react-native";
-import { Cursor } from "./components/cursor";
+import { Cursor } from "./cursor";
 
 export const CursorParameter = () => {
     const fluidity = useSoulStorage((state: any) => state.fluidity)

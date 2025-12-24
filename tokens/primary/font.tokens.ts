@@ -4,6 +4,7 @@ export const primaryFontTokens = {
     "font-family-primary": "JetBrainsMono" as const,
     "font-color-primary": primaryColorTokens["color-white"],
     "font-color-secondary": primaryColorTokens["color-tertiary-lower"],
+    "font-color-tertiary": primaryColorTokens["color-tertiary-high"],
 }
 
 export const subTitleFontTokens = {

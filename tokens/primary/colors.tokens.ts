@@ -12,6 +12,7 @@ export const primaryColorTokens = {
     "color-tertiary-high": "#050507"as ColorValue,
     "color-tertiary-medium": "#1D1E22"as ColorValue,
     "color-tertiary-low": "#39393D" as ColorValue,
+    "color-tertiary-low-transparent": "rgba(57, 57, 61, 0.2)" as ColorValue,
     "color-tertiary-lower": "#969696"as ColorValue,
     "color-tertiary-lowest": "#BFBFBF"as ColorValue,
 

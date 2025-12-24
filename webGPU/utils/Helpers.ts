@@ -7,7 +7,7 @@ export default class Helpers {
     private folders = {} as Folders
     private isDevMode = false
     constructor() {
-        this.isDevMode = process.env.EXPO_OS === 'web'
+        // this.isDevMode = process.env.EXPO_OS === 'web'
         if (!this.isDevMode) return
 
         this.GUI = new GUI()
