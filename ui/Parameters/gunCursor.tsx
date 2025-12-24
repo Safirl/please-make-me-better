@@ -2,7 +2,7 @@ import { primaryColorTokens } from "@/tokens/primary/colors.tokens";
 import SvgComponent from "@/ui/svg";
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { BlurView } from 'expo-blur';
-import { Dimensions, Pressable, StyleSheet, View } from "react-native";
+import { Dimensions, LayoutChangeEvent, Pressable, StyleSheet, View } from "react-native";
 import { Gesture, GestureDetector } from "react-native-gesture-handler";
 import Animated, { useAnimatedStyle, useSharedValue, withSpring, withTiming } from "react-native-reanimated";
 import { Circle, Path, Svg } from "react-native-svg";
@@ -21,12 +21,12 @@ const GunCursor = (props: gunCursorProps) => {
     const height = useSharedValue(0)
     const top = useSharedValue(sizes.height/2)
     const left = useSharedValue(sizes.width/2)
-    const cursorRef = useRef<View>(null);
-
-    useLayoutEffect(() => {
-        height.set(cursorRef.current?.getBoundingClientRect().height);
-        width.set(cursorRef.current?.getBoundingClientRect().width);
-    })
+    
+    const onLayoutHandler = (e: LayoutChangeEvent) => {
+        width.set(e.nativeEvent.layout.width);
+        height.set(e.nativeEvent.layout.height);
+        // height.value = e.nativeEvent.layout.height;
+    }
 
     const panGesture = Gesture.Pan()
         .onBegin((e) => {
@@ -61,7 +61,7 @@ const GunCursor = (props: gunCursorProps) => {
 
     return (
         <GestureDetector gesture={panGesture}>
-            <Animated.View style={[styles.cursorContainer, animatedCursorStyle]} ref={cursorRef}>
+            <Animated.View style={[styles.cursorContainer, animatedCursorStyle]} onLayout={onLayoutHandler}>
 
                 <View style={styles.lineLeft}/>
                 <View style={styles.lineRight}/>
