@@ -1,18 +1,18 @@
-import { ButtonPrimary } from '@/ui/Button/index';
+import { Button } from '@/ui/Button/index';
 import type { Meta, StoryObj } from '@storybook/react-native-web-vite';
 import { Text, View } from "react-native";
 import { fn } from 'storybook/test';
 
 const ButtonStory = (args: { label: string }) => {
   const { label } = args
-  return <ButtonPrimary type='primary'>
+  return <Button type='primary'>
     <Text>{label}</Text>
-  </ButtonPrimary>
+  </Button>
 }
 
 const meta = {
   title: 'Example/Button',
-  component: ButtonPrimary,
+  component: Button,
   decorators: [
     (Story) => (
       <View style={{ flex: 1, alignItems: 'flex-start' }}>
@@ -24,7 +24,7 @@ const meta = {
   tags: ['autodocs'],
   // Use `fn` to spy on the onPress arg, which will appear in the actions panel once invoked: https://storybook.js.org/docs/essentials/actions#story-args
   args: { onPress: fn() },
-} satisfies Meta<typeof ButtonPrimary>;
+} satisfies Meta<typeof Button>;
 
 export default meta;
 
