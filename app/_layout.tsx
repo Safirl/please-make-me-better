@@ -32,7 +32,8 @@ export default function RootLayout() {
             headerTransparent: true
         }}>
             <Stack.Screen name="index" options={{ title: 'Configurator', headerShown: false, }} />
-            <Stack.Screen name="memoriesPage" options={{ title: '', headerStyle: styles.headerStyle }} />
+            <Stack.Screen name="(pages)/memoriesPage" options={{ title: '', headerStyle: styles.headerStyle }} />
+            <Stack.Screen name="(pages)/personnalityPage" options={{ title: '', headerStyle: styles.headerStyle }} />
         </Stack>
     </>;
 }
