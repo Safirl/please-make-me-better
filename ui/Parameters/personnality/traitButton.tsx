@@ -1,5 +1,6 @@
 import { primaryColorTokens } from "@/tokens/primary/colors.tokens";
 import SvgComponent, { iconType, SvgComponentProps } from "@/ui/svg";
+import { useEffect } from "react";
 import { LayoutChangeEvent, Pressable, StyleSheet } from "react-native"
 import Animated, { useAnimatedStyle, useSharedValue } from "react-native-reanimated";
 

@@ -1,4 +1,4 @@
-import { characters, memory } from '@/data/characters'
+import { characters, Memory, Trait } from '@/data/characters'
 import { Vec3, Vector } from '@shopify/react-native-skia'
 import { create } from 'zustand'
 
@@ -27,20 +27,32 @@ export const useSoulStorage = create((set) => ({
 }))
 
 interface MemoryState {
-  memories: memory[]
+  memories: Memory[]
   gunPosition: {x: number, y: number}
   setGunPosition: (newPosition: {x: number, y: number}) => void
 
-  pushMemory: (newMemory: memory) => void
-  removeMemory: (oldMemory: memory) => void
+  pushMemory: (newMemory: Memory) => void
+  removeMemory: (oldMemory: Memory) => void
 }
 
 export const useMemoryStorage = create<MemoryState>((set) => ({
-  memories: characters[0].memories as memory[],
+  memories: characters[0].memories,
   gunPosition: {x:0,y:0},
   setGunPosition: (newPosition) => set((state) => ({gunPosition: newPosition})),
-  pushMemory: (newMemory: memory) => set((state) => ({memories: [...state.memories, newMemory]})),
-  removeMemory: (oldMemory: memory) => set((state) => ({memories: state.memories.filter((i: memory) => i !== oldMemory)}))
+  pushMemory: (newMemory: Memory) => set((state) => ({memories: [...state.memories, newMemory]})),
+  removeMemory: (oldMemory: Memory) => set((state) => ({memories: state.memories.filter((i: Memory) => i !== oldMemory)}))
+}))
+
+interface PersonnalityState {
+  traits: Trait[]
+  createdTraits: Trait[]
+  createTrait: (trait0: Trait, trait1: Trait) => void
+}
+
+export const usePersonnalityStorage = create<PersonnalityState>((set) => ({
+  traits: characters[0].traits,
+  createdTraits: [],
+  createTrait: (trait0, trait1) => set((state) => ({traits: state.traits.filter((t: Trait) => t === trait0 || t === trait1)}))
 }))
 
 export const useGameStorage = create((set) => ({

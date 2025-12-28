@@ -1,9 +1,32 @@
+import { Trait } from "@/data/characters";
+import { usePersonnalityStorage } from "@/storage/store";
 import { primaryColorTokens } from "@/tokens/primary/colors.tokens";
 import TraitButton from "@/ui/Parameters/personnality/traitButton";
-import { StyleSheet, View } from "react-native";
+import { useEffect, useState } from "react";
+import { Dimensions, StyleSheet, View } from "react-native";
 import Svg, { Circle, Defs, LinearGradient, Stop } from "react-native-svg";
 
+const CIRCLE_RADIUS = 154;
+const TOTAL_ANGLE = (Math.PI * 3)/2
+const DIMENSIONS = Dimensions.get("window")
+
+
 const personnalityParameters = () => {
+    const traits = usePersonnalityStorage((state) => state.traits)
+    const createTrait = usePersonnalityStorage((state) => state.createTrait)
+    
+    const getPosForTrait = (trait: Trait): {x: number, y: number} => {
+        const alphaSpacing = TOTAL_ANGLE / (traits.length - 1)
+        let ox = DIMENSIONS.width/2
+        let oy = DIMENSIONS.height/2
+        const currentAngle = alphaSpacing * (trait.id + 1) + Math.PI/1.7;
+        console.log(currentAngle)
+        ox += CIRCLE_RADIUS * Math.cos(currentAngle)
+        oy += CIRCLE_RADIUS * Math.sin(currentAngle)
+
+        return {x: ox, y: oy}
+    }
+
     return (
     <View style={styles.container}>
         <Svg
@@ -28,7 +51,11 @@ const personnalityParameters = () => {
             </LinearGradient>
             </Defs>
         </Svg>
-        <TraitButton iconName="comet" x={180} y={200}/>
+        {
+            traits.map((trait) => (
+                <TraitButton key={trait.id} iconName={trait.icon} x={getPosForTrait(trait).x} y={getPosForTrait(trait).y}/>
+            ))
+        }
     </View>
     )
 }

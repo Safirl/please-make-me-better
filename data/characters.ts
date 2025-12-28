@@ -1,17 +1,24 @@
-export interface character {
+import { iconType } from "@/ui/svg"
+
+export interface Character {
     id: number,
     name: string,
     description: string,
     pictures: string[],
-    memories: memory[]
+    memories: Memory[]
 }
 
-export interface memory {
+export interface Memory {
     id: number,
     type: 'dashed' | 'filled' | 'dashedNoCursor',
     label: string,
     posX: number,
     posY: number
+}
+
+export interface Trait {
+    id: number,
+    icon: iconType,
 }
 
 export const characters = [
@@ -39,12 +46,54 @@ export const characters = [
                 posY: 50,
             },
             {
-                id: 3,
+                id: 2,
                 type: 'dashedNoCursor',
                 label: "Dispute avec les parents",
                 posX: 300,
                 posY: 250,
             }
-        ] 
+        ] as Memory[],
+        traits: [
+            {
+                id: 0,
+                icon: "comet"
+            },
+            {
+                id: 1,
+                icon: "back-pain"
+            },
+            {
+                id: 2,
+                icon: "beech"
+            },
+            {
+                id: 3,
+                icon: "comet"
+            },
+            {
+                id: 4,
+                icon: "back-pain"
+            },
+            {
+                id: 5,
+                icon: "beech"
+            },
+            {
+                id: 6,
+                icon: "comet"
+            },
+            {
+                id: 7,
+                icon: "back-pain"
+            },
+            {
+                id: 8,
+                icon: "beech"
+            },
+            {
+                id: 9,
+                icon: "beech"
+            },
+        ] as Trait[]
     },
 ]
