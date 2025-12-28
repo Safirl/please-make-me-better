@@ -1,7 +1,9 @@
 import { primaryColorTokens } from "@/tokens/primary/colors.tokens";
+import { useGestureDrag } from "@/ui/hooks/baseGestureHandler";
 import SvgComponent, { iconType, SvgComponentProps } from "@/ui/svg";
 import { useEffect } from "react";
 import { LayoutChangeEvent, Pressable, StyleSheet } from "react-native"
+import { Gesture, GestureDetector, GestureType } from "react-native-gesture-handler";
 import Animated, { useAnimatedStyle, useSharedValue } from "react-native-reanimated";
 
 interface traitButtonProps {
@@ -14,27 +16,18 @@ const TraitButton = (props: traitButtonProps) => {
     const top = useSharedValue(props.y)
     const left = useSharedValue(props.x)
 
-    const width = useSharedValue(0)
-    const height = useSharedValue(0)
-
-    const onLayoutHandler = (e: LayoutChangeEvent) => {
-        width.value = e.nativeEvent.layout.width;
-        height.value = e.nativeEvent.layout.height;
-    }
-
-    const positionStyle = useAnimatedStyle(() => ({
-        top: top.value,
-        left: left.value,
-        transform: [
-            { translateX: -width.value / 2},
-            { translateY: -height.value / 2 },
-    ],
-    }))
+    const { panGesture, animatedStyle, onLayoutHandler } = useGestureDrag({
+        initialX: props.x,
+        initialY: props.y,
+        resetOnDragFinzalize: true,
+    });
 
     return (
-        <Animated.View style={[styles.button, positionStyle]} onLayout={onLayoutHandler}>
-            <SvgComponent name={props.iconName}></SvgComponent>
-        </Animated.View>
+        <GestureDetector gesture={panGesture}>
+            <Animated.View style={[styles.button, animatedStyle]} onLayout={onLayoutHandler}>
+                <SvgComponent name={props.iconName}></SvgComponent>
+            </Animated.View>
+        </GestureDetector>
     )
 }
 

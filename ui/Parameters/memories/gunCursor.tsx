@@ -1,88 +1,49 @@
 import { primaryColorTokens } from "@/tokens/primary/colors.tokens";
-import SvgComponent from "@/ui/svg";
-import { useEffect, useLayoutEffect, useRef, useState } from "react";
-import { BlurView } from 'expo-blur';
-import { Dimensions, LayoutChangeEvent, Pressable, StyleSheet, View } from "react-native";
-import { Gesture, GestureDetector } from "react-native-gesture-handler";
-import Animated, { useAnimatedStyle, useSharedValue, withSpring, withTiming } from "react-native-reanimated";
-import { Circle, Path, Svg } from "react-native-svg";
+import { Dimensions, StyleSheet, View } from "react-native";
+import { GestureDetector } from "react-native-gesture-handler";
+import Animated from "react-native-reanimated";
+import { Circle, Svg } from "react-native-svg";
 import { useMemoryStorage } from "@/storage/store";
+import { useGestureDrag } from "@/ui/hooks/baseGestureHandler";
 
-interface gunCursorProps {
-    onDragEnded: (posX: number, posY: number) => void
+interface GunCursorProps {
+    onDragEnded: (posX: number, posY: number) => void;
 }
 
 let sizes = Dimensions.get("screen");
 
-const GunCursor = (props: gunCursorProps) => {
-    const setGunPosition = useMemoryStorage((state) => state.setGunPosition)
-    
-    const width = useSharedValue(0)
-    const height = useSharedValue(0)
-    const top = useSharedValue(sizes.height/2)
-    const left = useSharedValue(sizes.width/2)
-    
-    const onLayoutHandler = (e: LayoutChangeEvent) => {
-        width.set(e.nativeEvent.layout.width);
-        height.set(e.nativeEvent.layout.height);
-        // height.value = e.nativeEvent.layout.height;
-    }
+const GunCursor = ({ onDragEnded }: GunCursorProps) => {
+    const setGunPosition = useMemoryStorage((state) => state.setGunPosition);
 
-    const panGesture = Gesture.Pan()
-        .onBegin((e) => {
-            top.set(withSpring(e.absoluteY, {
-                duration: 200,
-                },
-            ))
-            left.set(withSpring(e.absoluteX, {
-                duration: 200
-            }))
-            setGunPosition({x: left.value, y: top.value})   
-        })
-        .onUpdate((e) => {
-            top.set(withSpring(e.absoluteY, {
-                duration: 200,
-                },
-            )) 
-            left.set(withSpring(e.absoluteX, {
-                duration: 200,
-                },
-            ))
-            setGunPosition({x: left.value, y: top.value})   
-        })
-        .onEnd((e) => {
-            props.onDragEnded(left.value, top.value)
-        })
-
-    const animatedCursorStyle = useAnimatedStyle(() => ({
-        top: top.get() - height.get()/2,
-        left: left.get() - width.get()/2,
-    }));
+    const { panGesture, animatedStyle, onLayoutHandler, position } = useGestureDrag({
+        onPositionChanged: (x, y) => {
+            setGunPosition({ x, y });
+        },
+        onDragEnded: (x, y) => {
+            onDragEnded(x, y);
+        },
+    });
 
     return (
         <GestureDetector gesture={panGesture}>
-            <Animated.View style={[styles.cursorContainer, animatedCursorStyle]} onLayout={onLayoutHandler}>
-
-                <View style={styles.lineLeft}/>
-                <View style={styles.lineRight}/>
-                <View style={styles.lineTop}/>
-                <View style={styles.lineBottom}/>
+            <Animated.View style={[styles.cursorContainer, animatedStyle]} onLayout={onLayoutHandler}>
+                <View style={styles.lineLeft} />
+                <View style={styles.lineRight} />
+                <View style={styles.lineTop} />
+                <View style={styles.lineBottom} />
 
                 <View style={styles.cursor}>
-                    <Svg
-                        width={50}
-                        height={50}
-                        fill="none"
-                    >
-                    <Circle cx={25} cy={25} r={24.5} stroke="#F1F1F1" />
+                    <Svg width={50} height={50} fill="none">
+                        <Circle cx={25} cy={25} r={24.5} stroke="#F1F1F1" />
                     </Svg>
                 </View>
             </Animated.View>
         </GestureDetector>
-    )
-}
+    );
+};
 
 export default GunCursor;
+
 
 const styles = StyleSheet.create({
     cursorContainer: {

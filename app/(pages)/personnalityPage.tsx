@@ -1,6 +1,7 @@
 import { Trait } from "@/data/characters";
 import { usePersonnalityStorage } from "@/storage/store";
 import { primaryColorTokens } from "@/tokens/primary/colors.tokens";
+import MergeZone from "@/ui/Parameters/personnality/mergeZone";
 import TraitButton from "@/ui/Parameters/personnality/traitButton";
 import { useEffect, useState } from "react";
 import { Dimensions, StyleSheet, View } from "react-native";
@@ -56,6 +57,7 @@ const personnalityParameters = () => {
                 <TraitButton key={trait.id} iconName={trait.icon} x={getPosForTrait(trait).x} y={getPosForTrait(trait).y}/>
             ))
         }
+        <MergeZone/>
     </View>
     )
 }
