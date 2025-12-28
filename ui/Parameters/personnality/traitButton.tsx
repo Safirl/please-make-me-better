@@ -1,3 +1,4 @@
+import { primaryColorTokens } from "@/tokens/primary/colors.tokens";
 import SvgComponent, { iconType, SvgComponentProps } from "@/ui/svg";
 import { LayoutChangeEvent, Pressable, StyleSheet } from "react-native"
 import Animated, { useAnimatedStyle, useSharedValue } from "react-native-reanimated";
@@ -39,10 +40,11 @@ const TraitButton = (props: traitButtonProps) => {
 const styles = StyleSheet.create({
     button: {
         position: "absolute",
+        zIndex: 100,
         padding: 10,
         boxShadow: "0 0 9.7px 0 rgba(231, 229, 254, 0.49)",
         borderRadius: 100,
-        backgroundColor: "rgba(241, 241, 241, 0.04)"
+        backgroundColor: primaryColorTokens["color-tertiary-medium"]
     },
 })
 
