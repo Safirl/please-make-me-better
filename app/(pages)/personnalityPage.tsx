@@ -53,7 +53,7 @@ const personnalityParameters = () => {
         </Svg>
         {
             traits.map((trait) => (
-                <TraitButton key={trait.id} iconName={trait.icon} x={getPosForTrait(trait).x} y={getPosForTrait(trait).y} mergeZoneRadius={75}/>
+                <TraitButton key={trait.id} id={trait.id} iconName={trait.icon} x={getPosForTrait(trait).x} y={getPosForTrait(trait).y} mergeZoneRadius={75}/>
             ))
         }
         <MergeZone/>

@@ -15,7 +15,7 @@ interface UseGestureDragProps {
 
 export const useGestureDrag = ({
     onPositionChanged,
-    onDragEnded: onDragFinalize,
+    onDragEnded,
     initialX = sizes.width / 2,
     initialY = sizes.height / 2,
     resetOnDragFinalize: resetOnDragEnded = false
@@ -42,7 +42,7 @@ export const useGestureDrag = ({
             onPositionChanged?.(left.value, top.value);
         })
         .onFinalize(() => {
-            onDragFinalize?.(left.value, top.value);
+            onDragEnded?.(left.value, top.value);
             if (resetOnDragEnded) {
                 top.value = withSpring(initialY, { duration: 400 });
                 left.value = withSpring(initialX, { duration: 400 });

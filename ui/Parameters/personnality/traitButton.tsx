@@ -1,3 +1,4 @@
+import { usePersonnalityStorage } from "@/storage/store";
 import { primaryColorTokens } from "@/tokens/primary/colors.tokens";
 import { useGestureDrag } from "@/ui/hooks/baseGestureHandler";
 import SvgComponent, { iconType, SvgComponentProps } from "@/ui/svg";
@@ -9,16 +10,18 @@ import Animated, { useAnimatedReaction, useAnimatedStyle, useSharedValue, withSp
 const DIMENSIONS = Dimensions.get("window")
 
 interface traitButtonProps {
+    id: number,
     iconName: iconType,
     x: number,
     y: number
-    mergeZoneRadius: number, //We suppose that the 
-                            //center of the merge zone is the
-                            //center of the screen
+    mergeZoneRadius: number, //We suppose that the center of the merge zone is the center of the screen
 }
 
 const TraitButton = (props: traitButtonProps) => {
-    const { panGesture, animatedStyle, onLayoutHandler, position, dimensions } = useGestureDrag({
+    const setCurrentTraitPosition = usePersonnalityStorage((state) => state.setCurrentTraitPosition)
+    const addComposedTrait = usePersonnalityStorage((state) => state.addComposedTrait)
+
+    const { panGesture, animatedStyle, onLayoutHandler, position } = useGestureDrag({
         initialX: props.x,
         initialY: props.y,
         resetOnDragFinalize: false,
@@ -27,6 +30,12 @@ const TraitButton = (props: traitButtonProps) => {
                 position.left.value = withSpring(props.x)
                 position.top.value = withSpring(props.y)
             }
+            else {
+                addComposedTrait({id: props.id, icon: props.iconName})
+            }
+        },
+        onPositionChanged(x, y) {
+            setCurrentTraitPosition(x,y)
         },
     });
 
