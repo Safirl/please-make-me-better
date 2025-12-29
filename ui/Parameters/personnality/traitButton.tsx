@@ -20,13 +20,16 @@ interface traitButtonProps {
 const TraitButton = (props: traitButtonProps) => {
     const setCurrentTraitPosition = usePersonnalityStorage((state) => state.setCurrentTraitPosition)
     const addComposedTrait = usePersonnalityStorage((state) => state.addComposedTrait)
+    const composedTraits = usePersonnalityStorage((state) => state.composedTraits)
+    const placeHolders = usePersonnalityStorage((state) => state.placeHolders)
 
     const { panGesture, animatedStyle, onLayoutHandler, position } = useGestureDrag({
         initialX: props.x,
         initialY: props.y,
         resetOnDragFinalize: false,
         onDragEnded(x, y) {
-            if (!isTraitInMergeZoneRadius(x,y)) {
+            console.log(composedTraits['0']?.id)
+            if (!isTraitInMergeZoneRadius(x,y) || composedTraits['1']?.id !== undefined) {
                 position.left.value = withSpring(props.x)
                 position.top.value = withSpring(props.y)
             }
@@ -38,6 +41,17 @@ const TraitButton = (props: traitButtonProps) => {
             setCurrentTraitPosition(x,y)
         },
     });
+    
+    useEffect(() => {
+        if (composedTraits['0']?.id === props.id) {
+            position.left.value = withSpring(placeHolders[0].x)
+            position.top.value = withSpring(placeHolders[0].y)
+        }
+        else if (composedTraits['1']?.id === props.id) {
+            position.left.value = withSpring(placeHolders[1].x)
+            position.top.value = withSpring(placeHolders[1].y)
+        }
+    }, [[composedTraits['0']?.id, composedTraits['1']?.id]])
 
     const isTraitInMergeZoneRadius = (x: number, y: number): boolean => {
         const dx = x - DIMENSIONS.width/2

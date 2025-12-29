@@ -44,11 +44,13 @@ export const useMemoryStorage = create<MemoryState>((set) => ({
 }))
 
 interface PersonnalityState {
+  placeHolders: {x:number, y:number}[]
   traits: Trait[]
   //set the trait that are going to be merged
-  composedTraits: {1: Trait | null, 2: Trait | null}
+  composedTraits: {0: Trait | null, 1: Trait | null}
   currentTraitPosition: {x:number, y:number}
   createdTraits: Trait[]
+  setPlaceHolder: (index: number, x: number, y: number) => void
   addComposedTrait: (trait: Trait) => void
   createTrait: (trait0: Trait, trait1: Trait) => void
   setCurrentTraitPosition: (x: number, y: number) => void
@@ -58,10 +60,22 @@ export const usePersonnalityStorage = create<PersonnalityState>((set) => ({
   traits: characters[0].traits,
   currentTraitPosition: {x:0, y:0},
   createdTraits: [],
-  composedTraits: {1:null,2:null},
-  addComposedTrait: (trait) => set((state) => ({
-    composedTraits: {...state.composedTraits, 1: state.composedTraits[1] ?? trait, 2: state.composedTraits[2] ?? trait }
-  })),
+  composedTraits: {0:null,1:null},
+  placeHolders: [],
+  setPlaceHolder: (index, x, y) => set((state) => ({placeHolders: [...state.placeHolders, state.placeHolders[index] = {x,y}]})),
+  addComposedTrait: (trait) => set((state) => {
+    if (state.composedTraits[0] === null) {
+      return {
+        composedTraits: {...state.composedTraits, 0: trait}
+      };
+    } else if (state.composedTraits[1] === null) {
+      return {
+        composedTraits: {...state.composedTraits, 1: trait}
+      };
+    }
+    // Si les deux sont pleins, ne rien faire
+    return state;
+  }),
   createTrait: (trait0, trait1) => set((state) => ({traits: state.traits.filter((t: Trait) => t === trait0 || t === trait1)})),
   setCurrentTraitPosition: (x,y) => set((state) =>({currentTraitPosition: {x,y}}))
 }))
