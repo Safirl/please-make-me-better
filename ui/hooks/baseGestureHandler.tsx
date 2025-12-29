@@ -10,7 +10,7 @@ interface UseGestureDragProps {
     onDragEnded?: (x: number, y: number) => void;
     initialX?: number;
     initialY?: number;
-    resetOnDragFinzalize?: boolean;
+    resetOnDragFinalize?: boolean;
 }
 
 export const useGestureDrag = ({
@@ -18,7 +18,7 @@ export const useGestureDrag = ({
     onDragEnded: onDragFinalize,
     initialX = sizes.width / 2,
     initialY = sizes.height / 2,
-    resetOnDragFinzalize: resetOnDragEnded = false
+    resetOnDragFinalize: resetOnDragEnded = false
 }: UseGestureDragProps = {}) => {
     const width = useSharedValue(0);
     const height = useSharedValue(0);

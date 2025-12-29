@@ -21,7 +21,6 @@ const personnalityParameters = () => {
         let ox = DIMENSIONS.width/2
         let oy = DIMENSIONS.height/2
         const currentAngle = alphaSpacing * (trait.id + 1) + Math.PI/1.7;
-        console.log(currentAngle)
         ox += CIRCLE_RADIUS * Math.cos(currentAngle)
         oy += CIRCLE_RADIUS * Math.sin(currentAngle)
 
@@ -54,7 +53,7 @@ const personnalityParameters = () => {
         </Svg>
         {
             traits.map((trait) => (
-                <TraitButton key={trait.id} iconName={trait.icon} x={getPosForTrait(trait).x} y={getPosForTrait(trait).y}/>
+                <TraitButton key={trait.id} iconName={trait.icon} x={getPosForTrait(trait).x} y={getPosForTrait(trait).y} mergeZoneRadius={75}/>
             ))
         }
         <MergeZone/>

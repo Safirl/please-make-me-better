@@ -2,25 +2,40 @@ import { primaryColorTokens } from "@/tokens/primary/colors.tokens";
 import { useGestureDrag } from "@/ui/hooks/baseGestureHandler";
 import SvgComponent, { iconType, SvgComponentProps } from "@/ui/svg";
 import { useEffect } from "react";
-import { LayoutChangeEvent, Pressable, StyleSheet } from "react-native"
+import { Dimensions, LayoutChangeEvent, Pressable, StyleSheet } from "react-native"
 import { Gesture, GestureDetector, GestureType } from "react-native-gesture-handler";
-import Animated, { useAnimatedStyle, useSharedValue } from "react-native-reanimated";
+import Animated, { useAnimatedReaction, useAnimatedStyle, useSharedValue, withSpring } from "react-native-reanimated";
+
+const DIMENSIONS = Dimensions.get("window")
 
 interface traitButtonProps {
     iconName: iconType,
     x: number,
     y: number
+    mergeZoneRadius: number, //We suppose that the 
+                            //center of the merge zone is the
+                            //center of the screen
 }
 
 const TraitButton = (props: traitButtonProps) => {
-    const top = useSharedValue(props.y)
-    const left = useSharedValue(props.x)
-
-    const { panGesture, animatedStyle, onLayoutHandler } = useGestureDrag({
+    const { panGesture, animatedStyle, onLayoutHandler, position, dimensions } = useGestureDrag({
         initialX: props.x,
         initialY: props.y,
-        resetOnDragFinzalize: true,
+        resetOnDragFinalize: false,
+        onDragEnded(x, y) {
+            if (!isTraitInMergeZoneRadius(x,y)) {
+                position.left.value = withSpring(props.x)
+                position.top.value = withSpring(props.y)
+            }
+        },
     });
+
+    const isTraitInMergeZoneRadius = (x: number, y: number): boolean => {
+        const dx = x - DIMENSIONS.width/2
+        const dy = y -DIMENSIONS.height/2
+        const distance = Math.sqrt(dx * dx + dy * dy);
+        return distance < props.mergeZoneRadius;
+    }
 
     return (
         <GestureDetector gesture={panGesture}>
