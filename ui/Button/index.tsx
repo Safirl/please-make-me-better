@@ -231,19 +231,6 @@ const Button: React.FC<CustomButtonProps> = (props) => {
         <View
             style={[
                 styles.layout,
-                /**
-                 * 
-                 * As we already send the information in creteStyle with the current type, we sould build the correct style object, we sould only have 
-                 * 
-                 * 
-                 *  ```jsx
-                 *  tyles.default,
-                 *  isPressed && styles.pressed,
-                 *  state == "disabled" && styles.desabled
-                 *  ``` 
-                 * 
-                 * And the style should already have the right value.
-                 */
                 type === "primary" && [
                     styles.primary,
                     isPressed && styles.primaryPressed,
