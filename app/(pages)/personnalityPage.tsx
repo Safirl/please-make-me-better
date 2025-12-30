@@ -3,8 +3,9 @@ import { usePersonnalityStorage } from "@/storage/store";
 import { primaryColorTokens } from "@/tokens/primary/colors.tokens";
 import MergeZone from "@/ui/Parameters/personnality/mergeZone";
 import TraitButton from "@/ui/Parameters/personnality/traitButton";
-import { useEffect, useState } from "react";
-import { Dimensions, StyleSheet, View } from "react-native";
+import { useEffect, useRef, useState } from "react";
+import { Dimensions, LayoutChangeEvent, StyleSheet, View } from "react-native";
+import Animated, { useAnimatedStyle, useSharedValue, withTiming } from "react-native-reanimated";
 import Svg, { Circle, Defs, LinearGradient, Stop } from "react-native-svg";
 
 const CIRCLE_RADIUS = 154;
@@ -14,21 +15,39 @@ const DIMENSIONS = Dimensions.get("window")
 
 const personnalityParameters = () => {
     const traits = usePersonnalityStorage((state) => state.traits)
+    const alphaSpacing = TOTAL_ANGLE / (traits.length - 1)
     const createTrait = usePersonnalityStorage((state) => state.createTrait)
-    
-    const getPosForTrait = (trait: Trait): {x: number, y: number} => {
-        const alphaSpacing = TOTAL_ANGLE / (traits.length - 1)
-        let ox = DIMENSIONS.width/2
-        let oy = DIMENSIONS.height/2
-        const currentAngle = alphaSpacing * (trait.id + 1) + Math.PI/1.7;
-        ox += CIRCLE_RADIUS * Math.cos(currentAngle)
-        oy += CIRCLE_RADIUS * Math.sin(currentAngle)
+    const setContainerPosition = usePersonnalityStorage((state) => state.setContainerPosition)
+    const containerHeight = useSharedValue(0)
+    const containerWidth = useSharedValue(0)
+    const left = useSharedValue(0)
+    const top = useSharedValue(0)
+    const isContainerReady = usePersonnalityStorage((state) => state.isContainerReady)
 
-        return {x: ox, y: oy}
+    const onContainerLayoutHandler = (e: LayoutChangeEvent) => {
+        containerHeight.value = e.nativeEvent.layout.height
+        containerWidth.value = e.nativeEvent.layout.width
+        moveContainer(DIMENSIONS.width/2, DIMENSIONS.height/2)
     }
 
+    const moveContainer = (newLeft: number, newTop: number) => {
+        left.value = newLeft
+        top.value = newTop
+        const centerX = left.value
+        const centerY = top.value
+        setContainerPosition(centerX, centerY)
+    }
+
+    const animatedStyle = useAnimatedStyle(() => {
+        return {
+            top: top.value - containerHeight.value / 2,
+            left: left.value - containerWidth.value / 2,
+        }
+    });
+
     return (
-    <View style={styles.container}>
+    <>
+    <Animated.View style={[styles.container, animatedStyle]} onLayout={onContainerLayoutHandler}>
         <Svg
             width={308}
             height={308}
@@ -52,27 +71,37 @@ const personnalityParameters = () => {
             </Defs>
         </Svg>
         {
-            traits.map((trait) => (
-                <TraitButton key={trait.id} id={trait.id} iconName={trait.icon} x={getPosForTrait(trait).x} y={getPosForTrait(trait).y} mergeZoneRadius={75}/>
-            ))
+            <MergeZone />
         }
-        <MergeZone/>
-    </View>
+    </Animated.View>
+    {
+        isContainerReady &&
+        traits.map((trait) => (
+            <TraitButton
+                key={trait.id}
+                id={trait.id}
+                iconName={trait.icon}
+                mergeZoneRadius={75}
+                alphaSpacing={alphaSpacing}
+                totalAngle={TOTAL_ANGLE}
+                circleRadius={CIRCLE_RADIUS}
+            />
+        ))
+    }
+    </>
     )
 }
 
 const styles = StyleSheet.create({
     container: {
+        position: "absolute",
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
-        height: "100%"
     },
     circle: {
         position: "absolute",
         zIndex: 1,
-        // top: 0,
-        // left: 0,
     }
 })
 

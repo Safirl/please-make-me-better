@@ -50,6 +50,11 @@ interface PersonnalityState {
   composedTraits: {0: Trait | null, 1: Trait | null}
   currentTraitPosition: {x:number, y:number}
   createdTraits: Trait[]
+  containerCenterX: number
+  containerCenterY: number
+  isContainerReady: boolean
+
+  setContainerPosition: (x: number, y: number) => void
   setPlaceHolder: (index: number, x: number, y: number) => void
   addComposedTrait: (trait: Trait) => void
   createTrait: (trait0: Trait, trait1: Trait) => void
@@ -62,6 +67,11 @@ export const usePersonnalityStorage = create<PersonnalityState>((set) => ({
   createdTraits: [],
   composedTraits: {0:null,1:null},
   placeHolders: [],
+  containerCenterX: 0,
+  containerCenterY: 0,
+  isContainerReady: false,
+
+  setContainerPosition: (x, y) => set((state) => ({containerCenterX: x, containerCenterY: y, isContainerReady: true})),
   setPlaceHolder: (index, x, y) => set((state) => ({placeHolders: [...state.placeHolders, state.placeHolders[index] = {x,y}]})),
   addComposedTrait: (trait) => set((state) => {
     if (state.composedTraits[0] === null) {

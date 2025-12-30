@@ -1,3 +1,4 @@
+import { Trait } from "@/data/characters";
 import { usePersonnalityStorage } from "@/storage/store";
 import { primaryColorTokens } from "@/tokens/primary/colors.tokens";
 import { useGestureDrag } from "@/ui/hooks/baseGestureHandler";
@@ -5,16 +6,17 @@ import SvgComponent, { iconType, SvgComponentProps } from "@/ui/svg";
 import { useEffect } from "react";
 import { Dimensions, LayoutChangeEvent, Pressable, StyleSheet } from "react-native"
 import { Gesture, GestureDetector, GestureType } from "react-native-gesture-handler";
-import Animated, { useAnimatedReaction, useAnimatedStyle, useSharedValue, withSpring } from "react-native-reanimated";
+import Animated, { SharedValue, useAnimatedReaction, useAnimatedStyle, useSharedValue, withSpring } from "react-native-reanimated";
 
 const DIMENSIONS = Dimensions.get("window")
 
 interface traitButtonProps {
     id: number,
     iconName: iconType,
-    x: number,
-    y: number
-    mergeZoneRadius: number, //We suppose that the center of the merge zone is the center of the screen
+    mergeZoneRadius: number,
+    alphaSpacing: number,
+    circleRadius: number,
+    totalAngle: number
 }
 
 const TraitButton = (props: traitButtonProps) => {
@@ -22,16 +24,27 @@ const TraitButton = (props: traitButtonProps) => {
     const addComposedTrait = usePersonnalityStorage((state) => state.addComposedTrait)
     const composedTraits = usePersonnalityStorage((state) => state.composedTraits)
     const placeHolders = usePersonnalityStorage((state) => state.placeHolders)
+    const containerCenterX = usePersonnalityStorage((state) => state.containerCenterX)
+    const containerCenterY = usePersonnalityStorage((state) => state.containerCenterY)
+
+    const getPos = (): {x: number, y: number} => {
+        let ox = containerCenterX /* + DIMENSIONS.width/2*/
+        let oy = containerCenterY /*+ DIMENSIONS.height/2*/
+        console.log("ox", ox)
+        const currentAngle = props.alphaSpacing * (props.id + 1) + Math.PI/1.7;
+        ox += props.circleRadius * Math.cos(currentAngle)
+        oy += props.circleRadius * Math.sin(currentAngle)
+        return {x: ox, y: oy}
+    }
 
     const { panGesture, animatedStyle, onLayoutHandler, position } = useGestureDrag({
-        initialX: props.x,
-        initialY: props.y,
+        initialX: getPos().x,
+        initialY: getPos().y,
         resetOnDragFinalize: false,
         onDragEnded(x, y) {
-            console.log(composedTraits['0']?.id)
             if (!isTraitInMergeZoneRadius(x,y) || composedTraits['1']?.id !== undefined) {
-                position.left.value = withSpring(props.x)
-                position.top.value = withSpring(props.y)
+                position.left.value = withSpring(getPos().x)
+                position.top.value = withSpring(getPos().y)
             }
             else {
                 addComposedTrait({id: props.id, icon: props.iconName})
@@ -41,6 +54,7 @@ const TraitButton = (props: traitButtonProps) => {
             setCurrentTraitPosition(x,y)
         },
     });
+
     
     useEffect(() => {
         if (composedTraits['0']?.id === props.id) {
@@ -54,8 +68,8 @@ const TraitButton = (props: traitButtonProps) => {
     }, [[composedTraits['0']?.id, composedTraits['1']?.id]])
 
     const isTraitInMergeZoneRadius = (x: number, y: number): boolean => {
-        const dx = x - DIMENSIONS.width/2
-        const dy = y -DIMENSIONS.height/2
+        const dx = x - containerCenterX
+        const dy = y - containerCenterY
         const distance = Math.sqrt(dx * dx + dy * dy);
         return distance < props.mergeZoneRadius;
     }

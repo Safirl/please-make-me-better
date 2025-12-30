@@ -3,7 +3,7 @@ import { usePersonnalityStorage } from "@/storage/store";
 import { primaryColorTokens } from "@/tokens/primary/colors.tokens";
 import { useRef } from "react";
 import { StyleSheet, View, Text, Dimensions, LayoutChangeEvent } from "react-native";
-import Animated, { useAnimatedStyle, useSharedValue, withTiming } from "react-native-reanimated";
+import Animated, { SharedValue, useAnimatedStyle, useSharedValue, withTiming } from "react-native-reanimated";
 import Svg, { Path } from "react-native-svg";
 
 const DIMENSIONS = Dimensions.get("window")
@@ -15,13 +15,14 @@ const MergeZone = () => {
     const currentTraitPosition = usePersonnalityStorage((state) => state.currentTraitPosition)
     const composedTraits = usePersonnalityStorage((state) => state.composedTraits)
     const setPlaceHolder = usePersonnalityStorage((state) => state.setPlaceHolder)
-
+    const containerCenterX = usePersonnalityStorage((state) => state.containerCenterX)
+    const containerCenterY = usePersonnalityStorage((state) => state.containerCenterY)
 
     const isCurrentTraitInMergeZone = (): boolean => {
         if (composedTraits['0'] !== null || composedTraits['0'] !== null)
             return true;
-        const dx = currentTraitPosition.x - DIMENSIONS.width/2
-        const dy = currentTraitPosition.y - DIMENSIONS.height/2
+        const dx = currentTraitPosition.x - containerCenterX
+        const dy = currentTraitPosition.y - containerCenterY
         const distance = Math.sqrt(dx*dx + dy*dy)
         return distance < 75
     }

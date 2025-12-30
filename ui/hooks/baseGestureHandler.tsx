@@ -49,10 +49,12 @@ export const useGestureDrag = ({
             }
         });
 
-    const animatedStyle = useAnimatedStyle(() => ({
-        top: top.value - height.value / 2,
-        left: left.value - width.value / 2,
-    }));
+    const animatedStyle = useAnimatedStyle(() => {
+        return {
+            top: top.value - height.value / 2,
+            left: left.value - width.value / 2,
+        }
+    });
 
     return {
         panGesture,
