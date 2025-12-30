@@ -60,3 +60,13 @@ export const Back: Story = {
     label: "< retour",
   },
 };
+
+export const verticalIcon: Story = {
+  args: {
+    type: 'verticalIcon',
+    label: "buttonText",
+    icon: {name: "folder"},
+    state: "accent"
+
+  },
+};
