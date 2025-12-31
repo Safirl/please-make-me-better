@@ -50,7 +50,12 @@ const FolderHero: React.FC<CustomFolderProps> = (props) => {
             </View>
         </View>
         <View>
-            <Button type="primary" label="Configurer" onPress={configure} />
+            <Button 
+                icon={{name: "human"}} 
+                type="secondary"
+                label="Fiche Identité"
+                onPress={configure}
+            />
         </View>
 
     </View>

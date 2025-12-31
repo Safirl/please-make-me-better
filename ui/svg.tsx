@@ -5,7 +5,7 @@ import Svg, { Circle, ClipPath, Defs, G, Path, SvgProps } from "react-native-svg
 </svg>
 
 export interface SvgComponentProps extends SvgProps {
-    name: 'Brain-circuit' | 'emotion' | 'personality' | 'memory' | "folder",
+    name: 'Brain-circuit' | 'emotion' | 'personality' | 'memory' | "folder" | "human",
 }
 
 const SvgComponent = (props: SvgComponentProps) => {
@@ -14,7 +14,11 @@ const SvgComponent = (props: SvgComponentProps) => {
 
         return (
             <Svg
-                width="61" height="44" viewBox="0 0 61 44" fill="none"
+                width="61"
+                height="44"
+                viewBox="0 0 61 44"
+                fill="none"
+                {...rest}
             >
                 <Path
                     stroke={rest.color ? rest.color : "#39393D"}
@@ -26,7 +30,26 @@ const SvgComponent = (props: SvgComponentProps) => {
 
         )
     }
+    if (name === "human") {
 
+        return <Svg
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            {...rest}
+        >
+            <Path
+                d="M12 10.5C13.933 10.5 15.5 8.933 15.5 7C15.5 5.067 13.933 3.5 12 3.5C10.067 3.5 8.5 5.067 8.5 7C8.5 8.933 10.067 10.5 12 10.5Z"
+                fill={rest.color ? rest.color : "#F1F1F1"}
+            />
+            <Path
+                d="M5.5 20.5C5.5 15.8333 7.66667 13.5 12 13.5C16.3333 13.5 18.5 15.8333 18.5 20.5H5.5Z"
+                fill={rest.color ? rest.color : "#F1F1F1"}
+            />
+        </Svg>
+
+    }
 
     /**
      * Should be refactor as the upper one to avoid contaier overflow issues.
