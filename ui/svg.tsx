@@ -90,7 +90,6 @@ const SvgComponent = (props: SvgComponentProps) => {
 
     }
 
-
     return (
         <Svg
             width={24}
