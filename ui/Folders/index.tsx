@@ -7,6 +7,7 @@ import ContentGrid from "./ContentGrid";
 import FolderHero from "./FolderHero";
 import { createStyle } from "./style";
 import { clientRequestTabTokens, COMPONENT_NAME } from "./tokens";
+import FolderList from "./FolderList/index"
 interface CustomModalProps extends ViewProps {
     selectColor?: "primary" | "secondary" | "tertiary";
     type: '' | ''
@@ -97,11 +98,37 @@ const Modal: React.FC<CustomModalProps> = (props) => {
                         client={client}
                         configure={configure}
                     />
+
+                    <FolderList
+                        title={"Consulter ses dossiers"}
+                        folders={[
+                            {
+                                label: "Votre mission",
+                                state: "accent"
+                            },
+                            {
+                                label: "Image de soi",
+                            },
+                            {
+                                label: "Autrui",
+                            },
+                            {
+                                label: "Rupture",
+                            }
+                        ]}
+                    />
+                    {/*
+                    
+                    Old One
+      
                     <ContentGrid
                         content={gridContent}
-                    />
+                    /> 
+                    
+                    */}
                 </View>
             }
+
         </View>
 
     </View >
