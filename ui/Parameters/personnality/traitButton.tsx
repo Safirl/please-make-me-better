@@ -23,14 +23,13 @@ const TraitButton = (props: traitButtonProps) => {
     const setCurrentTraitPosition = usePersonnalityStorage((state) => state.setCurrentTraitPosition)
     const addComposedTrait = usePersonnalityStorage((state) => state.addComposedTrait)
     const composedTraits = usePersonnalityStorage((state) => state.composedTraits)
-    const placeHolders = usePersonnalityStorage((state) => state.placeHolders)
+    const placeHoldersPos = usePersonnalityStorage((state) => state.placeHoldersPos)
     const containerCenterX = usePersonnalityStorage((state) => state.containerCenterX)
     const containerCenterY = usePersonnalityStorage((state) => state.containerCenterY)
 
     const getPos = (): {x: number, y: number} => {
         let ox = containerCenterX /* + DIMENSIONS.width/2*/
         let oy = containerCenterY /*+ DIMENSIONS.height/2*/
-        console.log("ox", ox)
         const currentAngle = props.alphaSpacing * (props.id + 1) + Math.PI/1.7;
         ox += props.circleRadius * Math.cos(currentAngle)
         oy += props.circleRadius * Math.sin(currentAngle)
@@ -54,18 +53,21 @@ const TraitButton = (props: traitButtonProps) => {
             setCurrentTraitPosition(x,y)
         },
     });
-
     
     useEffect(() => {
         if (composedTraits['0']?.id === props.id) {
-            position.left.value = withSpring(placeHolders[0].x)
-            position.top.value = withSpring(placeHolders[0].y)
+            position.left.value = withSpring(placeHoldersPos[0].x)
+            position.top.value = withSpring(placeHoldersPos[0].y)
         }
         else if (composedTraits['1']?.id === props.id) {
-            position.left.value = withSpring(placeHolders[1].x)
-            position.top.value = withSpring(placeHolders[1].y)
+            position.left.value = withSpring(placeHoldersPos[1].x)
+            position.top.value = withSpring(placeHoldersPos[1].y)
         }
-    }, [[composedTraits['0']?.id, composedTraits['1']?.id]])
+        else {
+            position.left.value = withSpring(getPos().x)
+            position.top.value = withSpring(getPos().y)
+        }
+    }, [[composedTraits], placeHoldersPos])
 
     const isTraitInMergeZoneRadius = (x: number, y: number): boolean => {
         const dx = x - containerCenterX

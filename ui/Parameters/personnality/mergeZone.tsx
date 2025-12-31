@@ -1,10 +1,11 @@
 import fonts from "@/assets/styles/fonts";
 import { usePersonnalityStorage } from "@/storage/store";
 import { primaryColorTokens } from "@/tokens/primary/colors.tokens";
-import { useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { StyleSheet, View, Text, Dimensions, LayoutChangeEvent } from "react-native";
-import Animated, { SharedValue, useAnimatedStyle, useSharedValue, withTiming } from "react-native-reanimated";
+import Animated, { runOnJS, SharedValue, useAnimatedStyle, useSharedValue, withTiming } from "react-native-reanimated";
 import Svg, { Path } from "react-native-svg";
+import { scheduleOnRN } from "react-native-worklets";
 
 const DIMENSIONS = Dimensions.get("window")
 
@@ -14,9 +15,15 @@ const MergeZone = () => {
 
     const currentTraitPosition = usePersonnalityStorage((state) => state.currentTraitPosition)
     const composedTraits = usePersonnalityStorage((state) => state.composedTraits)
-    const setPlaceHolder = usePersonnalityStorage((state) => state.setPlaceHolder)
+    const setPlaceHolderPos = usePersonnalityStorage((state) => state.setPlaceHolderPos)
     const containerCenterX = usePersonnalityStorage((state) => state.containerCenterX)
     const containerCenterY = usePersonnalityStorage((state) => state.containerCenterY)
+    const placeHoldersPos = usePersonnalityStorage((state) => state.placeHoldersPos)
+
+    const [width0, setWidth0] = useState(0)
+    const [height0, setHeight0] = useState(0)
+    const [width1, setWidth1] = useState(0)
+    const [height1, setHeight1] = useState(0)
 
     const isCurrentTraitInMergeZone = (): boolean => {
         if (composedTraits['0'] !== null || composedTraits['0'] !== null)
@@ -28,26 +35,41 @@ const MergeZone = () => {
     }
 
     const mergeContainerAnimatedStyle = useAnimatedStyle(() => ({
-        opacity: withTiming(isCurrentTraitInMergeZone() ? 1 : 0, {}, () => {
-        }),
+        opacity: withTiming(isCurrentTraitInMergeZone() ? 1 : 0),
     }));
 
     const addContainerAnimatedStyle = useAnimatedStyle(() => ({
-        opacity: withTiming(isCurrentTraitInMergeZone() ? 0 : 1, {}, () => {
-        }),
+        opacity: withTiming(isCurrentTraitInMergeZone() ? 0 : 1),
     }));
 
     const onLeftLayoutHandler = (e: LayoutChangeEvent) => {
-        leftPlaceHolderRef.current?.measureInWindow((x,y,width,height) => {
-            setPlaceHolder(0, x + width/2, y + height/2)
+        leftPlaceHolderRef.current?.measure((x,y,width,height) => {
+            setWidth0(width)
+            setHeight0(height)
         })
     }
 
     const onRightLayoutHandler = (e: LayoutChangeEvent) => {
-        rightPlaceHolderRef.current?.measureInWindow((x,y,width,height) => {
-            setPlaceHolder(1, x + width/2, y + height/2)
+        rightPlaceHolderRef.current?.measure((x,y,width,height) => {
+            setWidth1(width)
+            setHeight1(height)
         })
     }
+
+    const getPlaceHolderPosition = (index: number, width: number, height: number): {x: number, y: number} => {
+        const first = index
+        const x = first ? containerCenterX + 15.5 + width/2 : containerCenterX - 15.5 - width/2
+        const y =  containerCenterY
+
+        return {x,y}
+    }
+
+    useEffect(() => {
+        const pos0 = getPlaceHolderPosition(0, width0, height0)
+        const pos1 = getPlaceHolderPosition(1, width1, height1)
+        setPlaceHolderPos(0, pos0.x, pos0.y)
+        setPlaceHolderPos(1, pos1.x, pos1.y)
+    }, [containerCenterX, containerCenterY, width0, width1])
 
     return (
         <View style={[styles.container]}>

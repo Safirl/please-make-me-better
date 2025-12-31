@@ -5,7 +5,7 @@ import MergeZone from "@/ui/Parameters/personnality/mergeZone";
 import TraitButton from "@/ui/Parameters/personnality/traitButton";
 import { useEffect, useRef, useState } from "react";
 import { Dimensions, LayoutChangeEvent, StyleSheet, View } from "react-native";
-import Animated, { useAnimatedStyle, useSharedValue, withTiming } from "react-native-reanimated";
+import Animated, { useAnimatedStyle, useSharedValue, withSpring, withTiming } from "react-native-reanimated";
 import Svg, { Circle, Defs, LinearGradient, Stop } from "react-native-svg";
 
 const CIRCLE_RADIUS = 154;
@@ -18,11 +18,12 @@ const personnalityParameters = () => {
     const alphaSpacing = TOTAL_ANGLE / (traits.length - 1)
     const createTrait = usePersonnalityStorage((state) => state.createTrait)
     const setContainerPosition = usePersonnalityStorage((state) => state.setContainerPosition)
+    const composedTraits = usePersonnalityStorage((state) => state.composedTraits)
     const containerHeight = useSharedValue(0)
     const containerWidth = useSharedValue(0)
     const left = useSharedValue(0)
     const top = useSharedValue(0)
-    const isContainerReady = usePersonnalityStorage((state) => state.isContainerReady)
+    // const isContainerReady = usePersonnalityStorage((state) => state.isContainerReady)
 
     const onContainerLayoutHandler = (e: LayoutChangeEvent) => {
         containerHeight.value = e.nativeEvent.layout.height
@@ -30,12 +31,16 @@ const personnalityParameters = () => {
         moveContainer(DIMENSIONS.width/2, DIMENSIONS.height/2)
     }
 
+    useEffect(() => {
+        if (composedTraits[0] != null && composedTraits[1] != null) {
+            moveContainer(DIMENSIONS.width/2 + 120, DIMENSIONS.height/2)
+        }
+    }, [composedTraits])
+
     const moveContainer = (newLeft: number, newTop: number) => {
-        left.value = newLeft
-        top.value = newTop
-        const centerX = left.value
-        const centerY = top.value
-        setContainerPosition(centerX, centerY)
+        left.value = withSpring(newLeft)
+        top.value = withSpring(newTop)
+        setContainerPosition(newLeft, newTop)
     }
 
     const animatedStyle = useAnimatedStyle(() => {
@@ -75,7 +80,7 @@ const personnalityParameters = () => {
         }
     </Animated.View>
     {
-        isContainerReady &&
+        // isContainerReady &&
         traits.map((trait) => (
             <TraitButton
                 key={trait.id}
