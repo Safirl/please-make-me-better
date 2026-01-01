@@ -17,8 +17,9 @@ export interface Memory {
 }
 
 export interface Trait {
-    id: number,
-    icon: iconType,
+    id: number
+    icon: iconType
+    label: string
 }
 
 export const characters = [
@@ -56,43 +57,53 @@ export const characters = [
         traits: [
             {
                 id: 0,
-                icon: "comet"
+                icon: "comet",
+                label: "rêveur"
             },
             {
                 id: 1,
-                icon: "back-pain"
+                icon: "back-pain",
+                label: "rêveur"
             },
             {
                 id: 2,
-                icon: "beech"
+                icon: "beech",
+                label: "rêveur"
             },
             {
                 id: 3,
-                icon: "comet"
+                icon: "comet",
+                label: "rêveur"
             },
             {
                 id: 4,
-                icon: "back-pain"
+                icon: "back-pain",
+                label: "rêveur"
             },
             {
                 id: 5,
-                icon: "beech"
+                icon: "beech",
+                label: "rêveur"
             },
             {
                 id: 6,
-                icon: "comet"
+                icon: "comet",
+                label: "rêveur"
             },
             {
                 id: 7,
-                icon: "back-pain"
+                icon: "back-pain",
+                label: "rêveur"
             },
             {
                 id: 8,
-                icon: "beech"
+                icon: "beech",
+                label: "rêveur"
             },
             {
                 id: 9,
-                icon: "beech"
+                icon: "beech",
+                label: "rêveur"
             },
         ] as Trait[]
     },

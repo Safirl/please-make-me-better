@@ -2,6 +2,7 @@ import { Trait } from "@/data/characters";
 import { usePersonnalityStorage } from "@/storage/store";
 import { primaryColorTokens } from "@/tokens/primary/colors.tokens";
 import MergeZone from "@/ui/Parameters/personnality/mergeZone";
+import PersonnalityCard from "@/ui/Parameters/personnality/PersonnalityCard";
 import TraitButton from "@/ui/Parameters/personnality/traitButton";
 import { useEffect, useRef, useState } from "react";
 import { Dimensions, LayoutChangeEvent, StyleSheet, View } from "react-native";
@@ -86,12 +87,17 @@ const personnalityParameters = () => {
                 key={trait.id}
                 id={trait.id}
                 iconName={trait.icon}
+                label={trait.label}
                 mergeZoneRadius={75}
                 alphaSpacing={alphaSpacing}
                 totalAngle={TOTAL_ANGLE}
                 circleRadius={CIRCLE_RADIUS}
             />
         ))
+    }
+    {
+        composedTraits[0] != null && composedTraits[1] != null && 
+        <PersonnalityCard trait0={composedTraits[0]} trait1={composedTraits[1]}></PersonnalityCard>
     }
     </>
     )

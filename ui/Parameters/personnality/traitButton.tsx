@@ -13,6 +13,7 @@ const DIMENSIONS = Dimensions.get("window")
 interface traitButtonProps {
     id: number,
     iconName: iconType,
+    label: string,
     mergeZoneRadius: number,
     alphaSpacing: number,
     circleRadius: number,
@@ -46,7 +47,7 @@ const TraitButton = (props: traitButtonProps) => {
                 position.top.value = withSpring(getPos().y)
             }
             else {
-                addComposedTrait({id: props.id, icon: props.iconName})
+                addComposedTrait({id: props.id, icon: props.iconName, label: props.label})
             }
         },
         onPositionChanged(x, y) {

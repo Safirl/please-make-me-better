@@ -11,7 +11,7 @@ const ButtonStory = (args: { label: string }) => {
 }
 
 const meta = {
-  title: 'Example/Button',
+  title: 'Ui/Button',
   component: Button,
   decorators: [
     (Story) => (
