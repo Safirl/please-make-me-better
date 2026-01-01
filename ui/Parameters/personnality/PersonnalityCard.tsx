@@ -5,10 +5,10 @@ import { primaryFontTokens } from "@/tokens/primary/font.tokens"
 import Button from "@/ui/Button"
 import { View, Text, StyleSheet, Dimensions, LayoutChangeEvent } from "react-native"
 import { Platform } from "react-native"
-import Animated, { useAnimatedStyle, useSharedValue } from "react-native-reanimated"
+import Animated, { useAnimatedStyle, useSharedValue, withSpring, withTiming } from "react-native-reanimated"
 import Svg, { Circle } from "react-native-svg"
 import Font from "@/assets/styles/fonts";
-import { useState } from "react"
+import { useEffect, useState } from "react"
 
 interface PersonnalityCardProps {
     trait0: Trait
@@ -19,12 +19,18 @@ const DIMENSIONS = Dimensions.get("window")
 
 const PersonnalityCard = (props: PersonnalityCardProps) => {
     const height = useSharedValue(0);
+    const opacity = useSharedValue(0)
 
     const onLayoutHandler = (e: LayoutChangeEvent) => {
         height.value = e.nativeEvent.layout.height;
     }
 
+    useEffect(() => {
+        opacity.value = withSpring(1)
+    }, [])
+
     const animatedStyle = useAnimatedStyle(() => ({
+        opacity: opacity.value,
         top: DIMENSIONS.height/2 - height.value/2,
     }))
 
@@ -74,6 +80,7 @@ const styles = StyleSheet.create({
     },
 
     container: {
+        opacity: 0,
         zIndex: 100,
         display: "flex",
         flexDirection: "column",
