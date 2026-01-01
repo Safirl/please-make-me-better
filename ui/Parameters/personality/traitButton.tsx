@@ -1,5 +1,5 @@
 import { Trait } from "@/data/characters";
-import { usePersonnalityStorage } from "@/storage/store";
+import { usePersonalityStorage } from "@/storage/store";
 import { primaryColorTokens } from "@/tokens/primary/colors.tokens";
 import { useGestureDrag } from "@/ui/hooks/baseGestureHandler";
 import SvgComponent, { iconType, SvgComponentProps } from "@/ui/svg";
@@ -21,12 +21,12 @@ interface traitButtonProps {
 }
 
 const TraitButton = (props: traitButtonProps) => {
-    const setCurrentTraitPosition = usePersonnalityStorage((state) => state.setCurrentTraitPosition)
-    const addComposedTrait = usePersonnalityStorage((state) => state.addComposedTrait)
-    const composedTraits = usePersonnalityStorage((state) => state.composedTraits)
-    const placeHoldersPos = usePersonnalityStorage((state) => state.placeHoldersPos)
-    const containerCenterX = usePersonnalityStorage((state) => state.containerCenterX)
-    const containerCenterY = usePersonnalityStorage((state) => state.containerCenterY)
+    const setCurrentTraitPosition = usePersonalityStorage((state) => state.setCurrentTraitPosition)
+    const addComposedTrait = usePersonalityStorage((state) => state.addComposedTrait)
+    const composedTraits = usePersonalityStorage((state) => state.composedTraits)
+    const placeHoldersPos = usePersonalityStorage((state) => state.placeHoldersPos)
+    const containerCenterX = usePersonalityStorage((state) => state.containerCenterX)
+    const containerCenterY = usePersonalityStorage((state) => state.containerCenterY)
 
     const getPos = (): {x: number, y: number} => {
         let ox = containerCenterX /* + DIMENSIONS.width/2*/

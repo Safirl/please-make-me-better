@@ -43,7 +43,7 @@ export const useMemoryStorage = create<MemoryState>((set) => ({
   removeMemory: (oldMemory: Memory) => set((state) => ({memories: state.memories.filter((i: Memory) => i !== oldMemory)}))
 }))
 
-interface PersonnalityState {
+interface PersonalityState {
   placeHoldersPos: {x:number, y:number}[]
   traits: Trait[]
   //set the trait that are going to be merged
@@ -61,7 +61,7 @@ interface PersonnalityState {
   setCurrentTraitPosition: (x: number, y: number) => void
 }
 
-export const usePersonnalityStorage = create<PersonnalityState>((set) => ({
+export const usePersonalityStorage = create<PersonalityState>((set) => ({
   traits: characters[0].traits,
   currentTraitPosition: {x:0, y:0},
   createdTraits: [],

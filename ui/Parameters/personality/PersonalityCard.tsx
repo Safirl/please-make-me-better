@@ -10,14 +10,14 @@ import Svg, { Circle } from "react-native-svg"
 import Font from "@/assets/styles/fonts";
 import { useEffect, useState } from "react"
 
-interface PersonnalityCardProps {
+interface PersonalityCardProps {
     trait0: Trait
     trait1: Trait
 }
 
 const DIMENSIONS = Dimensions.get("window")
 
-const PersonnalityCard = (props: PersonnalityCardProps) => {
+const PersonalityCard = (props: PersonalityCardProps) => {
     const height = useSharedValue(0);
     const opacity = useSharedValue(0)
 
@@ -121,4 +121,4 @@ const styles = StyleSheet.create({
     }
 })
 
-export default PersonnalityCard
+export default PersonalityCard

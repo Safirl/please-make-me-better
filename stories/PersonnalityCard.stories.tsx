@@ -1,13 +1,13 @@
 import ClientRequestCard from '@/ui/ClientRequestCard/index';
-import PersonnalityCard from '@/ui/Parameters/personnality/PersonnalityCard';
+import PersonalityCard from '@/ui/Parameters/personality/PersonalityCard';
 import type { Meta, StoryObj } from '@storybook/react-native-web-vite';
 import { View } from "react-native";
 import { fn } from 'storybook/test';
 
 
 const meta = {
-    title: 'UI/PersonnalityCard',
-    component: PersonnalityCard,
+    title: 'UI/PersonalityCard',
+    component: PersonalityCard,
     decorators: [
         (Story) => (
             <View style={{flex: 1, alignItems: 'flex-start'}}>
@@ -31,7 +31,7 @@ const meta = {
             url: 'https://www.figma.com/design/5VGPGRjnfdWU60rwAdXXPe/Maquette-App-Configurateur?node-id=1958-624&m=dev'
         }
     }
-} satisfies Meta<typeof PersonnalityCard>;
+} satisfies Meta<typeof PersonalityCard>;
 
 export default meta;
 

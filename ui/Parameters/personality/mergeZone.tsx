@@ -1,5 +1,5 @@
 import fonts from "@/assets/styles/fonts";
-import { usePersonnalityStorage } from "@/storage/store";
+import { usePersonalityStorage } from "@/storage/store";
 import { primaryColorTokens } from "@/tokens/primary/colors.tokens";
 import { useEffect, useRef, useState } from "react";
 import { StyleSheet, View, Text, Dimensions, LayoutChangeEvent } from "react-native";
@@ -13,12 +13,12 @@ const MergeZone = () => {
     const leftPlaceHolderRef = useRef<View>(null)
     const rightPlaceHolderRef = useRef<View>(null)
 
-    const currentTraitPosition = usePersonnalityStorage((state) => state.currentTraitPosition)
-    const composedTraits = usePersonnalityStorage((state) => state.composedTraits)
-    const setPlaceHolderPos = usePersonnalityStorage((state) => state.setPlaceHolderPos)
-    const containerCenterX = usePersonnalityStorage((state) => state.containerCenterX)
-    const containerCenterY = usePersonnalityStorage((state) => state.containerCenterY)
-    const placeHoldersPos = usePersonnalityStorage((state) => state.placeHoldersPos)
+    const currentTraitPosition = usePersonalityStorage((state) => state.currentTraitPosition)
+    const composedTraits = usePersonalityStorage((state) => state.composedTraits)
+    const setPlaceHolderPos = usePersonalityStorage((state) => state.setPlaceHolderPos)
+    const containerCenterX = usePersonalityStorage((state) => state.containerCenterX)
+    const containerCenterY = usePersonalityStorage((state) => state.containerCenterY)
+    const placeHoldersPos = usePersonalityStorage((state) => state.placeHoldersPos)
 
     const [width0, setWidth0] = useState(0)
     const [height0, setHeight0] = useState(0)

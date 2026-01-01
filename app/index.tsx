@@ -28,7 +28,7 @@ export default function Index() {
   const buttons = [
     { label: "Memories", icon: "memory" as const, route: "/memoriesPage" as Href, style: styles.button1 },
     { label: "Emotions", icon: "emotion" as const, route: "/memoriesPage" as Href, style: styles.button2 },
-    { label: "Personality", icon: "personality" as const, route: "/personnalityPage" as Href, style: styles.button3 },
+    { label: "Personality", icon: "personality" as const, route: "/personalityPage" as Href, style: styles.button3 },
   ];
 
   const handleNavigate = (route: Href) => {

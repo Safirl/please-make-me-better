@@ -1,9 +1,9 @@
 import { Trait } from "@/data/characters";
-import { usePersonnalityStorage } from "@/storage/store";
+import { usePersonalityStorage } from "@/storage/store";
 import { primaryColorTokens } from "@/tokens/primary/colors.tokens";
-import MergeZone from "@/ui/Parameters/personnality/mergeZone";
-import PersonnalityCard from "@/ui/Parameters/personnality/PersonnalityCard";
-import TraitButton from "@/ui/Parameters/personnality/traitButton";
+import MergeZone from "@/ui/Parameters/personality/mergeZone";
+import PersonalityCard from "@/ui/Parameters/personality/PersonalityCard";
+import TraitButton from "@/ui/Parameters/personality/traitButton";
 import { useEffect, useRef, useState } from "react";
 import { Dimensions, LayoutChangeEvent, StyleSheet, View } from "react-native";
 import Animated, { useAnimatedStyle, useSharedValue, withSpring, withTiming } from "react-native-reanimated";
@@ -14,17 +14,17 @@ const TOTAL_ANGLE = (Math.PI * 3)/2
 const DIMENSIONS = Dimensions.get("window")
 
 
-const personnalityParameters = () => {
-    const traits = usePersonnalityStorage((state) => state.traits)
+const personalityParameters = () => {
+    const traits = usePersonalityStorage((state) => state.traits)
     const alphaSpacing = TOTAL_ANGLE / (traits.length - 1)
-    const createTrait = usePersonnalityStorage((state) => state.createTrait)
-    const setContainerPosition = usePersonnalityStorage((state) => state.setContainerPosition)
-    const composedTraits = usePersonnalityStorage((state) => state.composedTraits)
+    const createTrait = usePersonalityStorage((state) => state.createTrait)
+    const setContainerPosition = usePersonalityStorage((state) => state.setContainerPosition)
+    const composedTraits = usePersonalityStorage((state) => state.composedTraits)
     const containerHeight = useSharedValue(0)
     const containerWidth = useSharedValue(0)
     const left = useSharedValue(0)
     const top = useSharedValue(0)
-    // const isContainerReady = usePersonnalityStorage((state) => state.isContainerReady)
+    // const isContainerReady = usePersonalityStorage((state) => state.isContainerReady)
 
     const onContainerLayoutHandler = (e: LayoutChangeEvent) => {
         containerHeight.value = e.nativeEvent.layout.height
@@ -97,7 +97,7 @@ const personnalityParameters = () => {
     }
     {
         composedTraits[0] != null && composedTraits[1] != null && 
-        <PersonnalityCard trait0={composedTraits[0]} trait1={composedTraits[1]}></PersonnalityCard>
+        <PersonalityCard trait0={composedTraits[0]} trait1={composedTraits[1]}></PersonalityCard>
     }
     </>
     )
@@ -116,4 +116,4 @@ const styles = StyleSheet.create({
     }
 })
 
-export default personnalityParameters;
+export default personalityParameters;
