@@ -8,9 +8,11 @@ import FolderHero from "./FolderHero";
 import { createStyle } from "./style";
 import { clientRequestTabTokens, COMPONENT_NAME } from "./tokens";
 import FolderList from "./FolderList/index"
+import Identity from "./Identity"
 interface CustomModalProps extends ViewProps {
     selectColor?: "primary" | "secondary" | "tertiary";
     type: '' | ''
+    currentView?: "" | "identity" | "mission" | "image" | "autrui" | "rupture"
     tabs: ('Dossier' | "Lore")[]
     client: {
         name: string
@@ -35,6 +37,7 @@ const Modal: React.FC<CustomModalProps> = (props) => {
 
     const {
         selectColor = "tertiary",
+        currentView = "",
         tabs,
         client,
         gridContent,
@@ -44,9 +47,26 @@ const Modal: React.FC<CustomModalProps> = (props) => {
 
     const Style = createStyle(selectColor);
 
-    const [selectedTab, setSelectedTab] = React.useState(tabs[0])
+    const [selectedTab, setSelectedTab] = React.useState<"Dossier" | "Lore">(tabs[0])
+    const [selectedView, setSelectedView] = React.useState<"" | "identity" | "mission" | "image" | "autrui" | "rupture">(currentView)
     const [backButtonWidth, setBackButtonWidth] = React.useState()
     const [backButtonHeight, setBackButtonHeight] = React.useState()
+    const [history, setHistory] = React.useState<Array<"" | "identity" | "mission" | "image" | "autrui" | "rupture">>([])
+
+    React.useEffect(() => {
+
+        if (!selectedView) {
+            setSelectedView("")
+        }
+
+
+        setHistory(h => [
+            ...h,
+            selectedView
+        ])
+
+    }, [selectedView])
+
 
     return <View
         style={{
@@ -66,10 +86,21 @@ const Modal: React.FC<CustomModalProps> = (props) => {
                 if (!backButtonHeight) setBackButtonHeight(e.nativeEvent.layout.height as any);
             }}
         >
+
             <Button
                 type="back"
                 label={"< retour"}
+                onPress={() => {
+
+                    setSelectedView(history[history.length - 2])
+                    setHistory((h) => {
+                        console.log(h)
+                        return h.slice(0, -2)
+                    })
+
+                }}
             />
+
         </View>
 
         {
@@ -94,38 +125,62 @@ const Modal: React.FC<CustomModalProps> = (props) => {
                 selectedTab === "Dossier" && <View
                     style={Style.folderSection}
                 >
-                    <FolderHero
-                        client={client}
-                        configure={configure}
-                    />
+                    {
+                        selectedView === "" && <>
+                            <FolderHero
+                                client={client}
+                                configure={() => {
+                                    setSelectedView("identity")
+                                }}
+                            />
 
-                    <FolderList
-                        title={"Consulter ses dossiers"}
-                        folders={[
-                            {
-                                label: "Votre mission",
-                                state: "accent"
-                            },
-                            {
-                                label: "Image de soi",
-                            },
-                            {
-                                label: "Autrui",
-                            },
-                            {
-                                label: "Rupture",
-                            }
-                        ]}
-                    />
-                    {/*
-                    
-                    Old One
-      
-                    <ContentGrid
-                        content={gridContent}
-                    /> 
-                    
-                    */}
+                            <FolderList
+                                title={"Consulter ses dossiers"}
+                                setSelectedView={setSelectedView}
+                                folders={[
+                                    {
+                                        label: "Votre mission",
+                                        state: "accent",
+                                        id: "mission"
+                                    },
+                                    {
+                                        label: "Image de soi",
+                                        id: "image"
+                                    },
+                                    {
+                                        label: "Autrui",
+                                        id: "autrui"
+                                    },
+                                    {
+                                        label: "Rupture",
+                                        id: "rupture"
+                                    }
+                                ]}
+                            />
+                        </>
+
+                    }
+
+                    {
+                        selectedView === "identity" && <><Identity/></>
+                    }
+
+                    {
+                        selectedView === "mission" && <><p>mission</p></>
+                    }
+
+                    {
+                        selectedView === "image" && <><p>image</p></>
+                    }
+
+                    {
+                        selectedView === "autrui" && <><p>autrui</p></>
+                    }
+
+                    {
+                        selectedView === "rupture" && <><p>rupture</p></>
+                    }
+
                 </View>
             }
 
@@ -193,7 +248,6 @@ const Tab = (
             height="41"
             viewBox="0 0 175 41"
             fill="none"
-            xmlns="http://www.w3.org/2000/svg"
         >
             <Path d="M1.13379 35.5358L0 40.3739L174.863 38.8802V35.4773L172.417 35.077L169.725 33.3867L168.436 31.4962L159.961 5.66034L159.069 3.52853L157.375 1.63863L155.455 0.671006L153.822 0.383728H40.8214H15.7085L13.0778 0.655871L11.2181 1.82005L9.23748 4.45079L8.60248 6.24996V22.6694V26.177L8.39081 29.1858L7.4383 31.9526L4.97387 34.4019L2.64552 35.3393L1.13379 35.5358Z"
                 fill={
