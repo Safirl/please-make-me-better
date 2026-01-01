@@ -34,6 +34,7 @@ const Target = (props: targetProps) => {
 
         const distance = Math.sqrt(Math.pow((positionX.value - gunPosition.x), 2) + Math.pow((positionY.value - gunPosition.y), 2))
         return {x:-xDiff* distance * .1,y:-yDiff* distance  * .1}
+        // return {x:-xDiff* 30,y:-yDiff* 30}
     } 
 
     const positionStyle = useAnimatedStyle(() => ({

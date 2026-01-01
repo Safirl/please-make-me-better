@@ -19,6 +19,8 @@ interface CustomButtonProps extends PressableProps {
     children?: React.ReactNode;
     icon?: SvgComponentProps,
     style?: StyleProp<ViewStyle>
+    overridePadding?: number,
+
 }
 
 const createStyles = (type: 'primary' | 'secondary' | 'tertiary' | 'back') => {
@@ -106,6 +108,7 @@ const Button: React.FC<CustomButtonProps> = (props) => {
         children,
         label,
         style,
+        overridePadding: overrideWidth,
         ...rest
     } = props
 
@@ -128,6 +131,7 @@ const Button: React.FC<CustomButtonProps> = (props) => {
             setIsPressed(false)
         }}
         style={[
+            // {width: overrideWidth},
             styles.pressable,
             type === "primary" &&
             [
@@ -159,6 +163,7 @@ const Button: React.FC<CustomButtonProps> = (props) => {
         <View
             style={[
                 styles.layout,
+                {paddingHorizontal:overrideWidth},
                 type === "primary" && [
                     styles.primary,
                     isPressed && styles.primaryPressed,
