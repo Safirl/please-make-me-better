@@ -3,11 +3,12 @@ import { primaryBackgroundTokens } from "@/tokens/primary/backgrounds.tokens"
 import { primaryColorTokens } from "@/tokens/primary/colors.tokens"
 import { primaryFontTokens } from "@/tokens/primary/font.tokens"
 import Button from "@/ui/Button"
-import { View, Text, StyleSheet, Dimensions } from "react-native"
+import { View, Text, StyleSheet, Dimensions, LayoutChangeEvent } from "react-native"
 import { Platform } from "react-native"
-import Animated from "react-native-reanimated"
+import Animated, { useAnimatedStyle, useSharedValue } from "react-native-reanimated"
 import Svg, { Circle } from "react-native-svg"
 import Font from "@/assets/styles/fonts";
+import { useState } from "react"
 
 interface PersonnalityCardProps {
     trait0: Trait
@@ -17,9 +18,19 @@ interface PersonnalityCardProps {
 const DIMENSIONS = Dimensions.get("window")
 
 const PersonnalityCard = (props: PersonnalityCardProps) => {
+    const height = useSharedValue(0);
+
+    const onLayoutHandler = (e: LayoutChangeEvent) => {
+        height.value = e.nativeEvent.layout.height;
+    }
+
+    const animatedStyle = useAnimatedStyle(() => ({
+        top: DIMENSIONS.height/2 - height.value/2,
+    }))
+
     return (
         <>
-            <Animated.View style={styles.container}>
+            <Animated.View style={[styles.container, animatedStyle]} onLayout={onLayoutHandler}>
             <View style={styles.subcontainer}>
                 <View style={styles.line}>
                     <Text style={styles.content}>
@@ -31,7 +42,7 @@ const PersonnalityCard = (props: PersonnalityCardProps) => {
                     <Text style={styles.content}>
                         +
                     </Text>
-                    <Text style={styles.content} style={[styles.tag, styles.content]}>
+                    <Text style={[styles.tag, styles.content]}>
                         {props.trait1.label}
                     </Text>
                 </View>
@@ -49,8 +60,8 @@ const PersonnalityCard = (props: PersonnalityCardProps) => {
                 </View>
             </View>
             <View style={styles.line}>
-                <Button type="secondary" label="Reject" icon={{name: "cross"}}/>
-                <Button type="primary" label="Add" icon={{name: "lightning-bolt"}}/>
+                <Button type="secondary" label="Reject" icon={{name: "cross"}} overridePadding={16}/>
+                <Button type="primary" label="Add" icon={{name: "lightning-bolt"}} overridePadding={42}/>
             </View>
             </Animated.View>
         </>
@@ -63,14 +74,14 @@ const styles = StyleSheet.create({
     },
 
     container: {
+        zIndex: 100,
         display: "flex",
         flexDirection: "column",
         padding: 18,
         gap: 10,
 
         position: "absolute",
-        top: DIMENSIONS.height/2,
-        left: 63,
+        left: 42,
         backgroundColor: primaryColorTokens["color-tertiary-medium"],
         borderRadius: 4,
         borderWidth: 1,
@@ -83,7 +94,8 @@ const styles = StyleSheet.create({
         backgroundColor: primaryBackgroundTokens["background-tertiary"],
         borderRadius: 4,
         paddingHorizontal: 14,
-        paddingVertical: 8
+        paddingVertical: 8,
+        gap: 14
     },
 
     line: {
