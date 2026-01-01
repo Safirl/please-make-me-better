@@ -8,7 +8,9 @@ interface CustomFolderProps extends ViewProps {
     folders: {
         label: string
         state?: "accent"
+        id: "mission" | "image" | "autrui" | "rupture"
     }[]
+    setSelectedView?: React.Dispatch<React.SetStateAction<"" | "identity" | "mission" | "image" | "autrui" | "rupture">>
 }
 
 
@@ -19,14 +21,15 @@ const FolderHero: React.FC<CustomFolderProps> = (props) => {
     const {
         folders,
         title,
+        setSelectedView,
         ...rest
     } = props
 
     const Style = createStyle();
 
     return <View
-    {...rest}
-    style={Style.main}
+        {...rest}
+        style={Style.main}
     >
         <Text style={Style.name} > {title} </Text>
         <View style={Style.row}>
@@ -34,8 +37,11 @@ const FolderHero: React.FC<CustomFolderProps> = (props) => {
                 folders.map((folder, i) => {
                     return <View
                         style={Style.item}
-                        >
+                    >
                         <Button
+                            onPress={() => {
+                                setSelectedView && setSelectedView(folder.id)
+                            }}
                             type="verticalIcon"
                             state={folder.state}
                             label={folder.label}
