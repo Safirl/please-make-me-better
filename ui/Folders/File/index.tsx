@@ -95,6 +95,7 @@ const FolderHero: React.FC<CustomFolderProps> = (props) => {
                     <Button
                         type="back"
                         label="Dossier suivant >"
+                        onPress={next}
                     />
                 </View>
             }
