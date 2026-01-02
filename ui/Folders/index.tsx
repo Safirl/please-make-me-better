@@ -191,7 +191,8 @@ const Modal: React.FC<CustomModalProps> = (props) => {
 
         <View
             style={[Style.back, {
-                transform: [{ translateY: -(backButtonHeight || 0) - 5 }]
+                transform: [{ translateY: -(backButtonHeight || 0) - 5 }],
+                opacity: history[history.length - 1] === "" ? 0 : 1
             }]}
             onLayout={(e) => {
                 if (!backButtonWidth) setBackButtonWidth(e.nativeEvent.layout.width as any);
@@ -203,13 +204,12 @@ const Modal: React.FC<CustomModalProps> = (props) => {
                 type="back"
                 label={"< retour"}
                 onPress={() => {
-
-                    setSelectedView(history[history.length - 2])
-                    setHistory((h) => {
-                        console.log(h)
-                        return h.slice(0, -2)
-                    })
-
+                    if (history[history.length - 1] !== "") {
+                        setSelectedView(history[history.length - 2])
+                        setHistory((h) => {
+                            return h.slice(0, -2)
+                        })
+                    }
                 }}
             />
 
