@@ -42,6 +42,7 @@ export const Primary: Story = {
     args: {
         title: "Le conflit avec le miroir",
         sectionName: "Image de soi",
+        next: () => { },
         parahraph: [
             [
                 {
