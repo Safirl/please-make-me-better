@@ -9,6 +9,7 @@ import { createStyle } from "./style";
 import { clientRequestTabTokens, COMPONENT_NAME } from "./tokens";
 import FolderList from "./FolderList/index"
 import Identity from "./Identity"
+import File from "./File"
 interface CustomModalProps extends ViewProps {
     selectColor?: "primary" | "secondary" | "tertiary";
     type: '' | ''
@@ -52,6 +53,117 @@ const Modal: React.FC<CustomModalProps> = (props) => {
     const [backButtonWidth, setBackButtonWidth] = React.useState()
     const [backButtonHeight, setBackButtonHeight] = React.useState()
     const [history, setHistory] = React.useState<Array<"" | "identity" | "mission" | "image" | "autrui" | "rupture">>([])
+
+
+
+    const image = {
+        title: "Le conflit avec le miroir",
+        sectionName: "Image de soi",
+        next: () => { setSelectedView("autrui") },
+        parahraph: [
+            [
+                {
+                    text: "Mia développe une dysmorphie.",
+                    style: 'accent' as const
+                },
+
+            ],
+            [
+                {
+                    text: "Elle a envisagé la transformation physique comme solution.",
+                    style: "neutral" as const
+                },
+
+                {
+                    text: "La chirurgie devient une tentative pour se conformer.",
+                    style: "accent" as const
+                },
+            ],
+            [
+                {
+                    text: "Mais malgré les changements, rien ne s'apaise.",
+                    style: "neutral" as const
+                },
+            ],
+            [
+                {
+                    text: "Le sentiment d'échec persiste.",
+                    style: "neutral" as const
+                },
+            ]
+        ]
+    }
+
+
+    const autrui = {
+        title: "La validation comme piège",
+        sectionName: "Autrui",
+        next: () => { setSelectedView("rupture") },
+        parahraph: [
+            [
+                {
+                    text: "Mia cherche alors la validation extérieure.",
+                    style: 'accent' as const
+                },
+
+            ],
+            [
+                {
+                    text: "Le regard des autres devient un repère. Elle intériorise les jugements. Les attentes des autres prennent le pas sur sa propre voix.",
+                    style: "neutral" as const
+                },
+
+                {
+                    text: "Peu à peu, elle s'oublie.",
+                    style: "accent" as const
+                },
+            ],
+        ]
+    }
+
+
+    const rupture = {
+        title: "Le moment de bascule",
+        sectionName: "Rupture",
+        next: () => { setSelectedView("mission") },
+        parahraph: [
+            [
+                {
+                    text: "Mia comprend qu'elle ne veut plus changer son corps.",
+                    style: 'neutral' as const
+                },
+                {
+                    text: "Elle veut être comprise.",
+                    style: 'accent' as const
+                }
+            ],
+            [
+                {
+                    text: "Le regard des autres devient un repère. Elle intériorise les jugements. Les attentes des autres prennent le pas sur sa propre voix.",
+                    style: "neutral" as const
+                },
+
+                {
+                    text: "Elle aspire à des relations sincères, où son apparence n'est plus centrale.",
+                    style: "accent" as const
+                },
+            ],
+            [
+                {
+                    text: "C'est ici que votre rôle commence.",
+                    style: "accent2" as const
+
+                }
+            ]
+        ]
+    }
+
+    const obj = {
+        image,
+        autrui,
+        rupture
+    }
+
 
     React.useEffect(() => {
 
@@ -162,7 +274,7 @@ const Modal: React.FC<CustomModalProps> = (props) => {
                     }
 
                     {
-                        selectedView === "identity" && <><Identity/></>
+                        selectedView === "identity" && <><Identity /></>
                     }
 
                     {
@@ -170,16 +282,18 @@ const Modal: React.FC<CustomModalProps> = (props) => {
                     }
 
                     {
-                        selectedView === "image" && <><p>image</p></>
+                        (
+                            selectedView === "autrui"
+                            || selectedView === "image"
+                            || selectedView === "rupture"
+                        ) && <><File
+                            title={obj[selectedView].title}
+                            sectionName={obj[selectedView].sectionName}
+                            parahraph={obj[selectedView].parahraph}
+                            next={obj[selectedView].next}
+                        /></>
                     }
 
-                    {
-                        selectedView === "autrui" && <><p>autrui</p></>
-                    }
-
-                    {
-                        selectedView === "rupture" && <><p>rupture</p></>
-                    }
 
                 </View>
             }

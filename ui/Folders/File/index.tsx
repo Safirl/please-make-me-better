@@ -12,7 +12,7 @@ interface CustomFolderProps extends ViewProps {
     sectionName: string
     parahraph: {
         text: string
-        style: "accent" | "neutral"
+        style: "accent" | "neutral" | "accent2"
     }[][]
     next?: () => void
     //     folders: {
@@ -74,7 +74,8 @@ const FolderHero: React.FC<CustomFolderProps> = (props) => {
                             lines.map(line => {
                                 return <Text
                                     style={[
-                                        line.style === "accent" && Style.accentParagraph
+                                        line.style === "accent" && Style.accentParagraph,
+                                        line.style === "accent2" && Style.accentParagraph2
                                     ]}
                                 >
                                     {line.text}
