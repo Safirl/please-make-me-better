@@ -19,7 +19,7 @@ export const paragraphFontTokens = {
     "font-paragraph-size": 12 as const,
     "font-paragraph-weight": "400" as const,
     "font-paragraph-family": primaryFontTokens["font-family-primary"],
-    "font-paragraph-line": 12 as const,
+    "font-paragraph-line": 22 as const,
     "font-paragraph-letterSpacing": 0 as const,
 }
 

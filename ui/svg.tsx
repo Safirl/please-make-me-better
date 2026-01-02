@@ -9,6 +9,8 @@ export interface SvgComponentProps extends SvgProps {
 
 const SvgComponent = (props: SvgComponentProps) => {
     const { name, ...rest } = props
+
+
     if (name === "folder") {
 
         return (
@@ -49,6 +51,7 @@ const SvgComponent = (props: SvgComponentProps) => {
         </Svg>
 
     }
+
     if (name === "star") {
         return <Svg width="24" height="24" viewBox="0 0 24 24" fill="none" >
             <Path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"
@@ -59,7 +62,10 @@ const SvgComponent = (props: SvgComponentProps) => {
             />
         </Svg>
     }
+
     if (name === "eye") {
+
+
         return <Svg width="22" height="16" viewBox="0 0 22 16" fill="none">
             <Path
                 d="M1 8C1 8 4 1 11 1C18 1 21 8 21 8C21 8 18 15 11 15C4 15 1 8 1 8Z"
@@ -77,6 +83,8 @@ const SvgComponent = (props: SvgComponentProps) => {
             />
         </Svg>
     }
+
+
     if (name === "heart") {
         return <Svg width="22" height="20" viewBox="0 0 22 20" fill="none">
             <Path
@@ -89,6 +97,10 @@ const SvgComponent = (props: SvgComponentProps) => {
         </Svg>
 
     }
+
+
+
+
 
     return (
         <Svg
@@ -246,6 +258,7 @@ const SvgComponent = (props: SvgComponentProps) => {
             }
         </Svg>
     )
+
 }
 
 export default SvgComponent;
