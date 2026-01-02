@@ -10,6 +10,7 @@ import { clientRequestTabTokens, COMPONENT_NAME } from "./tokens";
 import FolderList from "./FolderList/index"
 import Identity from "./Identity"
 import File from "./File"
+import Mission from "./Mission"
 interface CustomModalProps extends ViewProps {
     selectColor?: "primary" | "secondary" | "tertiary";
     type: '' | ''
@@ -30,7 +31,7 @@ interface CustomModalProps extends ViewProps {
         }[]
     }[]
 
-    configure: (event: GestureResponderEvent) => void
+    configure: () => void
 }
 
 
@@ -278,7 +279,7 @@ const Modal: React.FC<CustomModalProps> = (props) => {
                     }
 
                     {
-                        selectedView === "mission" && <><p>mission</p></>
+                        selectedView === "mission" && <Mission configure={configure} />
                     }
 
                     {
