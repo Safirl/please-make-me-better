@@ -1,6 +1,7 @@
 import File from '@/ui/Folders/File/index';
 import type { Meta, StoryObj } from '@storybook/react-native-web-vite';
 import { View } from "react-native";
+import { fn } from 'storybook/test';
 // import pp from "./assets/images/clients/niel_musk_pp.jpg";
 
 // console.log(pp)
@@ -19,6 +20,7 @@ const meta = {
     tags: ['autodocs'],
     // Use `fn` to spy on the onPress arg, which will appear in the actions panel once invoked: https://storybook.js.org/docs/essentials/actions#story-args
     args: {
+        next: fn()
     },
     // argTypes: {
     //     selectColor: {
@@ -42,7 +44,6 @@ export const Primary: Story = {
     args: {
         title: "Le conflit avec le miroir",
         sectionName: "Image de soi",
-        next: () => { },
         parahraph: [
             [
                 {
