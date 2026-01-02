@@ -5,7 +5,7 @@ import Svg, { Circle, ClipPath, Defs, G, Path, SvgProps } from "react-native-svg
 </svg>
 
 export interface SvgComponentProps extends SvgProps {
-    name: 'Brain-circuit' | 'emotion' | 'personality' | 'memory' | "folder" | "human",
+    name: 'Brain-circuit' | 'emotion' | 'personality' | 'memory' | "folder" | "human" | "star" | "eye" | "heart",
 }
 
 const SvgComponent = (props: SvgComponentProps) => {
@@ -51,9 +51,58 @@ const SvgComponent = (props: SvgComponentProps) => {
 
     }
 
+    if (name === "star") {
+        return <Svg width="24" height="24" viewBox="0 0 24 24" fill="none" >
+            <Path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"
+                stroke={rest.color ? rest.color : "#F1F1F1"}
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+            />
+        </Svg>
+    }
+
+    if (name === "eye") {
+
+
+        return <Svg width="22" height="16" viewBox="0 0 22 16" fill="none">
+            <Path
+                d="M1 8C1 8 4 1 11 1C18 1 21 8 21 8C21 8 18 15 11 15C4 15 1 8 1 8Z"
+                stroke={rest.color ? rest.color : "#F1F1F1"}
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+            />
+            <Path
+                d="M11 11C12.6569 11 14 9.65685 14 8C14 6.34315 12.6569 5 11 5C9.34315 5 8 6.34315 8 8C8 9.65685 9.34315 11 11 11Z"
+                stroke={rest.color ? rest.color : "#F1F1F1"}
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+            />
+        </Svg>
+    }
+
+
+    if (name === "heart") {
+        return <Svg width="22" height="20" viewBox="0 0 22 20" fill="none">
+            <Path
+                d="M18 12C19.49 10.54 21 8.79 21 6.5C21 5.04131 20.4205 3.64236 19.3891 2.61091C18.3576 1.57946 16.9587 1 15.5 1C13.74 1 12.5 1.5 11 3C9.5 1.5 8.26 1 6.5 1C5.04131 1 3.64236 1.57946 2.61091 2.61091C1.57946 3.64236 1 5.04131 1 6.5C1 8.8 2.5 10.55 4 12L11 19L18 12Z"
+                stroke={rest.color ? rest.color : "#F1F1F1"}
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+            />
+        </Svg>
+
+    }
+
+
+
+
     /**
-     * Should be refactor as the upper one to avoid contaier overflow issues.
-     */
+        * Should be refactor as the upper one to avoid contaier overflow issues.
+        */
     return (
         <Svg
             width={24}
@@ -99,7 +148,7 @@ const SvgComponent = (props: SvgComponentProps) => {
                     </G>
                     <Defs>
                         <ClipPath id="a">
-                            <Path fill={rest.color ? rest.color : "#fff"} d d="M0 0h23v23H0z" />
+                            <Path fill={rest.color ? rest.color : "#fff"} d="M0 0h23v23H0z" />
                         </ClipPath>
                     </Defs>
                 </>
@@ -107,6 +156,7 @@ const SvgComponent = (props: SvgComponentProps) => {
             }
         </Svg>
     )
+
 }
 
 export default SvgComponent;

@@ -46,10 +46,6 @@ export const createStyle = () => StyleSheet.create({
         color: primaryTokens["color-tertiary-lower"],
         paddingVertical: 4,
     },
-    accentParagraph2: {
-        color: primaryTokens["color-primary-low"],
-        paddingVertical: 4,
-    },
     accentParagraph: {
         color: primaryTokens["color-secondary-high"],
         paddingVertical: 4,
