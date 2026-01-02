@@ -37,12 +37,12 @@ const FolderHero: React.FC<CustomFolderProps> = (props) => {
 
                     <View style={Style.row}>
 
-                        <Text style={Style.name} > {c.name} </Text>
+                        <Text style={Style.name}>{c.name}</Text>
 
 
                         {
                             c.labels.map(label => {
-                                return <Text style={[Style.label, Style[`${label.status}`]]} > {label.label} </Text>
+                                return <Text style={[Style.label, Style[`${label.status}`]]}>{label.label}</Text>
                             })
                         }
 
