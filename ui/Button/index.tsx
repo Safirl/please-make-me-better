@@ -13,15 +13,15 @@ import SvgComponent, { SvgComponentProps } from "../svg";
 
 //ommit styles
 interface CustomButtonProps extends PressableProps {
-    type: 'primary' | 'secondary' | 'tertiary' | 'back';
-    state?: 'none' | 'disabled' | 'active'
+    type: 'primary' | 'secondary' | 'tertiary' | 'back' | 'verticalIcon';
+    state?: 'none' | 'disabled' | 'active' | 'accent'
     label?: string;
     children?: React.ReactNode;
     icon?: SvgComponentProps,
     style?: StyleProp<ViewStyle>
 }
 
-const createStyles = (type: 'primary' | 'secondary' | 'tertiary' | 'back') => {
+const createStyles = (type: 'primary' | 'secondary' | 'tertiary' | 'back' | 'verticalIcon', state?: 'none' | 'disabled' | 'active' | 'accent') => {
     return StyleSheet.create({
         layout: {
             position: "relative",
@@ -33,6 +33,17 @@ const createStyles = (type: 'primary' | 'secondary' | 'tertiary' | 'back') => {
             gap: 8,
             flexDirection: "row",
             borderRadius: 4,
+            ...(type === "primary" && {
+                minHeight: 46,
+            }),
+            ...(type === "verticalIcon" && {
+                backgroundColor: primaryColorTokens["color-tertiary-medium"],
+                flexDirection: "column",
+                gap: 12,
+                paddingVertical: 16,
+                paddingHorizontal: 16,
+            })
+
         },
 
         border: {
@@ -42,12 +53,27 @@ const createStyles = (type: 'primary' | 'secondary' | 'tertiary' | 'back') => {
             left: 0,
             right: 0,
             borderRadius: 5,
+            ...(type === "verticalIcon" && {
+                // backgroundColor: primaryColorTokens["color-tertiary-medium"],
+                ...(state === "accent" && {
+                    backgroundColor: primaryColorTokens["color-primary-medium"]
+                })
+            })
         },
 
         content: {
+            // color: primaryColorTokens['color-white'],
             userSelect: "none",
-            ...Font.paragraph
+            ...Font.paragraph,
+
+            ...(type === "back" && {
+                lineHeight: 14
+            })
         },
+        // content: {
+        //     userSelect: "none",
+        //     ...Font.paragraph
+        // },
 
         contentSecondary: {
             color: primaryColorTokens['color-secondary-medium'],
@@ -57,6 +83,7 @@ const createStyles = (type: 'primary' | 'secondary' | 'tertiary' | 'back') => {
         contentDisabled: {
             color: primaryColorTokens['color-tertiary-lower'],
         },
+
 
         pressable: {
             position: "relative",
@@ -90,10 +117,49 @@ const createStyles = (type: 'primary' | 'secondary' | 'tertiary' | 'back') => {
             backgroundColor: primaryColorTokens["color-tertiary-medium"],
         },
 
+
         tertiary: {
             backgroundColor: primaryColorTokens["color-tertiary-medium"],
         },
+
+        dot: {
+            width: 8,
+            height: 8,
+            backgroundColor: primaryColorTokens['color-primary-medium'],
+            borderRadius: "50%"
+        },
+
+        labelContainer: {
+            display: "flex",
+            flexDirection: "row",
+            gap: 8,
+            alignItems: "center"
+        }
     })
+}
+
+const getBorderGradient = (type: 'primary' | 'secondary' | 'tertiary' | 'back' | 'verticalIcon', state?: 'none' | 'disabled' | 'active' | 'accent') => {
+
+    if (type === "verticalIcon" && state === "accent") {
+        return primaryColorTokens["primart-accent-border"]
+    }
+
+
+    if (type === "back") {
+        return primaryColorTokens["gradient-border-2"]
+    }
+
+    if (type === "tertiary" && state === "active") {
+        return primaryColorTokens["gradient-border-3"]
+    }
+
+    if (type === "tertiary") {
+        primaryColorTokens["gradient-border-4"]
+    }
+
+    return primaryColorTokens["gradient-border-1"]
+
+
 }
 
 const Button: React.FC<CustomButtonProps> = (props) => {
@@ -109,16 +175,13 @@ const Button: React.FC<CustomButtonProps> = (props) => {
         ...rest
     } = props
 
-    const styles = createStyles(type)
+    const styles = createStyles(type, state)
 
     const iconColor = state === "disabled"
         ? styles.contentDisabled.color : state === "active" ?
             styles.contentSecondary.color : styles.content.color
 
-    const borderGradient = type === "back"
-        ? primaryColorTokens["gradient-border-2"] : type === "tertiary" && state === "active"
-            ? primaryColorTokens["gradient-border-3"] : type === "tertiary" ? primaryColorTokens["gradient-border-4"] : primaryColorTokens["gradient-border-1"]
-
+    const borderGradient = getBorderGradient(type, state)
 
     return <Pressable
         onPressIn={() => {
@@ -129,6 +192,21 @@ const Button: React.FC<CustomButtonProps> = (props) => {
         }}
         style={[
             styles.pressable,
+            /**
+             * 
+             * As we already send the information in creteStyle with the current type, we sould build the correct style object, we sould only have 
+             * 
+             * 
+             *  ```jsx
+             *  tyles.default,
+             *  isPressed && styles.pressed,
+             *  state == "disabled" && styles.desabled
+             *  ``` 
+             * 
+             * And the style should already have the right value.
+             * 
+             * As react rebuild the whole component at each rerenders, it should be possible to move isPressed and state conditions in the style part.
+             */
             type === "primary" &&
             [
                 styles.primary,
@@ -143,7 +221,7 @@ const Button: React.FC<CustomButtonProps> = (props) => {
             type === "back" && [
                 styles.secondary,
                 isPressed && styles.secondaryPressed,
-                state == "disabled" && styles.secondaryDisabled
+                state == "disabled" && styles.secondaryDisabled,
             ],
             type === "tertiary" && [
                 styles.tertiary,
@@ -152,6 +230,7 @@ const Button: React.FC<CustomButtonProps> = (props) => {
         ]}
         {...rest}
     >
+
         <LinearGradient
             colors={borderGradient}
             style={styles.border}
@@ -186,12 +265,31 @@ const Button: React.FC<CustomButtonProps> = (props) => {
             }
             {
                 label
-                    ? <Text style={[
-                        styles.content,
-                        state == "disabled" && styles.contentDisabled,
-                        state == "active" && styles.contentSecondary,
-                    ]}
-                    >{label}</Text>
+                    ? <View
+                        style={
+                            styles.labelContainer
+                        }>
+                        {
+                            type === "verticalIcon"
+                            && state === "accent"
+                            && (
+                                <View
+                                    style={
+                                        styles.dot
+                                    }>
+
+                                </View>
+                            )
+                        }
+
+                        <Text
+                            style={[
+                                styles.content,
+                                state == "disabled" && styles.contentDisabled,
+                                state == "active" && styles.contentSecondary,
+                            ]}
+                        >{label}</Text>
+                    </View>
                     : children
             }
         </View>
