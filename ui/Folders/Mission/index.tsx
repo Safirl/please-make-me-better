@@ -38,7 +38,9 @@ const FolderHero: React.FC<CustomFolderProps> = (props) => {
 
     return <View
         style={{
-            alignItems: "center"
+            alignItems: "center",
+            minWidth: 443 + 180,
+            paddingVertical: 4
         }}
     >
         <View
