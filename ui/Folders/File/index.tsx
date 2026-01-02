@@ -14,6 +14,7 @@ interface CustomFolderProps extends ViewProps {
         text: string
         style: "accent" | "neutral"
     }[][]
+    next?: () => void
     //     folders: {
     //         label: string
     //         state?: "accent"
@@ -32,6 +33,7 @@ const FolderHero: React.FC<CustomFolderProps> = (props) => {
         title,
         sectionName,
         parahraph,
+        next,
         ...rest
     } = props
 
@@ -84,6 +86,18 @@ const FolderHero: React.FC<CustomFolderProps> = (props) => {
                 })
             }
 
+
+            {
+                next &&
+                <View
+                    style={Style.btnContainer}
+                >
+                    <Button
+                        type="back"
+                        label="Dossier suivant >"
+                    />
+                </View>
+            }
         </View>
 
     </View >

@@ -26,7 +26,7 @@ export const createStyle = () => StyleSheet.create({
         ...Fonts["h2"],
         paddingVertical: 10
     },
-    hr:{
+    hr: {
         backgroundColor: primaryTokens["color-tertiary-low"],
         margin: 0,
         width: 375,
@@ -55,6 +55,11 @@ export const createStyle = () => StyleSheet.create({
         position: "absolute",
         top: 21,
         left: -50
+    },
+    btnContainer: {
+        paddingTop: 12,
+        width: 150,
+
     }
 })
 
