@@ -34,12 +34,10 @@ export const createStyle = () => StyleSheet.create({
     },
     name: {
         ...Fonts.paragraph,
-        lineHeight: 22,
         fontSize: 14
     },
     label: {
         ...Fonts.paragraph,
-        lineHeight: 22,
         backgroundColor: primaryTokens["color-tertiary-medium"],
         paddingBottom: 4,
         paddingTop: 4,

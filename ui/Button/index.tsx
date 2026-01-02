@@ -66,7 +66,11 @@ const createStyles = (type: 'primary' | 'secondary' | 'tertiary' | 'back' | 'ver
         content: {
             // color: primaryColorTokens['color-white'],
             userSelect: "none",
-            ...Font.paragraph
+            ...Font.paragraph,
+
+            ...(type === "back" && {
+                lineHeight: 14
+            })
         },
         // content: {
         //     userSelect: "none",
@@ -221,7 +225,7 @@ const Button: React.FC<CustomButtonProps> = (props) => {
             type === "back" && [
                 styles.secondary,
                 isPressed && styles.secondaryPressed,
-                state == "disabled" && styles.secondaryDisabled
+                state == "disabled" && styles.secondaryDisabled,
             ],
             type === "tertiary" && [
                 styles.tertiary,

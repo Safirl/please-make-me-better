@@ -10,7 +10,6 @@ const titleFont = {
 const paragraphFont = {
     ...Fonts.paragraph,
     color: primaryFontTokens["font-color-secondary"],
-    paddingBottom: 4
 }
 const main = () => ({
     flexDirection: "row" as const,
