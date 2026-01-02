@@ -43,10 +43,10 @@ const FolderHero: React.FC<CustomFolderProps> = (props) => {
             />
 
             <View>
-                <Text style={Style.titleFont} > {client.name} // </Text>
-                <Text style={Style.paragraphFont} > {client.request} </Text>
-                <Text style={Style.paragraphFont} > {client.work} </Text>
-                <Text style={Style.paragraphFont} > {client.age} </Text>
+                <Text style={Style.titleFont}>{client.name} //</Text>
+                <Text style={Style.paragraphFont}>{client.request}</Text>
+                <Text style={Style.paragraphFont}>{client.work}</Text>
+                <Text style={Style.paragraphFont}>{client.age}</Text>
             </View>
         </View>
         <View>

@@ -31,7 +31,7 @@ const FolderHero: React.FC<CustomFolderProps> = (props) => {
         {...rest}
         style={Style.main}
     >
-        <Text style={Style.name} > {title} </Text>
+        <Text style={Style.name}>{title}</Text>
         <View style={Style.row}>
             {
                 folders.map((folder, i) => {
