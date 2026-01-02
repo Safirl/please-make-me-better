@@ -11,6 +11,7 @@ interface UseGestureDragProps {
     initialX?: number;
     initialY?: number;
     resetOnDragFinalize?: boolean;
+    enable?: boolean
 }
 
 export const useGestureDrag = ({
@@ -18,7 +19,8 @@ export const useGestureDrag = ({
     onDragEnded,
     initialX = sizes.width / 2,
     initialY = sizes.height / 2,
-    resetOnDragFinalize: resetOnDragEnded = false
+    resetOnDragFinalize: resetOnDragEnded = false,
+    enable = true
 }: UseGestureDragProps = {}) => {
     const width = useSharedValue(0);
     const height = useSharedValue(0);
@@ -32,16 +34,19 @@ export const useGestureDrag = ({
 
     const panGesture = Gesture.Pan()
         .onBegin((e) => {
+            if (!enable) return;
             top.value = withSpring(e.absoluteY, { duration: 200 });
             left.value = withSpring(e.absoluteX, { duration: 200 });
             onPositionChanged?.(left.value, top.value);
         })
         .onUpdate((e) => {
+            if (!enable) return;
             top.value = withSpring(e.absoluteY, { duration: 200 });
             left.value = withSpring(e.absoluteX, { duration: 200 });
             onPositionChanged?.(left.value, top.value);
         })
         .onFinalize(() => {
+            if (!enable) return;
             onDragEnded?.(left.value, top.value);
             if (resetOnDragEnded) {
                 top.value = withSpring(initialY, { duration: 400 });

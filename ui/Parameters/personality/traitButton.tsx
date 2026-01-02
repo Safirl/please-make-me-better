@@ -3,7 +3,7 @@ import { usePersonalityStorage } from "@/storage/store";
 import { primaryColorTokens } from "@/tokens/primary/colors.tokens";
 import { useGestureDrag } from "@/ui/hooks/baseGestureHandler";
 import SvgComponent, { iconType, SvgComponentProps } from "@/ui/svg";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Dimensions, LayoutChangeEvent, Pressable, StyleSheet } from "react-native"
 import { Gesture, GestureDetector, GestureType } from "react-native-gesture-handler";
 import Animated, { SharedValue, useAnimatedReaction, useAnimatedStyle, useSharedValue, withSpring } from "react-native-reanimated";
@@ -27,6 +27,8 @@ const TraitButton = (props: traitButtonProps) => {
     const placeHoldersPos = usePersonalityStorage((state) => state.placeHoldersPos)
     const containerCenterX = usePersonalityStorage((state) => state.containerCenterX)
     const containerCenterY = usePersonalityStorage((state) => state.containerCenterY)
+    const opacity = useSharedValue(1)
+    const [enabled, setIsEnabled] = useState(true)
 
     const getPos = (): {x: number, y: number} => {
         let ox = containerCenterX /* + DIMENSIONS.width/2*/
@@ -53,16 +55,26 @@ const TraitButton = (props: traitButtonProps) => {
         onPositionChanged(x, y) {
             setCurrentTraitPosition(x,y)
         },
+        enable: enabled
     });
     
     useEffect(() => {
         if (composedTraits['0']?.id === props.id) {
             position.left.value = withSpring(placeHoldersPos[0].x)
             position.top.value = withSpring(placeHoldersPos[0].y)
+            setIsEnabled(false)
         }
         else if (composedTraits['1']?.id === props.id) {
             position.left.value = withSpring(placeHoldersPos[1].x)
             position.top.value = withSpring(placeHoldersPos[1].y)
+            setIsEnabled(false)
+        }
+        else if (composedTraits['0']?.id !== undefined && composedTraits['0']?.id !== props.id
+            && composedTraits['1']?.id !== undefined && composedTraits['1']?.id !== props.id
+        ) {
+            opacity.value = withSpring(0)
+            position.left.value = withSpring(getPos().x)
+            position.top.value = withSpring(getPos().y)
         }
         else {
             position.left.value = withSpring(getPos().x)
@@ -77,9 +89,13 @@ const TraitButton = (props: traitButtonProps) => {
         return distance < props.mergeZoneRadius;
     }
 
+    const opacityAnimatedStyle = useAnimatedStyle(() => ({
+        opacity: opacity.value
+    }))
+
     return (
         <GestureDetector gesture={panGesture}>
-            <Animated.View style={[styles.button, animatedStyle]} onLayout={onLayoutHandler}>
+            <Animated.View style={[styles.button, animatedStyle, opacityAnimatedStyle]} onLayout={onLayoutHandler}>
                 <SvgComponent name={props.iconName}></SvgComponent>
             </Animated.View>
         </GestureDetector>
