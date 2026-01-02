@@ -30,12 +30,9 @@ export const createStyle = () => StyleSheet.create({
     paragraph: {
         ...Fonts.paragraph,
         color: primaryTokens["color-tertiary-lower"],
-        paddingVertical: 4,
     },
     accentParagraph: {
         color: primaryTokens["color-secondary-high"],
-        paddingVertical: 4,
-
     },
     marker: {
         position: "absolute",

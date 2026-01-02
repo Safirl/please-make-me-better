@@ -40,7 +40,6 @@ export const createStyle = (selectColor: "primary" | "secondary" | "tertiary" = 
     },
     btnLabel: {
         ...Fonts.paragraph,
-
         position: "absolute" as const,
         top: "50%",
         left: "50%",

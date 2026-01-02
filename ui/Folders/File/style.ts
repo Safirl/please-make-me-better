@@ -44,7 +44,6 @@ export const createStyle = () => StyleSheet.create({
     paragraph: {
         ...Fonts.paragraph,
         color: primaryTokens["color-tertiary-lower"],
-        paddingVertical: 4,
     },
     accentParagraph: {
         color: primaryTokens["color-secondary-high"],
@@ -59,7 +58,6 @@ export const createStyle = () => StyleSheet.create({
     btnContainer: {
         paddingTop: 12,
         width: 150,
-
     }
 })
 
