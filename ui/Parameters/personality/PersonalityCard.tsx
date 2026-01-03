@@ -41,17 +41,17 @@ const PersonalityCard = (props: PersonalityCardProps) => {
         <>
             <Animated.View style={[styles.container, animatedStyle]} onLayout={onLayoutHandler}>
             <View style={styles.subcontainer}>
-                <View style={styles.line}>
-                    <Text style={styles.content}>
+                <View style={[styles.line]}>
+                    <Text style={[styles.content, styles.line1]}>
                         Source: 
                     </Text>
-                    <Text style={[styles.tag, styles.content]}>
+                    <Text style={[styles.tag, styles.content, styles.line1]}>
                         {props.trait0.label}
                     </Text>
-                    <Text style={styles.content}>
+                    <Text style={[styles.content, styles.line1]}>
                         +
                     </Text>
-                    <Text style={[styles.tag, styles.content]}>
+                    <Text style={[styles.tag, styles.content, styles.line1]}>
                         {props.trait1.label}
                     </Text>
                 </View>
@@ -113,6 +113,10 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         alignItems: "center",
         gap: 8
+    },
+
+    line1: {
+        color: primaryColorTokens["color-tertiary-lower"]
     },
 
     tag:{
