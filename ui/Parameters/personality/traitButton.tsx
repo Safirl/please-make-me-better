@@ -1,14 +1,11 @@
-import { Trait } from "@/data/characters";
 import { usePersonalityStorage } from "@/storage/store";
 import { primaryColorTokens } from "@/tokens/primary/colors.tokens";
 import { useGestureDrag } from "@/ui/hooks/baseGestureHandler";
-import SvgComponent, { iconType, SvgComponentProps } from "@/ui/svg";
+import SvgComponent, { iconType } from "@/ui/svg";
 import { useEffect, useState } from "react";
-import { Dimensions, LayoutChangeEvent, Pressable, StyleSheet } from "react-native"
-import { Gesture, GestureDetector, GestureType } from "react-native-gesture-handler";
-import Animated, { SharedValue, useAnimatedReaction, useAnimatedStyle, useSharedValue, withSpring } from "react-native-reanimated";
-
-const DIMENSIONS = Dimensions.get("window")
+import { Dimensions, StyleSheet } from "react-native"
+import { GestureDetector } from "react-native-gesture-handler";
+import Animated, { useAnimatedStyle, useSharedValue, withSpring } from "react-native-reanimated";
 
 interface traitButtonProps {
     id: number,
@@ -72,11 +69,14 @@ const TraitButton = (props: traitButtonProps) => {
         else if (composedTraits['0']?.id !== undefined && composedTraits['0']?.id !== props.id
             && composedTraits['1']?.id !== undefined && composedTraits['1']?.id !== props.id
         ) {
+            setIsEnabled(true)
             opacity.value = withSpring(0)
             position.left.value = withSpring(getPos().x)
             position.top.value = withSpring(getPos().y)
         }
         else {
+            setIsEnabled(true)
+            opacity.value = withSpring(1)
             position.left.value = withSpring(getPos().x)
             position.top.value = withSpring(getPos().y)
         }

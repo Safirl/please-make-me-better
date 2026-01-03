@@ -9,6 +9,7 @@ import Animated, { useAnimatedStyle, useSharedValue, withSpring, withTiming } fr
 import Svg, { Circle } from "react-native-svg"
 import Font from "@/assets/styles/fonts";
 import { useEffect, useState } from "react"
+import { usePersonalityStorage } from "@/storage/store"
 
 interface PersonalityCardProps {
     trait0: Trait
@@ -20,6 +21,8 @@ const DIMENSIONS = Dimensions.get("window")
 const PersonalityCard = (props: PersonalityCardProps) => {
     const height = useSharedValue(0);
     const opacity = useSharedValue(0)
+
+    const resetTraits = usePersonalityStorage((state) => state.resetTraits)
 
     const onLayoutHandler = (e: LayoutChangeEvent) => {
         height.value = e.nativeEvent.layout.height;
@@ -66,7 +69,7 @@ const PersonalityCard = (props: PersonalityCardProps) => {
                 </View>
             </View>
             <View style={styles.line}>
-                <Button type="secondary" label="Reject" icon={{name: "cross"}} overridePadding={16}/>
+                <Button type="secondary" label="Reject" icon={{name: "cross"}} overridePadding={16} onPress={resetTraits}/>
                 <Button type="primary" label="Add" icon={{name: "lightning-bolt"}} overridePadding={42}/>
             </View>
             </Animated.View>

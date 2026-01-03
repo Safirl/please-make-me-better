@@ -36,6 +36,9 @@ const personalityParameters = () => {
         if (composedTraits[0] != null && composedTraits[1] != null) {
             moveContainer(DIMENSIONS.width/2 + 120, DIMENSIONS.height/2)
         }
+        else {
+            moveContainer(DIMENSIONS.width/2, DIMENSIONS.height/2)
+        }
     }, [composedTraits])
 
     const moveContainer = (newLeft: number, newTop: number) => {

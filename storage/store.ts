@@ -59,6 +59,7 @@ interface PersonalityState {
   addComposedTrait: (trait: Trait) => void
   createTrait: (trait0: Trait, trait1: Trait) => void
   setCurrentTraitPosition: (x: number, y: number) => void
+  resetTraits: () => void;
 }
 
 export const usePersonalityStorage = create<PersonalityState>((set) => ({
@@ -91,7 +92,8 @@ export const usePersonalityStorage = create<PersonalityState>((set) => ({
     return state;
   }),
   createTrait: (trait0, trait1) => set((state) => ({traits: state.traits.filter((t: Trait) => t === trait0 || t === trait1)})),
-  setCurrentTraitPosition: (x,y) => set((state) =>({currentTraitPosition: {x,y}}))
+  setCurrentTraitPosition: (x,y) => set(() =>({currentTraitPosition: {x,y}})),
+  resetTraits: () => set(() => ({composedTraits: {0:null,1:null}}))
 }))
 
 export const useGameStorage = create((set) => ({
