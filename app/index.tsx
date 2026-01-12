@@ -1,7 +1,4 @@
-import { CursorParameter } from "@/ui/Parameters/cursorParameter";
-import { WordParameter } from "@/ui/Parameters/wordParameter";
-import { Text } from "@react-navigation/elements";
-import { Link, router } from "expo-router";
+import { router } from "expo-router";
 import { useEffect } from "react";
 import { Dimensions, Pressable, View } from "react-native";
 import { useStorage } from "../storage/store";
@@ -17,7 +14,6 @@ export default function Index() {
   const currentParameter: string = useStorage((state: any) => state.currentParameter)
   const setCurrentParameter = useStorage((state: any) => state.setCurrentParameter)
 
-
   useEffect(() => {
     if (!Helpers.isDevMode) return;
     let root = Helpers.instance.getGUIFolder();
@@ -27,7 +23,7 @@ export default function Index() {
 
   const buttons = [
     { label: "Memories", icon: "memory" as const, route: "/memoriesPage" as Href, style: styles.button1 },
-    { label: "Emotions", icon: "emotion" as const, route: "/memoriesPage" as Href, style: styles.button2 },
+    { label: "Emotions", icon: "emotion" as const, route: "/emotionsPage" as Href, style: styles.button2 },
     { label: "Personality", icon: "personality" as const, route: "/personalityPage" as Href, style: styles.button3 },
   ];
 
@@ -37,15 +33,8 @@ export default function Index() {
 
   return (
     <View
-      style={{
-        flex: 1,
-        justifyContent: "center",
-        alignItems: "center",
-        overflow: "hidden"
-      }}
+      style={styles.container}
     >
-
-
       {
         buttons.map(({ label, icon, route, style }) => (
           <View key={label} style={style}>
@@ -79,6 +68,13 @@ export default function Index() {
 }
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    overflow: "hidden"
+  },
+
   circle: {
     position: "absolute",
     zIndex: -1

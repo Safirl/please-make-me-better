@@ -1,15 +1,19 @@
+import { primaryColorTokens } from "@/tokens/primary/colors.tokens";
 import { LayoutChangeEvent, StyleSheet, View } from "react-native";
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 import Animated, { clamp, useAnimatedStyle, useSharedValue, withTiming } from "react-native-reanimated";
 
 interface cursorProps {
+  rotation: string,
+  offsetX?: number,
+  offsetY?: number,
   value: number,
   onValueChanged: (newValue: number) => void
 }
 
 const sizes = {
-  width: 50,
-  height: 200
+  width: 42,
+  height: 130
 }
 
 export const Cursor = (props: cursorProps) => {
@@ -25,7 +29,7 @@ export const Cursor = (props: cursorProps) => {
       position.set(withTiming(e.y, {
           duration: 200,
         }, 
-        () => {props.onValueChanged(position.get()/sizes.height)}
+        () => {props.onValueChanged(position.get()/sizes.height + 21)}
       ))   
     })
     .onUpdate((e) => {
@@ -33,16 +37,27 @@ export const Cursor = (props: cursorProps) => {
         props.onValueChanged(1 - position.get()/sizes.height)
     })
 
+  const transformStyle = StyleSheet.create({
+    transform: {
+      transform: [
+        {rotate: props.rotation}, 
+        {translateX: props.offsetX ? props.offsetX : 0},
+        {translateY: props.offsetY ? props.offsetY : 0}
+      ],
+    }
+  })
+
   const animatedCursorStyle = useAnimatedStyle(() => ({
-    top: position.value,
+    top: position.value - 21,
   }));
+
   const animatedFillStyle = useAnimatedStyle(() => ({
     height: sizes.height - position.value,
   }));
 
   return (
     <GestureDetector gesture={panGesture}>
-      <View style={styles.fillBackground} onLayout={handleOnLayout}>
+      <View style={[styles.fillBackground, transformStyle.transform]} onLayout={handleOnLayout}>
           <Animated.View style={[styles.fill,animatedFillStyle]} />
           <Animated.View style={[styles.cursor, animatedCursorStyle]}/>
       </View>
@@ -52,7 +67,7 @@ export const Cursor = (props: cursorProps) => {
 
 const styles = StyleSheet.create({
   fillBackground: {
-    position: "relative",
+    position: "absolute",
     backgroundColor: "red",
     height: sizes.height,
     width: sizes.width,
@@ -70,8 +85,11 @@ const styles = StyleSheet.create({
   cursor: {
     position: "absolute",
     width: sizes.width,
-    height: 5,
+    height: 42,
+    borderRadius: 200,
+    borderWidth: 1,
     left: 0,
-    backgroundColor: "yellow"
+    borderColor: primaryColorTokens["color-white"],
+    backgroundColor: "rgba(84, 84, 84, 0.15);",
   }
 });
