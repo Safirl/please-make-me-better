@@ -1,4 +1,4 @@
-import { characters, memory } from '@/data/characters'
+import { characters, Memory, Trait } from '@/data/characters'
 import { Vec3, Vector } from '@shopify/react-native-skia'
 import { create } from 'zustand'
 
@@ -27,20 +27,73 @@ export const useSoulStorage = create((set) => ({
 }))
 
 interface MemoryState {
-  memories: memory[]
+  memories: Memory[]
   gunPosition: {x: number, y: number}
   setGunPosition: (newPosition: {x: number, y: number}) => void
 
-  pushMemory: (newMemory: memory) => void
-  removeMemory: (oldMemory: memory) => void
+  pushMemory: (newMemory: Memory) => void
+  removeMemory: (oldMemory: Memory) => void
 }
 
 export const useMemoryStorage = create<MemoryState>((set) => ({
-  memories: characters[0].memories as memory[],
+  memories: characters[0].memories,
   gunPosition: {x:0,y:0},
   setGunPosition: (newPosition) => set((state) => ({gunPosition: newPosition})),
-  pushMemory: (newMemory: memory) => set((state) => ({memories: [...state.memories, newMemory]})),
-  removeMemory: (oldMemory: memory) => set((state) => ({memories: state.memories.filter((i: memory) => i !== oldMemory)}))
+  pushMemory: (newMemory: Memory) => set((state) => ({memories: [...state.memories, newMemory]})),
+  removeMemory: (oldMemory: Memory) => set((state) => ({memories: state.memories.filter((i: Memory) => i !== oldMemory)}))
+}))
+
+interface PersonalityState {
+  placeHoldersPos: {x:number, y:number}[]
+  traits: Trait[]
+  //set the trait that are going to be merged
+  composedTraits: {0: Trait | null, 1: Trait | null}
+  currentTraitPosition: {x:number, y:number}
+  createdTraits: Trait[]
+  containerCenterX: number
+  containerCenterY: number
+  isContainerReady: boolean
+
+  setContainerPosition: (x: number, y: number) => void
+  setPlaceHolderPos: (index: number, width: number, height: number) => void
+  addComposedTrait: (trait: Trait) => void
+  createTrait: (trait0: Trait, trait1: Trait) => void
+  setCurrentTraitPosition: (x: number, y: number) => void
+  resetTraits: () => void;
+}
+
+export const usePersonalityStorage = create<PersonalityState>((set) => ({
+  traits: characters[0].traits,
+  currentTraitPosition: {x:0, y:0},
+  createdTraits: [],
+  composedTraits: {0:null,1:null},
+  placeHoldersPos: [],
+  containerCenterX: 0,
+  containerCenterY: 0,
+  isContainerReady: false,
+
+  setContainerPosition: (x, y) => set((state) => ({containerCenterX: x, containerCenterY: y, isContainerReady: true})),
+  setPlaceHolderPos: (index, x, y) => set((state) => {
+    const newPlaceHolders = [...state.placeHoldersPos];
+    newPlaceHolders[index] = {x, y};
+    return {placeHoldersPos: newPlaceHolders};
+  }),
+  addComposedTrait: (trait) => set((state) => {
+    if (state.composedTraits[0] === null) {
+      return {
+        composedTraits: {...state.composedTraits, 0: trait}
+      };
+    } else if (state.composedTraits[1] === null) {
+      return {
+        composedTraits: {...state.composedTraits, 1: trait}
+      };
+    }
+    // Si les deux sont pleins, ne rien faire
+    return state;
+  }),
+  createTrait: (trait0, trait1) => set((state) => ({traits: state.traits.filter((t: Trait) => t === trait0 || t === trait1)})),
+  setCurrentTraitPosition: (x,y) => set(() =>({currentTraitPosition: {x,y}})),
+  resetTraits: () => set(() => ({composedTraits: {0:null,1:null}}))
 }))
 
 export const useGameStorage = create((set) => ({
