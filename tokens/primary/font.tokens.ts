@@ -19,7 +19,7 @@ export const paragraphFontTokens = {
     "font-paragraph-size": 12 as const,
     "font-paragraph-weight": "400" as const,
     "font-paragraph-family": primaryFontTokens["font-family-primary"],
-    "font-paragraph-line": 12 as const,
+    "font-paragraph-line": 22 as const,
     "font-paragraph-letterSpacing": 0 as const,
 }
 
@@ -38,11 +38,20 @@ export const h1FontTokens = {
     "font-h1-size": 18 as const,
     "font-h1-letterSpacing": 0 as const,
 }
+
+export const h2FontTokens = {
+    "font-h2-line": 22 as const,
+    "font-h2-weight": "400" as const,
+    "font-h2-family": primaryFontTokens["font-family-primary"],
+    "font-h2-size": 16 as const,
+    "font-h2-letterSpacing": 0 as const,
+}
 export const fontTokens = {
     primary: primaryFontTokens,
     ...subTitleFontTokens,
     ...paragraphFontTokens,
     ...bodyBoldFontTokens,
     ...h1FontTokens,
+    ...h2FontTokens,
 }
 
