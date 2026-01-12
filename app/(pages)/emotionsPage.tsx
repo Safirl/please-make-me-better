@@ -4,10 +4,10 @@ import { StyleSheet, View } from "react-native"
 const emotionsParameters = () => {
     return (
         <View style={styles.container}>
-            <Cursor offsetY={-90} rotation="0deg" onValueChanged={(value: number)=>{}}></Cursor>
-            <Cursor offsetY={-90} rotation="90deg" onValueChanged={(value: number)=>{}}></Cursor>
-            <Cursor offsetY={90} rotation="0deg" onValueChanged={(value: number)=>{}}></Cursor>
-            <Cursor offsetY={-90} rotation="-90deg" onValueChanged={(value: number)=>{}}></Cursor>
+            <Cursor value={0} offsetY={-900} rotation="vertical-" onValueChanged={(value: number)=>{console.log("value; ", value)}}></Cursor>
+            <Cursor value={0} offsetY={-90} rotation="horizontal+" onValueChanged={(value: number)=>{console.log("value; ", value)}}></Cursor>
+            {/* <Cursor value={0} offsetY={-90} rotation="vertical-" onValueChanged={(value: number)=>{}}></Cursor> */}
+            {/* <Cursor value={0} offsetY={-90} rotation="horizontal-" onValueChanged={(value: number)=>{}}></Cursor> */}
         </View>
     )
 }
