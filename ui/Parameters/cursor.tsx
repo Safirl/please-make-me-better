@@ -2,7 +2,7 @@ import { primaryColorTokens } from "@/tokens/primary/colors.tokens";
 import { useState } from "react";
 import { LayoutChangeEvent, StyleSheet, View } from "react-native";
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
-import Animated, { clamp, useAnimatedStyle, useDerivedValue, useSharedValue, withTiming } from "react-native-reanimated";
+import Animated, { clamp, useAnimatedStyle, useDerivedValue, useSharedValue, withSpring, withTiming } from "react-native-reanimated";
 
 interface cursorProps {
   rotation: "vertical+" | "vertical-" | "horizontal+" | "horizontal-",
@@ -26,11 +26,27 @@ export const Cursor = (props: cursorProps) => {
     height: 130
   }
 
-  const position = useSharedValue(sizes.height - props.value * sizes.height)
   const viewHeight = useSharedValue(0);
   const viewWidth = useSharedValue(0);
-  const [isHorizontal, setIsHorizontal] = useState(props.rotation === "horizontal+" || props.rotation === "horizontal-")
-  const [isPositive, setIsPositive] = useState(props.rotation === "horizontal+" || props.rotation === "vertical+")
+  const isHorizontal = props.rotation === "horizontal+" || props.rotation === "horizontal-"
+  const isPositive = props.rotation === "horizontal+" || props.rotation === "vertical+"
+  
+  const initialPosition = (() => {
+    if (isHorizontal) {
+      if (!isPositive) {
+        return sizes.width - props.value * sizes.width
+      }
+      return props.value * sizes.width 
+    }
+
+    if (isPositive) {
+      return sizes.height - props.value * sizes.height
+    }
+    return props.value * sizes.height
+  })();
+
+  const position = useSharedValue(initialPosition)
+
   const backgroundSize = useDerivedValue(() => isHorizontal ? viewWidth.value : viewHeight.value)
 
 
@@ -42,22 +58,20 @@ export const Cursor = (props: cursorProps) => {
   const panGesture = Gesture.Pan()
     .onBegin((e) => {
       const axisPos = isHorizontal ? e.x : e.y
-      position.set(withTiming(axisPos, {
-          duration: 200,
-        }, 
+      position.set(withSpring(axisPos, {}, 
         () => {props.onValueChanged(position.value / backgroundSize.value)}
-      ))   
+      ))
     })
     .onUpdate((e) => {
         const axisPos = isHorizontal ? e.x : e.y
-        position.set(clamp(axisPos, 0, backgroundSize.value));
-        props.onValueChanged(position.value / backgroundSize.value)
+        position.set(withSpring(clamp(axisPos, 0, backgroundSize.value), {}, 
+        () => props.onValueChanged(position.value / backgroundSize.value)
+      ));
     })
 
   const backgroundDynamicStyle = StyleSheet.create({
     dynamic: {
       transform: [
-        {rotate: props.rotation}, 
         {translateX: props.offsetX ?? 0},
         {translateY: props.offsetY ?? 0}
       ],
@@ -66,18 +80,18 @@ export const Cursor = (props: cursorProps) => {
     }
   })
 
-  const fillDynamicStyle = StyleSheet.create({
-    dynamic: {
-      bottom: 0,
-      left: isHorizontal ? isPositive ? 0 : "100%" : 0,
-    }
-  })
-
+  
   const animatedCursorStyle = useAnimatedStyle(() => ({
     top: isHorizontal ? 0 : position.value - 21,
     left: isHorizontal ? position.value - 21 : 0,
   }));
-
+  
+  // const fillDynamicStyle = StyleSheet.create({
+  //   dynamic: {
+  //     bottom: 0,
+  //     left: isHorizontal ? isPositive ? 0 : "100%" : 0,
+  //   }
+  // })
   // const animatedFillStyle = useAnimatedStyle(() => ({
   //   height: isHorizontal ? sizes.height : sizes.height - position.value,
   //   width: isHorizontal ? props.rotation === "horizontal-" ? sizes.width - position.value : sizes.width + position.value : sizes.width,
