@@ -319,7 +319,7 @@ export default class Soul extends Component {
 
         this.gl.uniform1f(this.uTimeLoc, this.time.elapsedTime * 0.0005);
         this.gl.uniform1f(this.uBlendingFactor, this.params.blendingFactor);
-        this.gl.uniform2f(this.uResolutionLoc, this.experience.sizes.width, this.experience.sizes.height);
+        this.gl.uniform2f(this.uResolutionLoc, this.experience.sizes.width * this.experience.sizes.pixelRatio, this.experience.sizes.height * this.experience.sizes.pixelRatio);
         this.gl.uniform1f(this.uFactorLoc, this.params.factor);
         this.gl.uniform1f(this.uSpeed, this.params.speed);
 
