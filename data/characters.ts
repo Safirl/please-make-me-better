@@ -22,6 +22,12 @@ export interface Trait {
     label: string
 }
 
+export interface Emotion {
+    id: number
+    label: string
+    intensity: number //Between 0 and 1
+}
+
 export const characters = [
     {
         id: 0,
@@ -105,6 +111,28 @@ export const characters = [
                 icon: "beech",
                 label: "rêveur"
             },
-        ] as Trait[]
+        ] as Trait[],
+        emotions: [
+            {
+                id: 0,
+                intensity: 1,
+                label: "Colère"
+            },
+            {
+                id: 1,
+                intensity: 1,
+                label: "Joie"
+            },
+            {
+                id: 2,
+                intensity: 1,
+                label: "Tristesse"
+            },
+            {
+                id: 3,
+                intensity: 1,
+                label: "Peur"
+            },
+        ] as Emotion[]
     },
 ]

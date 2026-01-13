@@ -1,5 +1,4 @@
 import { primaryColorTokens } from "@/tokens/primary/colors.tokens";
-import { useState } from "react";
 import { LayoutChangeEvent, StyleSheet, View } from "react-native";
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 import Animated, { clamp, useAnimatedStyle, useDerivedValue, useSharedValue, withSpring, withTiming } from "react-native-reanimated";
@@ -9,7 +8,8 @@ interface cursorProps {
   offsetX?: number,
   offsetY?: number,
   value: number,
-  onValueChanged: (newValue: number) => void
+  emotionId: number,
+  onValueChanged: (newValue: number, emotionId: number) => void
 }
 
 
@@ -59,13 +59,31 @@ export const Cursor = (props: cursorProps) => {
       console.log("coucou")
       const axisPos = isHorizontal ? e.x : e.y
       position.set(withSpring(axisPos, {}, 
-        () => {props.onValueChanged(position.value / backgroundSize.value)}
+        () => {
+          let newValue = 0;
+          if (isHorizontal) {
+            newValue = isPositive ? (position.value / backgroundSize.value) : 1 - (position.value / backgroundSize.value)
+          }
+          else {
+           newValue = isPositive ? 1 - (position.value / backgroundSize.value) : (position.value / backgroundSize.value)
+          }
+          props.onValueChanged(newValue, props.emotionId)
+        }
       ))
     })
     .onUpdate((e) => {
         const axisPos = isHorizontal ? e.x : e.y
         position.set(withSpring(clamp(axisPos, 0, backgroundSize.value), {}, 
-        () => props.onValueChanged(position.value / backgroundSize.value)
+        () => {
+          let newValue = 0;
+          if (isHorizontal) {
+            newValue = isPositive ? (position.value / backgroundSize.value) : 1 - (position.value / backgroundSize.value)
+          }
+          else {
+           newValue = isPositive ? 1 - (position.value / backgroundSize.value) : (position.value / backgroundSize.value)
+          }
+          props.onValueChanged(newValue, props.emotionId)
+        }
       ));
     })
 
@@ -111,7 +129,6 @@ const styles = StyleSheet.create({
   fillBackground: {
     position: "absolute",
     // backgroundColor: "red",
-
   },
   
   fill: {

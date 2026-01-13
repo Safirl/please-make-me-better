@@ -1,4 +1,5 @@
-import { characters, Memory, Trait } from '@/data/characters'
+import { characters, Emotion, Memory, Trait } from '@/data/characters'
+import { Label } from '@react-navigation/elements'
 import { Vec3, Vector } from '@shopify/react-native-skia'
 import { create } from 'zustand'
 
@@ -94,6 +95,16 @@ export const usePersonalityStorage = create<PersonalityState>((set) => ({
   createTrait: (trait0, trait1) => set((state) => ({traits: state.traits.filter((t: Trait) => t === trait0 || t === trait1)})),
   setCurrentTraitPosition: (x,y) => set(() =>({currentTraitPosition: {x,y}})),
   resetTraits: () => set(() => ({composedTraits: {0:null,1:null}}))
+}))
+
+interface EmotionState {
+  emotions: Emotion[]
+  setEmotionIntensity: (id: number, intensity: number) => void;
+}
+
+export const useEmotionStorage = create<EmotionState>((set) => ({
+  emotions: characters[0].emotions,
+  setEmotionIntensity: (id, intensity) => set((state) => ({emotions: state.emotions.map((e,i) => i === id ? {id: id, label: e.label, intensity: intensity} as Emotion : e)}))
 }))
 
 export const useGameStorage = create((set) => ({
