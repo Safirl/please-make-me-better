@@ -17,13 +17,13 @@ export const Cursor = (props: cursorProps) => {
   const sizes = 
   props.rotation === "horizontal+" || props.rotation === "horizontal-" ?
   {
-    width: 130,
+    width: 100,
     height: 42
   }
   :
   {
     width: 42,
-    height: 130
+    height: 100
   }
 
   const viewHeight = useSharedValue(0);
@@ -46,7 +46,6 @@ export const Cursor = (props: cursorProps) => {
   })();
 
   const position = useSharedValue(initialPosition)
-
   const backgroundSize = useDerivedValue(() => isHorizontal ? viewWidth.value : viewHeight.value)
 
 
@@ -57,6 +56,7 @@ export const Cursor = (props: cursorProps) => {
 
   const panGesture = Gesture.Pan()
     .onBegin((e) => {
+      console.log("coucou")
       const axisPos = isHorizontal ? e.x : e.y
       position.set(withSpring(axisPos, {}, 
         () => {props.onValueChanged(position.value / backgroundSize.value)}
@@ -110,7 +110,8 @@ export const Cursor = (props: cursorProps) => {
 const styles = StyleSheet.create({
   fillBackground: {
     position: "absolute",
-    backgroundColor: "red",
+    // backgroundColor: "red",
+
   },
   
   fill: {
