@@ -16,12 +16,14 @@ export default class Sizes extends EventEmitter {
         super()
 
         this.experience = e
-        this.width = this.experience.canvas.clientWidth * 0.5
-        this.height = this.experience.canvas.clientHeight * 0.5
+
 
 
         this.devicePixelRatio = PixelRatio.get()
         this.pixelRatio = Math.min(devicePixelRatio, 2)
+
+        this.width = this.experience.canvas.clientWidth / this.pixelRatio;
+        this.height = this.experience.canvas.clientHeight / this.pixelRatio;
 
         this.aspectRatio = this.width / this.height
         this.viewWidth = 0
@@ -30,8 +32,8 @@ export default class Sizes extends EventEmitter {
         /**
          * @Important : Set canvas Height
          */
-        this.experience.canvas.width = this.experience.canvas.clientWidth * this.pixelRatio;
-        this.experience.canvas.height = this.experience.canvas.clientHeight * this.pixelRatio;
+        this.experience.canvas.width = this.experience.canvas.clientWidth
+        this.experience.canvas.height = this.experience.canvas.clientHeight
 
         this.resize = this.resize.bind(this)
         this.subscription = Dimensions.addEventListener('change', this.resize);
@@ -39,9 +41,9 @@ export default class Sizes extends EventEmitter {
 
     resize() {
 
-        this.width = this.experience.canvas.clientWidth * 0.5
-        this.height = this.experience.canvas.clientHeight * 0.5
         this.pixelRatio = Math.min(window.devicePixelRatio, 2)
+        this.width = this.experience.canvas.clientWidth * this.devicePixelRatio
+        this.height = this.experience.canvas.clientHeight * this.devicePixelRatio
         this.aspectRatio = this.width / this.height
         this.trigger("resize")
 

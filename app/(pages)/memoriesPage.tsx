@@ -60,7 +60,6 @@ const styles = StyleSheet.create({
     },
 
     container: {
-        backgroundColor: primaryBackgroundTokens["background-secondary"],
         height: "100%",
         overflow: "hidden"
     }
