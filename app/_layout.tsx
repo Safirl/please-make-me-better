@@ -1,6 +1,7 @@
 // import GL from "@/ui/GL";
 import { primaryBackgroundTokens } from "@/tokens/primary/backgrounds.tokens";
 import Button from "@/ui/Button";
+import WebGPU from "@/ui/GPU";
 import { useTheme } from "@react-navigation/native";
 import { useFonts } from "expo-font";
 import { Stack } from "expo-router";
@@ -24,7 +25,7 @@ export default function RootLayout() {
                 backgroundColor: primaryBackgroundTokens["background-secondary"]
             }}
         >
-            <GPU/>
+            {/* <WebGPU/> */}
         </View>
         <Stack screenOptions={{
             contentStyle: { backgroundColor: 'transparent' },

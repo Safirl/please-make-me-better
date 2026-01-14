@@ -22,15 +22,13 @@ const personalityParameters = () => {
     const createTrait = usePersonalityStorage((state) => state.createTrait)
     const setContainerPosition = usePersonalityStorage((state) => state.setContainerPosition)
     const composedTraits = usePersonalityStorage((state) => state.composedTraits)
-    const containerHeight = useSharedValue(0)
-    const containerWidth = useSharedValue(0)
     const left = useSharedValue(0)
     const top = useSharedValue(0)
     const rotation = useSharedValue(0)
     const savedPosX = useSharedValue(0)
     const savedPosY = useSharedValue(0)
-    const setRotation = usePersonalityStorage((state) => state.setRotation)
-    // const isContainerReady = usePersonalityStorage((state) => state.isContainerReady)
+    
+    const closestTrait = useSharedValue(0)
 
     const rotationGesture = Gesture.Pan()
         .onUpdate((e) => {
@@ -39,22 +37,12 @@ const personalityParameters = () => {
             const distance = Math.sqrt(deltaX*deltaX + deltaY*deltaY)
             savedPosX.value = e.absoluteX
             savedPosY.value = e.absoluteY
-            rotation.value = withSpring(rotation.value + (Math.sign(deltaX) * distance) * Math.PI/100)
+            rotation.value = withSpring(rotation.value + (Math.sign(deltaX) * distance) * Math.PI/50)
         })
         .onEnd((e) => {
             savedPosX.value = 0
             savedPosY.value = 0
         })
-
-    useDerivedValue(() => {
-        setRotation(rotation.value)
-    });
-
-    const onContainerLayoutHandler = (e: LayoutChangeEvent) => {
-        containerHeight.value = e.nativeEvent.layout.height
-        containerWidth.value = e.nativeEvent.layout.width
-        moveContainer(DIMENSIONS.width/2, DIMENSIONS.height/2)
-    }
 
     useEffect(() => {
         if (composedTraits[0] != null && composedTraits[1] != null) {
@@ -77,8 +65,6 @@ const personalityParameters = () => {
 
     const traitContainerAnimatedStyle = useAnimatedStyle(() => {
         return {
-            // top: top.value - containerHeight.value / 2,
-            // left: left.value - containerWidth.value / 2,
             transform: [{ rotateZ: `${(rotation.value / Math.PI) * 180}deg` }],
         }
     });
@@ -103,7 +89,6 @@ const personalityParameters = () => {
                 d="M26.773.5 13.636 14.41.5.5m26.273 10.045-13.137 13.91L.5 10.544m26.273 10.046L13.636 34.5.5 20.59"
                 />
         </Svg>
-    </View>
     {
         traits.map((trait) => (
             <TraitButton
@@ -117,9 +102,11 @@ const personalityParameters = () => {
                 circleRadius={CIRCLE_RADIUS}
                 scale={2.2}
                 enableDrag={false}
+                rotation={rotation}
             />
         ))
     } 
+    </View>
     </>
     )
 }
@@ -140,8 +127,8 @@ const styles = StyleSheet.create({
         width: CIRCLE_RADIUS*2,
         left: DIMENSIONS.width/2 - CIRCLE_RADIUS,
         top: -CIRCLE_RADIUS,
-        // backgroundColor:"red",
-        borderRadius: 300
+        backgroundColor:"red",
+        borderRadius: 200
     },
     circle: {
         position: "absolute",

@@ -5,7 +5,7 @@ import SvgComponent, { iconType } from "@/ui/svg";
 import { useEffect, useState } from "react";
 import { Dimensions, StyleSheet } from "react-native"
 import { GestureDetector } from "react-native-gesture-handler";
-import Animated, { SharedValue, useAnimatedStyle, useDerivedValue, useSharedValue, withSpring } from "react-native-reanimated";
+import Animated, { SharedValue, useAnimatedReaction, useAnimatedStyle, useDerivedValue, useSharedValue, withSpring } from "react-native-reanimated";
 
 interface traitButtonProps {
     id: number,
@@ -16,7 +16,8 @@ interface traitButtonProps {
     circleRadius: number,
     totalAngle: number,
     scale: number,
-    enableDrag: boolean
+    enableDrag: boolean,
+    rotation: SharedValue<number>
 }
 
 const TraitButton = (props: traitButtonProps) => {
@@ -28,15 +29,30 @@ const TraitButton = (props: traitButtonProps) => {
     const containerCenterY = usePersonalityStorage((state) => state.containerCenterY)
     const opacity = useSharedValue(1)
     const [enabled, setIsEnabled] = useState(props.enableDrag)
-    const rotation = usePersonalityStorage((state) => state.rotation)
+    // const rotation = usePersonalityStorage((state) => state.rotation)
+    const rotation = props.rotation
+    let savedRotation = 0
+
+    const closestMultiple = (n: number, x: number) => {
+        if (x > n)
+            return x;
+        n = n + x / 2;
+        n = n - (n % x);
+        return n;
+    }
 
     const getPos = (): {x: number, y: number} => {
         let ox = containerCenterX /* + DIMENSIONS.width/2*/
         let oy = containerCenterY /*+ DIMENSIONS.height/2*/
-        const currentAngle = props.alphaSpacing * (props.id + 1) + Math.PI/2 * rotation;
+        const currentAngle = props.alphaSpacing * (props.id + 1) + (hasRotationChanged() ? rotation.value : closestMultiple(rotation.value, props.alphaSpacing) + Math.PI/2);
+        savedRotation = rotation.value;
         ox += props.circleRadius * Math.cos(currentAngle)
         oy += props.circleRadius * Math.sin(currentAngle)
         return {x: ox, y: oy}
+    }
+
+    const hasRotationChanged = (): boolean => {
+        return Math.abs(savedRotation - rotation.value) > 0.1
     }
 
     const { panGesture, animatedStyle, onLayoutHandler, position, isDragging } = useGestureDrag({
@@ -57,12 +73,17 @@ const TraitButton = (props: traitButtonProps) => {
         },
         enable: enabled
     });
-
-    useDerivedValue(() => {
+    
+    
+    useAnimatedReaction(
+    () => rotation.value,
+    (currentRotation, previousRotation) => {
         if (isDragging.value) return;
-        position.left.value = withSpring(getPos().x)
-        position.top.value = withSpring(getPos().y)
-    })
+        const newPos = getPos();
+        position.left.value = withSpring(newPos.x);
+        position.top.value = withSpring(newPos.y);
+    }
+);
     
     useEffect(() => {
         if (composedTraits['0']?.id === props.id) {
