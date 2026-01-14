@@ -10,7 +10,7 @@ import Svg, {
     Filter,
 } from "react-native-svg";
 
-export type iconType = 'lightning-bolt' | 'cross' | 'brain-circuit' | 'emotion' | 'personality' | 'memory' | 'paint-brush' | 'backup' | 'back-pain' | 'king' | 'fire-dash' | 'comet' | 'cherish' | 'beech' | "folder" | "human" | "star" | "eye" | "heart" | "title" | "back-chevron"
+export type iconType = 'lightning-bolt' | 'cross' | 'brain-circuit' | 'emotion' | 'personality' | 'memory' | 'paint-brush' | 'backup' | 'back-pain' | 'king' | 'fire-dash' | 'comet' | 'cherish' | 'beech' | "folder" | "human" | "star" | "eye" | "heart" | "title" | "back-chevron" | "file"
 
 export interface SvgComponentProps extends SvgProps {
     name: iconType,
@@ -165,9 +165,20 @@ const SvgComponent = (props: SvgComponentProps) => {
             {...rest}
         >
             {
+                name === "file" &&
+                <Path
+                    stroke={rest.color ?? primaryColorTokens["color-white"]}
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M14 2v6h6m-4 5H8m8 4H8m2-8H8m6.5-7H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2Z"
+                />
+
+                ||
+                
                 name === "lightning-bolt" &&
                 <Path
-                    stroke="#F1F1F1"
+                    stroke={rest.color ?? primaryColorTokens["color-white"]}
                     strokeLinecap="round"
                     strokeLinejoin="round"
                     strokeWidth={2}

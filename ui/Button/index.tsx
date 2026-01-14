@@ -20,7 +20,7 @@ interface CustomButtonProps extends PressableProps {
     icon?: SvgComponentProps,
     style?: StyleProp<ViewStyle>
     overridePadding?: number,
-
+    innerStyle?: StyleProp<ViewStyle>
 }
 
 const createStyles = (type: 'primary' | 'secondary' | 'tertiary' | 'back' | 'verticalIcon' | "icon", state?: 'none' | 'disabled' | 'active' | 'accent') => {
