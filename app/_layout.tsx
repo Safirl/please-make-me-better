@@ -1,4 +1,4 @@
-// import GL from "@/ui/GL";
+import GL from "@/ui/GL";
 import { primaryBackgroundTokens } from "@/tokens/primary/backgrounds.tokens";
 import Button from "@/ui/Button";
 import { useTheme } from "@react-navigation/native";
@@ -25,7 +25,7 @@ export default function RootLayout() {
                 backgroundColor: primaryBackgroundTokens["background-secondary"]
             }}
         >
-            <GPU />
+            <GL />
         </View>
         <Stack screenOptions={{
             contentStyle: { backgroundColor: 'transparent' },

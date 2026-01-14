@@ -54,7 +54,7 @@ interface PersonalityState {
   containerCenterX: number
   containerCenterY: number
   isContainerReady: boolean
-  rotation: number
+  closestTraitId: number
 
   setContainerPosition: (x: number, y: number) => void
   setPlaceHolderPos: (index: number, width: number, height: number) => void
@@ -62,7 +62,7 @@ interface PersonalityState {
   createTrait: (trait0: Trait, trait1: Trait) => void
   setCurrentTraitPosition: (x: number, y: number) => void
   resetTraits: () => void;
-  setRotation: (newRotation: number) => void;
+  setClosestTraitId: (id: number) => void;
 }
 
 export const usePersonalityStorage = create<PersonalityState>((set) => ({
@@ -74,7 +74,7 @@ export const usePersonalityStorage = create<PersonalityState>((set) => ({
   containerCenterX: 0,
   containerCenterY: 0,
   isContainerReady: false,
-  rotation: 0,
+  closestTraitId: 0,
 
   setContainerPosition: (x, y) => set((state) => ({containerCenterX: x, containerCenterY: y, isContainerReady: true})),
   setPlaceHolderPos: (index, x, y) => set((state) => {
@@ -98,7 +98,7 @@ export const usePersonalityStorage = create<PersonalityState>((set) => ({
   createTrait: (trait0, trait1) => set((state) => ({traits: state.traits.filter((t: Trait) => t === trait0 || t === trait1)})),
   setCurrentTraitPosition: (x,y) => set(() =>({currentTraitPosition: {x,y}})),
   resetTraits: () => set(() => ({composedTraits: {0:null,1:null}})),
-  setRotation: (newRotation) => set(() => ({rotation: newRotation})),
+  setClosestTraitId: (id) => set(() => ({closestTraitId: id}))
 }))
 
 interface EmotionState {
