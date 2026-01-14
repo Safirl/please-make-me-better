@@ -73,7 +73,6 @@ const TraitButton = (props: traitButtonProps) => {
     useAnimatedReaction(
         () => rotation.value,
         (currentRotation, previousRotation) => {
-            console.log("rotation changed: ", rotation.value)
             const newPos = getPos();
             position.left.value = withSpring(newPos.x);
             position.top.value = withSpring(newPos.y);
