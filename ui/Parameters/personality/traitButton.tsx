@@ -18,6 +18,7 @@ interface traitButtonProps {
     scale: number,
     enableDrag: boolean,
     rotation: SharedValue<number>
+    isRotating: SharedValue<boolean>
 }
 
 const TraitButton = (props: traitButtonProps) => {
@@ -34,8 +35,6 @@ const TraitButton = (props: traitButtonProps) => {
     let savedRotation = 0
 
     const closestMultiple = (n: number, x: number) => {
-        if (x > n)
-            return x;
         n = n + x / 2;
         n = n - (n % x);
         return n;
@@ -44,15 +43,11 @@ const TraitButton = (props: traitButtonProps) => {
     const getPos = (): {x: number, y: number} => {
         let ox = containerCenterX /* + DIMENSIONS.width/2*/
         let oy = containerCenterY /*+ DIMENSIONS.height/2*/
-        const currentAngle = props.alphaSpacing * (props.id + 1) + (hasRotationChanged() ? rotation.value : closestMultiple(rotation.value, props.alphaSpacing) + Math.PI/2);
+        const currentAngle = props.alphaSpacing * (props.id + 1) + closestMultiple(rotation.value, props.alphaSpacing) + Math.PI/2;
         savedRotation = rotation.value;
         ox += props.circleRadius * Math.cos(currentAngle)
         oy += props.circleRadius * Math.sin(currentAngle)
         return {x: ox, y: oy}
-    }
-
-    const hasRotationChanged = (): boolean => {
-        return Math.abs(savedRotation - rotation.value) > 0.1
     }
 
     const { panGesture, animatedStyle, onLayoutHandler, position, isDragging } = useGestureDrag({
@@ -76,14 +71,14 @@ const TraitButton = (props: traitButtonProps) => {
     
     
     useAnimatedReaction(
-    () => rotation.value,
-    (currentRotation, previousRotation) => {
-        if (isDragging.value) return;
-        const newPos = getPos();
-        position.left.value = withSpring(newPos.x);
-        position.top.value = withSpring(newPos.y);
-    }
-);
+        () => rotation.value,
+        (currentRotation, previousRotation) => {
+            console.log("rotation changed: ", rotation.value)
+            const newPos = getPos();
+            position.left.value = withSpring(newPos.x);
+            position.top.value = withSpring(newPos.y);
+        }
+    );
     
     useEffect(() => {
         if (composedTraits['0']?.id === props.id) {
