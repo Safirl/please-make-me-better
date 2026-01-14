@@ -27,6 +27,7 @@ const personalityParameters = () => {
     const rotation = useSharedValue(0)
     const savedPosX = useSharedValue(0)
     const savedPosY = useSharedValue(0)
+    const isRotating = useSharedValue(false)
     
     const closestTrait = useSharedValue(0)
 
@@ -103,6 +104,7 @@ const personalityParameters = () => {
                 scale={2.2}
                 enableDrag={false}
                 rotation={rotation}
+                isRotating={isRotating}
             />
         ))
     } 
