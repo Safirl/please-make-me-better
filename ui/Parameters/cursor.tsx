@@ -56,7 +56,6 @@ export const Cursor = (props: cursorProps) => {
 
   const panGesture = Gesture.Pan()
     .onBegin((e) => {
-      console.log("coucou")
       const axisPos = isHorizontal ? e.x : e.y
       position.set(withSpring(axisPos, {}, 
         () => {

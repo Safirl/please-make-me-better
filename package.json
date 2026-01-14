@@ -63,6 +63,7 @@
     "@vitest/browser-playwright": "^4.0.15",
     "@vitest/coverage-v8": "^4.0.15",
     "@webgpu/types": "^0.1.66",
+    "baseline-browser-mapping": "^2.9.14",
     "eslint": "^9.25.0",
     "eslint-config-expo": "~10.0.0",
     "eslint-plugin-storybook": "^10.1.4",

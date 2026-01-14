@@ -5,7 +5,7 @@ import SvgComponent, { iconType } from "@/ui/svg";
 import { useEffect, useState } from "react";
 import { Dimensions, StyleSheet } from "react-native"
 import { GestureDetector } from "react-native-gesture-handler";
-import Animated, { useAnimatedStyle, useSharedValue, withSpring } from "react-native-reanimated";
+import Animated, { SharedValue, useAnimatedStyle, useDerivedValue, useSharedValue, withSpring } from "react-native-reanimated";
 
 interface traitButtonProps {
     id: number,
@@ -14,7 +14,9 @@ interface traitButtonProps {
     mergeZoneRadius: number,
     alphaSpacing: number,
     circleRadius: number,
-    totalAngle: number
+    totalAngle: number,
+    scale: number,
+    enableDrag: boolean
 }
 
 const TraitButton = (props: traitButtonProps) => {
@@ -25,18 +27,19 @@ const TraitButton = (props: traitButtonProps) => {
     const containerCenterX = usePersonalityStorage((state) => state.containerCenterX)
     const containerCenterY = usePersonalityStorage((state) => state.containerCenterY)
     const opacity = useSharedValue(1)
-    const [enabled, setIsEnabled] = useState(true)
+    const [enabled, setIsEnabled] = useState(props.enableDrag)
+    const rotation = usePersonalityStorage((state) => state.rotation)
 
     const getPos = (): {x: number, y: number} => {
         let ox = containerCenterX /* + DIMENSIONS.width/2*/
         let oy = containerCenterY /*+ DIMENSIONS.height/2*/
-        const currentAngle = props.alphaSpacing * (props.id + 1) + Math.PI/1.7;
+        const currentAngle = props.alphaSpacing * (props.id + 1) + Math.PI/2 * rotation;
         ox += props.circleRadius * Math.cos(currentAngle)
         oy += props.circleRadius * Math.sin(currentAngle)
         return {x: ox, y: oy}
     }
 
-    const { panGesture, animatedStyle, onLayoutHandler, position } = useGestureDrag({
+    const { panGesture, animatedStyle, onLayoutHandler, position, isDragging } = useGestureDrag({
         initialX: getPos().x,
         initialY: getPos().y,
         resetOnDragFinalize: false,
@@ -54,6 +57,12 @@ const TraitButton = (props: traitButtonProps) => {
         },
         enable: enabled
     });
+
+    useDerivedValue(() => {
+        if (isDragging.value) return;
+        position.left.value = withSpring(getPos().x)
+        position.top.value = withSpring(getPos().y)
+    })
     
     useEffect(() => {
         if (composedTraits['0']?.id === props.id) {
@@ -66,21 +75,12 @@ const TraitButton = (props: traitButtonProps) => {
             position.top.value = withSpring(placeHoldersPos[1].y)
             setIsEnabled(false)
         }
-        else if (composedTraits['0']?.id !== undefined && composedTraits['0']?.id !== props.id
-            && composedTraits['1']?.id !== undefined && composedTraits['1']?.id !== props.id
-        ) {
-            setIsEnabled(true)
-            opacity.value = withSpring(0)
-            position.left.value = withSpring(getPos().x)
-            position.top.value = withSpring(getPos().y)
-        }
         else {
             setIsEnabled(true)
-            opacity.value = withSpring(1)
             position.left.value = withSpring(getPos().x)
             position.top.value = withSpring(getPos().y)
         }
-    }, [[composedTraits], placeHoldersPos])
+    }, [composedTraits[0], composedTraits[1], placeHoldersPos])
 
     const isTraitInMergeZoneRadius = (x: number, y: number): boolean => {
         const dx = x - containerCenterX
@@ -93,9 +93,15 @@ const TraitButton = (props: traitButtonProps) => {
         opacity: opacity.value
     }))
 
+    const dynamicStyle = StyleSheet.create({
+        style: {
+            transform: [{scale: props.scale}],
+        }
+    })
+
     return (
         <GestureDetector gesture={panGesture}>
-            <Animated.View style={[styles.button, animatedStyle, opacityAnimatedStyle]} onLayout={onLayoutHandler}>
+            <Animated.View style={[styles.button, animatedStyle, opacityAnimatedStyle, dynamicStyle.style]} onLayout={onLayoutHandler}>
                 <SvgComponent name={props.iconName}></SvgComponent>
             </Animated.View>
         </GestureDetector>
