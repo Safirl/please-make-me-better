@@ -1,11 +1,13 @@
+import fonts from "@/assets/styles/fonts";
 import { Trait } from "@/data/characters";
 import { usePersonalityStorage } from "@/storage/store";
+import { primaryBackgroundTokens } from "@/tokens/primary/backgrounds.tokens";
 import { primaryColorTokens } from "@/tokens/primary/colors.tokens";
 import MergeZone from "@/ui/Parameters/personality/mergeZone";
 import PersonalityCard from "@/ui/Parameters/personality/PersonalityCard";
 import TraitButton from "@/ui/Parameters/personality/traitButton";
 import { useEffect, useRef, useState } from "react";
-import { Dimensions, LayoutChangeEvent, StyleSheet, View } from "react-native";
+import { Dimensions, LayoutChangeEvent, StyleSheet, View, Text } from "react-native";
 import { Gesture, GestureDetector, GestureHandlerRootView } from "react-native-gesture-handler";
 import { RotationGesture } from "react-native-gesture-handler/lib/typescript/handlers/gestures/rotationGesture";
 import Animated, { useAnimatedStyle, useDerivedValue, useSharedValue, withSpring, withTiming } from "react-native-reanimated";
@@ -70,27 +72,50 @@ const personalityParameters = () => {
         }
     });
 
+    const glowWidth = useSharedValue(0)
+    const glowHeight = useSharedValue(0)
+    const onGlowLayoutHandler = (e :LayoutChangeEvent) => {
+        glowWidth.value = e.nativeEvent.layout.width
+        glowHeight.value = e.nativeEvent.layout.height
+    }
+
+    const glowAnimatedStyle = useAnimatedStyle(() => ({
+        top: glowWidth.value/2
+    }))
+
     return (
     <>
     <View style={styles.container} onLayout={()=>{}}>
+        <Text style={styles.count}>
+            /2
+        </Text>
+        <View style={styles.selectContainer}>
+            <Text style={styles.trait}>
+                Confiant
+            </Text>
+            <View style={styles.selectZone}>
+
+            </View>
+            <Svg
+                width={28}
+                height={36}
+                fill="none"
+                style={styles.arrow}
+                >
+                <Path
+                    stroke="#A897FB"
+                    strokeLinecap="round"
+                    strokeOpacity={0.6}
+                    d="M26.773.5 13.636 14.41.5.5m26.273 10.045-13.137 13.91L.5 10.544m26.273 10.046L13.636 34.5.5 20.59"
+                    />
+            </Svg>
+           
+        </View>
         <GestureDetector gesture={rotationGesture}>
             <Animated.View style={[styles.traitContainer, traitContainerAnimatedStyle]}>   
             </Animated.View>
         </GestureDetector>
-        <Svg
-            width={28}
-            height={36}
-            fill="none"
-            style={[styles.arrow]}
-            >
-            <Path
-                stroke="#A897FB"
-                strokeLinecap="round"
-                strokeOpacity={0.6}
-                d="M26.773.5 13.636 14.41.5.5m26.273 10.045-13.137 13.91L.5 10.544m26.273 10.046L13.636 34.5.5 20.59"
-                />
-        </Svg>
-    {
+        {
         traits.map((trait) => (
             <TraitButton
                 key={trait.id}
@@ -107,7 +132,21 @@ const personalityParameters = () => {
                 isRotating={isRotating}
             />
         ))
-    } 
+        } 
+        <View style={styles.dropZone}>
+            <View style={styles.glowZone} onLayout={onGlowLayoutHandler}>
+
+            </View>
+            <View style={styles.dropZoneMask}>
+
+            </View>
+            <View style={styles.dropZoneLight}>
+
+            </View>
+            <Text style={{...fonts.paragraph, color: primaryColorTokens["color-tertiary-lower"]}}>
+                Drag two traits down to create new one
+            </Text>
+        </View>
     </View>
     </>
     )
@@ -119,6 +158,8 @@ const styles = StyleSheet.create({
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
+        // backgroundColor: "red",
+        width: "100%"
     },
     traitContainer: {
         position: "absolute",
@@ -129,17 +170,67 @@ const styles = StyleSheet.create({
         width: CIRCLE_RADIUS*2,
         left: DIMENSIONS.width/2 - CIRCLE_RADIUS,
         top: -CIRCLE_RADIUS,
-        backgroundColor:"red",
+        // backgroundColor:"red",
         borderRadius: 200
+    },
+    selectContainer: {
+        alignItems: "center",
+        paddingTop: 32,
+        gap: 16
+    },
+    trait: {
+        ...fonts.paragraph,
+        fontSize: 18,
+        color: primaryColorTokens["color-primary-medium"],
+    },
+    selectZone: {
+        borderWidth: 1,
+        borderRadius: 64,
+        borderColor: "#8670F9",
+        width: 120,
+        height: 120,
+        boxShadow: "0 0 26.3px 5px rgba(134, 112, 249, 0.80)"
+    },
+    dropZone: {
+        position: "absolute",
+        zIndex: 100,
+        width: "100%",
+        bottom:-72,
+        alignItems: "center",
+    },
+    dropZoneMask: {
+        position: "absolute",
+        width: "100%",
+        height: 200,
+        backgroundColor: primaryBackgroundTokens["background-secondary"]
+        // bottom:-42,
+        // alignItems: "center"
+    },
+    dropZoneLight: {
+        width: 172,
+        paddingBottom: 16,
+        borderTopWidth: 1,
+        borderColor: primaryColorTokens["color-primary-low"],
+    },
+    glowZone: {
+        position: "absolute",
+        boxShadow: "0 0 77.7px #8670F9",
+        width: 124,
+        height: 124,
+        borderRadius: 300,
+        // left: "50%"
+    },
+    count: {
+        ...fonts.paragraph,
+        color: primaryColorTokens["color-tertiary-lower"],
+        paddingTop: 12
     },
     circle: {
         position: "absolute",
         zIndex: 1,
     },
     arrow: {
-        position: "absolute",
-        left: DIMENSIONS.width/2 - 28/2,
-        top: 250
+        paddingTop: 8
     }
 })
 
