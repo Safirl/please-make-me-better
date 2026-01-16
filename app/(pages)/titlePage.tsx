@@ -21,7 +21,6 @@ import { router } from "expo-router";
 
 
 
-// const timeline = 
 const personalityParameters = () => {
     const [userName, setUserName] = useState("")
     const [frequency, setFrequency] = useState({ x: 2, y: 2 })

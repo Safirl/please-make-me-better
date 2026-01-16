@@ -81,7 +81,6 @@ export const useProgressStorage = create<ProgressStateType>((set) => ({
             }
 
 
-            console.log(state)
             return state
         })
     },
