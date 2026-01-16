@@ -1,6 +1,6 @@
 import { usePersonalityStorage } from "@/storage/store";
 import { primaryColorTokens } from "@/tokens/primary/colors.tokens";
-import { useGestureDrag } from "@/ui/hooks/baseGestureHandler";
+import { useGestureDrag } from "@/assets/scripts/hooks/baseGestureHandler";
 import SvgComponent, { iconType } from "@/ui/svg";
 import { useEffect, useState } from "react";
 import { Dimensions, StyleSheet } from "react-native"

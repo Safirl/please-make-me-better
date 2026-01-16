@@ -4,7 +4,7 @@ import { GestureDetector } from "react-native-gesture-handler";
 import Animated from "react-native-reanimated";
 import { Circle, Svg } from "react-native-svg";
 import { useMemoryStorage } from "@/storage/store";
-import { useGestureDrag } from "@/ui/hooks/baseGestureHandler";
+import { useGestureDrag } from "@/assets/scripts/hooks/baseGestureHandler";
 
 interface GunCursorProps {
     onDragEnded: (posX: number, posY: number) => void;
