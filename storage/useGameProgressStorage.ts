@@ -1,7 +1,7 @@
 import { create } from 'zustand'
 
 
-type Step = "" | "title" | "login" | "folders" | "configurator" | "end"
+type Step = "" | "title" | "login" | "folders" | "configurator" | "end" | "LoreIntroduction"
 export type ProgressStateType = {
     steps: Step[];
     currentStep: Step,
@@ -22,13 +22,14 @@ const routes = {
     "": null,
     "title": { path: "/titlePage" },
     "login": { path: "/loginPage" },
+    "LoreIntroduction": { path: "/LoreIntroductionPage" },
     "folders": { path: "/folders" },
     "configurator": { path: "/configurator" },
     "end": { path: "/end" }
 } as Routes
 
 export const useProgressStorage = create<ProgressStateType>((set) => ({
-    steps: ["", "title", "login", "folders", "configurator", "end"] as Step[],
+    steps: ["", "title", "login", "LoreIntroduction", "folders", "configurator", "end"] as Step[],
     currentStep: "",
     currentRoute: null,
     initProgress: () => {
