@@ -31,7 +31,7 @@ const TraitButton = (props: traitButtonProps) => {
     const containerCenterY = usePersonalityStorage((state) => state.containerCenterY)
     const setClosestTraitId = usePersonalityStorage((state) => state.setClosestTraitId)
     const opacity = useSharedValue(1)
-    const enabled = useSharedValue(props.enableDrag)
+    const enabled = useSharedValue(false)
     // const rotation = usePersonalityStorage((state) => state.rotation)
     const rotation = props.rotation
     let savedRotation = 0
@@ -62,6 +62,7 @@ const TraitButton = (props: traitButtonProps) => {
                 position.top.value = withSpring(getPos().y)
             }
             else {
+                enabled.value = false
                 addComposedTrait({id: props.id, icon: props.iconName, label: props.label})
                 setClosestTraitId(-1)
             }
@@ -80,38 +81,26 @@ const TraitButton = (props: traitButtonProps) => {
     useAnimatedReaction(
         () => rotation.value,
         (currentRotation, previousRotation) => {
-            if (!enabled.value)  {
-                return;
-            };
-
             const newPos = getPos();
-            position.left.value = withSpring(newPos.x, {}, () => {if (isTraitClose()) setClosestTraitId(props.id)});
-            position.top.value = withSpring(newPos.y);
-
+            position.left.value = withSpring(newPos.x, {}, () => {
+                if (isTraitClose()) {
+                        setClosestTraitId(props.id)
+                        enabled.value = true
+                    }
+                    else {
+                        enabled.value = false
+                    }
+                });
+            if (composedTraits['0']?.id === props.id || composedTraits['1']?.id === props.id) {
+                enabled.value = false
+                position.left.value = withSpring(DIMENSIONS.width/2)
+                position.top.value = withSpring(DIMENSIONS.height/2 + DIMENSIONS.height)
+            }
+            else {
+                position.top.value = withSpring(newPos.y);
+            }
         }
     );
-    
-    useEffect(() => {
-        if (composedTraits['0']?.id === props.id) {
-            enabled.value = false
-            position.left.value = withSpring(DIMENSIONS.width/2)
-            position.top.value = withSpring(DIMENSIONS.height/2 + DIMENSIONS.height)
-            // position.top.value = withSpring(placeHoldersPos[0].y)
-            // position.top.value = withSpring(placeHoldersPos[0].y)
-            // position.left.value = withSpring(placeHoldersPos[0].x)
-        }
-        else if (composedTraits['1']?.id === props.id) {
-            // position.top.value = withSpring(1000)
-            enabled.value = false
-            position.left.value = withSpring(DIMENSIONS.width/2)
-            position.top.value = withSpring(DIMENSIONS.height/2)
-        }
-        else {
-            enabled.value = true
-            position.left.value = withSpring(getPos().x)
-            position.top.value = withSpring(getPos().y)
-        }
-    }, [composedTraits[0], composedTraits[1]])
 
     const isTraitInMergeZoneRadius = (x: number, y: number): boolean => {
         const dx = x - DIMENSIONS.width/2
