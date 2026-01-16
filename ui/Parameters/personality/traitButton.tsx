@@ -6,6 +6,9 @@ import { useEffect, useState } from "react";
 import { Dimensions, StyleSheet } from "react-native"
 import { GestureDetector } from "react-native-gesture-handler";
 import Animated, { SharedValue, useAnimatedReaction, useAnimatedStyle, useDerivedValue, useSharedValue, withSpring } from "react-native-reanimated";
+import { isEnabled } from "react-native/Libraries/Performance/Systrace";
+
+const DIMENSIONS = Dimensions.get("screen")
 
 interface traitButtonProps {
     id: number,
@@ -14,11 +17,9 @@ interface traitButtonProps {
     mergeZoneRadius: number,
     alphaSpacing: number,
     circleRadius: number,
-    totalAngle: number,
     scale: number,
     enableDrag: boolean,
     rotation: SharedValue<number>
-    isRotating: SharedValue<boolean>
 }
 
 const TraitButton = (props: traitButtonProps) => {
@@ -51,8 +52,8 @@ const TraitButton = (props: traitButtonProps) => {
     }
 
     const { panGesture, animatedStyle, onLayoutHandler, position, isDragging } = useGestureDrag({
-        initialX: getPos().x,
-        initialY: getPos().y,
+        initialX: 0,
+        initialY: 0,
         resetOnDragFinalize: false,
         onDragEnded(x, y) {
             if (!isTraitInMergeZoneRadius(x,y) || composedTraits['1']?.id !== undefined) {
@@ -60,6 +61,7 @@ const TraitButton = (props: traitButtonProps) => {
                 position.top.value = withSpring(getPos().y)
             }
             else {
+                console.log("0")
                 addComposedTrait({id: props.id, icon: props.iconName, label: props.label})
             }
         },
@@ -69,10 +71,14 @@ const TraitButton = (props: traitButtonProps) => {
         enable: enabled
     });
     
-    
+    //rotate
     useAnimatedReaction(
         () => rotation.value,
         (currentRotation, previousRotation) => {
+            if (!isEnabled()) return;
+
+            console.log("2")
+            // console.log("coucou")
             const newPos = getPos();
             position.left.value = withSpring(newPos.x);
             position.top.value = withSpring(newPos.y);
@@ -81,14 +87,19 @@ const TraitButton = (props: traitButtonProps) => {
     
     useEffect(() => {
         if (composedTraits['0']?.id === props.id) {
-            position.left.value = withSpring(placeHoldersPos[0].x)
-            position.top.value = withSpring(placeHoldersPos[0].y)
+            console.log("1")
+            // position.left.value = withSpring(placeHoldersPos[0].x)
+            // position.top.value = withSpring(1000)
             setIsEnabled(false)
+            position.top.value = withSpring(placeHoldersPos[0].y)
+            position.left.value = withSpring(placeHoldersPos[0].x)
+            console.log("x: ", placeHoldersPos[0].x, "y: ", placeHoldersPos[0].y)
         }
         else if (composedTraits['1']?.id === props.id) {
-            position.left.value = withSpring(placeHoldersPos[1].x)
-            position.top.value = withSpring(placeHoldersPos[1].y)
+            // position.top.value = withSpring(1000)
             setIsEnabled(false)
+            position.top.value = placeHoldersPos[1].y
+            position.left.value = placeHoldersPos[1].x
         }
         else {
             setIsEnabled(true)
@@ -98,8 +109,8 @@ const TraitButton = (props: traitButtonProps) => {
     }, [composedTraits[0], composedTraits[1], placeHoldersPos])
 
     const isTraitInMergeZoneRadius = (x: number, y: number): boolean => {
-        const dx = x - containerCenterX
-        const dy = y - containerCenterY
+        const dx = x - DIMENSIONS.width/2
+        const dy = y - DIMENSIONS.height
         const distance = Math.sqrt(dx * dx + dy * dy);
         return distance < props.mergeZoneRadius;
     }
