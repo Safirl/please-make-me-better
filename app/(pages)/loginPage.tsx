@@ -4,6 +4,7 @@ import Button from "@/ui/Button";
 import Fonts from "@/assets/styles/fonts";
 import { primaryTokens } from "@/tokens/primary/primary.token";
 import { useProgressStorage, ProgressStateType } from "@/storage/useGameProgressStorage";
+import { usePlayerNameStorage } from "@/storage/usePlayerNameStorage";
 import Svg, {
     Defs,
     Path,
@@ -19,6 +20,7 @@ const personalityParameters = () => {
     const [userName, setUserName] = useState("")
     const gameProgress: ProgressStateType = useProgressStorage()
 
+    const { setUserName: storeName } = usePlayerNameStorage()
 
     const title = {
         opacity: useSharedValue(0),
@@ -111,6 +113,8 @@ const personalityParameters = () => {
     const next = () => {
         if (!userName) return
 
+        storeName(userName)
+
         a.map((v) => {
             v.opacity.value = withSpring(0, { duration: 750 })
             v.posY.value = withSpring(-50, { duration: 750 })
@@ -182,7 +186,7 @@ const personalityParameters = () => {
                             <TextInput
                                 style={styles.input}
                                 placeholderTextColor={primaryTokens["color-tertiary-lower"]}
-                                onChangeText={setUserName}
+                                onChangeText={(a) => setUserName(a)}
                                 value={userName}
                                 placeholder="Username"
                             />
