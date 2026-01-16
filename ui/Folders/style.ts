@@ -10,7 +10,7 @@ import {
 
 const main = (selectColor: "primary" | "secondary" | "tertiary" = "tertiary") => ({
 
-    width: "auto" as const,
+    width: "100%" as const,
     alignSelf: "flex-start" as const,
 
     backgroundColor: clientRequestTabTokens[`${COMPONENT_NAME}-main-background-color`],

@@ -23,7 +23,7 @@ const routes = {
     "title": { path: "/titlePage" },
     "login": { path: "/loginPage" },
     "LoreIntroduction": { path: "/LoreIntroductionPage" },
-    "folders": { path: "/folders" },
+    "folders": { path: "/foldersPage" },
     "configurator": { path: "/configurator" },
     "end": { path: "/end" }
 } as Routes

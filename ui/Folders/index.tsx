@@ -49,6 +49,7 @@ const Modal: React.FC<CustomModalProps> = (props) => {
 
     const Style = createStyle(selectColor);
 
+    console.log(tabs)
     const [selectedTab, setSelectedTab] = React.useState<"Dossier" | "Lore">(tabs[0])
     const [selectedView, setSelectedView] = React.useState<"" | "identity" | "mission" | "image" | "autrui" | "rupture">(currentView)
     const [backButtonWidth, setBackButtonWidth] = React.useState()

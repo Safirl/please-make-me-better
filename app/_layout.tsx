@@ -25,7 +25,7 @@ export default function RootLayout() {
                 backgroundColor: primaryBackgroundTokens["background-secondary"]
             }}
         >
-            <GPU />
+            {/* <GPU /> */}
         </View>
         <Stack screenOptions={{
             contentStyle: { backgroundColor: 'transparent' },

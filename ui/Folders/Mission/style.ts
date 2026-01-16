@@ -58,7 +58,6 @@ export const createStyle = () => StyleSheet.create({
         paddingHorizontal: 12,
     },
     columnDirection: {
-
         width: 210,
         gap: 14,
         paddingVertical: 24,

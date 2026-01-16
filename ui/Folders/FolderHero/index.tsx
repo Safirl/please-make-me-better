@@ -38,7 +38,7 @@ const FolderHero: React.FC<CustomFolderProps> = (props) => {
 
             <Image
                 style={Style.image}
-                source={{ uri: client.profilePicture }}
+                source={client.profilePicture }
                 contentFit="cover"
             />
 
