@@ -21,7 +21,7 @@ export const useGestureDrag = ({
     initialX = sizes.width / 2,
     initialY = sizes.height / 2,
     resetOnDragFinalize: resetOnDragEnded = false,
-    enable = useSharedValue(true)
+    enable
 }: UseGestureDragProps) => {
     const width = useSharedValue(0);
     const height = useSharedValue(0);
@@ -44,22 +44,26 @@ export const useGestureDrag = ({
     //         }
     //     );
 
+    useDerivedValue(() => {
+        console.log("enabled: ", enable.value)
+    })
+
     const panGesture = Gesture.Pan()
         .onBegin((e) => {
-            if (!enable) return;
+            if (!enable.value) return;
             isDragging.value = true
             top.value = withSpring(e.absoluteY, { duration: 200 });
             left.value = withSpring(e.absoluteX, { duration: 200 });
             onPositionChanged?.(left.value, top.value);
         })
         .onUpdate((e) => {
-            if (!enable) return;
+            if (!enable.value) return;
             top.value = withSpring(e.absoluteY, { duration: 200 });
             left.value = withSpring(e.absoluteX, { duration: 200 });
             onPositionChanged?.(left.value, top.value);
         })
         .onFinalize(() => {
-            if (!enable) return;
+            if (!enable.value) return;
             isDragging.value = false
             onDragEnded?.(left.value, top.value);
             if (resetOnDragEnded) {
