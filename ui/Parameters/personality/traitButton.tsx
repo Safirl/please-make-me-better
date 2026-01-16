@@ -26,11 +26,10 @@ const TraitButton = (props: traitButtonProps) => {
     const setCurrentTraitPosition = usePersonalityStorage((state) => state.setCurrentTraitPosition)
     const addComposedTrait = usePersonalityStorage((state) => state.addComposedTrait)
     const composedTraits = usePersonalityStorage((state) => state.composedTraits)
-    const placeHoldersPos = usePersonalityStorage((state) => state.placeHoldersPos)
     const containerCenterX = usePersonalityStorage((state) => state.containerCenterX)
     const containerCenterY = usePersonalityStorage((state) => state.containerCenterY)
     const opacity = useSharedValue(1)
-    const [enabled, setIsEnabled] = useState(props.enableDrag)
+    const enabled = useSharedValue(props.enableDrag)
     // const rotation = usePersonalityStorage((state) => state.rotation)
     const rotation = props.rotation
     let savedRotation = 0
@@ -61,7 +60,6 @@ const TraitButton = (props: traitButtonProps) => {
                 position.top.value = withSpring(getPos().y)
             }
             else {
-                console.log("0")
                 addComposedTrait({id: props.id, icon: props.iconName, label: props.label})
             }
         },
@@ -75,10 +73,10 @@ const TraitButton = (props: traitButtonProps) => {
     useAnimatedReaction(
         () => rotation.value,
         (currentRotation, previousRotation) => {
-            if (!isEnabled()) return;
+            if (!enabled.value)  {
+                return;
+            };
 
-            console.log("2")
-            // console.log("coucou")
             const newPos = getPos();
             position.left.value = withSpring(newPos.x);
             position.top.value = withSpring(newPos.y);
@@ -87,26 +85,26 @@ const TraitButton = (props: traitButtonProps) => {
     
     useEffect(() => {
         if (composedTraits['0']?.id === props.id) {
-            console.log("1")
+            enabled.value = false
+            position.left.value = withSpring(DIMENSIONS.width/2)
+            position.top.value = withSpring(DIMENSIONS.height/2 + DIMENSIONS.height)
+            // position.top.value = withSpring(placeHoldersPos[0].y)
+            // position.top.value = withSpring(placeHoldersPos[0].y)
             // position.left.value = withSpring(placeHoldersPos[0].x)
-            // position.top.value = withSpring(1000)
-            setIsEnabled(false)
-            position.top.value = withSpring(placeHoldersPos[0].y)
-            position.left.value = withSpring(placeHoldersPos[0].x)
-            console.log("x: ", placeHoldersPos[0].x, "y: ", placeHoldersPos[0].y)
         }
         else if (composedTraits['1']?.id === props.id) {
             // position.top.value = withSpring(1000)
-            setIsEnabled(false)
-            position.top.value = placeHoldersPos[1].y
-            position.left.value = placeHoldersPos[1].x
+            enabled.value = false
+            position.left.value = withSpring(DIMENSIONS.width/2)
+            position.top.value = withSpring(DIMENSIONS.height/2)
         }
         else {
-            setIsEnabled(true)
+            enabled.value = true
+            console.log("enabled?: ", enabled.value)
             position.left.value = withSpring(getPos().x)
             position.top.value = withSpring(getPos().y)
         }
-    }, [composedTraits[0], composedTraits[1], placeHoldersPos])
+    }, [composedTraits[0], composedTraits[1]])
 
     const isTraitInMergeZoneRadius = (x: number, y: number): boolean => {
         const dx = x - DIMENSIONS.width/2

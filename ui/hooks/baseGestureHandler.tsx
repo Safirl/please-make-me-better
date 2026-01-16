@@ -1,7 +1,8 @@
 // hooks/useGestureDrag.ts
+import { useEffect } from "react";
 import { Dimensions, LayoutChangeEvent } from "react-native";
 import { Gesture } from "react-native-gesture-handler";
-import { useAnimatedStyle, useSharedValue, withSpring } from "react-native-reanimated";
+import { SharedValue, useAnimatedReaction, useAnimatedStyle, useDerivedValue, useSharedValue, withSpring } from "react-native-reanimated";
 
 let sizes = Dimensions.get("screen");
 
@@ -11,7 +12,7 @@ interface UseGestureDragProps {
     initialX?: number;
     initialY?: number;
     resetOnDragFinalize?: boolean;
-    enable?: boolean
+    enable: SharedValue<boolean>
 }
 
 export const useGestureDrag = ({
@@ -20,8 +21,8 @@ export const useGestureDrag = ({
     initialX = sizes.width / 2,
     initialY = sizes.height / 2,
     resetOnDragFinalize: resetOnDragEnded = false,
-    enable = true
-}: UseGestureDragProps = {}) => {
+    enable = useSharedValue(true)
+}: UseGestureDragProps) => {
     const width = useSharedValue(0);
     const height = useSharedValue(0);
     const top = useSharedValue(initialY);
@@ -32,6 +33,16 @@ export const useGestureDrag = ({
         width.value = e.nativeEvent.layout.width;
         height.value = e.nativeEvent.layout.height;
     };
+
+    // useAnimatedReaction(
+    //         () => props.enable.value,
+    //         (currentEnable, previousEnable) => {
+    //             if (!props.enable.value)  {
+    //                 return;
+    //             };
+
+    //         }
+    //     );
 
     const panGesture = Gesture.Pan()
         .onBegin((e) => {
