@@ -9,6 +9,7 @@ import Animated, { SharedValue, useAnimatedReaction, useAnimatedStyle, useDerive
 import { isEnabled } from "react-native/Libraries/Performance/Systrace";
 
 const DIMENSIONS = Dimensions.get("screen")
+const MERGE_RADIUS = 30
 
 interface traitButtonProps {
     id: number,
@@ -28,6 +29,7 @@ const TraitButton = (props: traitButtonProps) => {
     const composedTraits = usePersonalityStorage((state) => state.composedTraits)
     const containerCenterX = usePersonalityStorage((state) => state.containerCenterX)
     const containerCenterY = usePersonalityStorage((state) => state.containerCenterY)
+    const setClosestTraitId = usePersonalityStorage((state) => state.setClosestTraitId)
     const opacity = useSharedValue(1)
     const enabled = useSharedValue(props.enableDrag)
     // const rotation = usePersonalityStorage((state) => state.rotation)
@@ -61,6 +63,7 @@ const TraitButton = (props: traitButtonProps) => {
             }
             else {
                 addComposedTrait({id: props.id, icon: props.iconName, label: props.label})
+                setClosestTraitId(-1)
             }
         },
         onPositionChanged(x, y) {
@@ -69,6 +72,10 @@ const TraitButton = (props: traitButtonProps) => {
         enable: enabled
     });
     
+    const isTraitClose = (): boolean => {
+        return Math.abs(position.top.value - DIMENSIONS.height/2) < MERGE_RADIUS
+    }
+
     //rotate
     useAnimatedReaction(
         () => rotation.value,
@@ -78,8 +85,9 @@ const TraitButton = (props: traitButtonProps) => {
             };
 
             const newPos = getPos();
-            position.left.value = withSpring(newPos.x);
+            position.left.value = withSpring(newPos.x, {}, () => {if (isTraitClose()) setClosestTraitId(props.id)});
             position.top.value = withSpring(newPos.y);
+
         }
     );
     
@@ -100,7 +108,6 @@ const TraitButton = (props: traitButtonProps) => {
         }
         else {
             enabled.value = true
-            console.log("enabled?: ", enabled.value)
             position.left.value = withSpring(getPos().x)
             position.top.value = withSpring(getPos().y)
         }
