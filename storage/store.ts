@@ -45,7 +45,6 @@ export const useMemoryStorage = create<MemoryState>((set) => ({
 }))
 
 interface PersonalityState {
-  placeHoldersPos: {x:number, y:number}[]
   traits: Trait[]
   //set the trait that are going to be merged
   composedTraits: {0: Trait | null, 1: Trait | null}
@@ -58,7 +57,6 @@ interface PersonalityState {
   currentScene: number
 
   setContainerPosition: (x: number, y: number) => void
-  setPlaceHolderPos: (index: number, x: number, y: number) => void
   addComposedTrait: (trait: Trait) => void
   createTrait: (trait0: Trait, trait1: Trait) => void
   setCurrentTraitPosition: (x: number, y: number) => void
@@ -72,7 +70,6 @@ export const usePersonalityStorage = create<PersonalityState>((set) => ({
   currentTraitPosition: {x:0, y:0},
   createdTraits: [],
   composedTraits: {0:null,1:null},
-  placeHoldersPos: [],
   containerCenterX: 0,
   containerCenterY: 0,
   isContainerReady: false,
@@ -80,11 +77,6 @@ export const usePersonalityStorage = create<PersonalityState>((set) => ({
   currentScene: 0,
 
   setContainerPosition: (x, y) => set((state) => ({containerCenterX: x, containerCenterY: y, isContainerReady: true})),
-  setPlaceHolderPos: (index, x, y) => set((state) => {
-    const newPlaceHolders = [...state.placeHoldersPos];
-    newPlaceHolders[index] = {x, y};
-    return {placeHoldersPos: newPlaceHolders};
-  }),
   addComposedTrait: (trait) => set((state) => {
     if (state.composedTraits[0] === null) {
       return {

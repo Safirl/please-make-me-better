@@ -24,15 +24,15 @@ const personalityParameters = () => {
 
     const composedTraits = usePersonalityStorage((state) => state.composedTraits)
     const SceneSelectContainerOpacity = useSharedValue(0)
-    const SceneSelectContainerTop = useSharedValue(-1000)
+    const SceneSelectContainerTop = useSharedValue(-DIMENSIONS.height)
     
     const SceneComposedContainerOpacity = useSharedValue(0)
-    const SceneComposedContainerTop = useSharedValue(1000)
+    const SceneComposedContainerTop = useSharedValue(DIMENSIONS.height)
 
     useEffect(() => {
         if ((composedTraits[0] !== null && composedTraits[1] !== null)) {
             SceneSelectContainerOpacity.value = withSpring(0)
-            SceneSelectContainerTop.value = withSpring(-1000)
+            SceneSelectContainerTop.value = withSpring(-DIMENSIONS.height)
             SceneComposedContainerOpacity.value = withSpring(1)
             SceneComposedContainerTop.value = withSpring(0)
         }
@@ -41,7 +41,7 @@ const personalityParameters = () => {
             SceneSelectContainerTop.value = withSpring(0)
 
             SceneComposedContainerOpacity.value = withSpring(0)
-            SceneComposedContainerTop.value = withSpring(1000)
+            SceneComposedContainerTop.value = withSpring(DIMENSIONS.height)
         }
     }, [composedTraits[0], composedTraits[1]])
 

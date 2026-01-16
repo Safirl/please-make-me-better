@@ -104,7 +104,7 @@ const SceneSelect = (props: sceneSelectProps) => {
                     alphaSpacing={alphaSpacing}
                     circleRadius={CIRCLE_RADIUS}
                     scale={2.2}
-                    enableDrag={false}
+                    enableDrag={true}
                     rotation={rotation}
                 />
             ))
@@ -142,9 +142,9 @@ const styles = StyleSheet.create({
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
-        height: CIRCLE_RADIUS*2,
-        width: CIRCLE_RADIUS*2,
-        left: DIMENSIONS.width/2 - CIRCLE_RADIUS,
+        height: CIRCLE_RADIUS*2 + 100,
+        width: CIRCLE_RADIUS*2 + 100,
+        left: DIMENSIONS.width/2 - CIRCLE_RADIUS - 50,
         top: -CIRCLE_RADIUS,
         // backgroundColor:"red",
         borderRadius: 200
@@ -177,7 +177,7 @@ const styles = StyleSheet.create({
     dropZoneMask: {
         position: "absolute",
         width: "100%",
-        height: 200,
+        height: 160,
         backgroundColor: primaryBackgroundTokens["background-secondary"]
         // bottom:-42,
         // alignItems: "center"

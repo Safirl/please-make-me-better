@@ -14,9 +14,9 @@ const DIMENSIONS = Dimensions.get("screen")
 
 const SceneComposed = () => {
     const composedTraits = usePersonalityStorage((state) => state.composedTraits)
-    const setPlaceHolderPos = usePersonalityStorage((state) => state.setPlaceHolderPos)
     const posX = useSharedValue(0)
     const posY = useSharedValue(0)
+    const resetTraits = usePersonalityStorage((state) => state.resetTraits)
 
 
     // const getPlaceHolderPosition = (index: number, width: number, height: number): {x: number, y: number} => {
@@ -27,47 +27,59 @@ const SceneComposed = () => {
     //     return {x,y}
     // }
 
-    useEffect(() => {
-        console.log
-        setPlaceHolderPos(0, DIMENSIONS.width/2, DIMENSIONS.height/2)
-        setPlaceHolderPos(1, DIMENSIONS.width/2, DIMENSIONS.height/2)
-    }, [])
-
     // useDerivedValue(() => {
     //     setPlaceHolderPos(0, DIMENSIONS.width/2, DIMENSIONS.height/2)
     //     setPlaceHolderPos(1, DIMENSIONS.width/2, DIMENSIONS.height/2)
     // })
 
-    // if (!composedTraits[0] || composedTraits[1]) {
-    //     return (
-    //         <></>
-    //     )
-    // }
+    if (!composedTraits[0] || !composedTraits[1]) {
+        return (
+            <></>
+        )
+    }
+
+    const dynamicStyleLeft = StyleSheet.create({
+        style: {
+            transform: [{translateX: 80}, {scale: 2.2}],
+        }
+    })
+
+    const dynamicStyleRight = StyleSheet.create({
+        style: {
+            transform: [{translateX: -80}, {scale: 2.2}],
+        }
+    })
 
     return (
         <Animated.View style={styles.container}>
-            {/* <View> */}
-                <View style={styles.textContainer}>
-                    <View style={styles.dot}/>
-                    <Text style={styles.text}>Nom du nouveau trait : XXX</Text>
-                </View>
-                <View style={styles.separator}/>
-            {/* </View> */}
-            <Svg
-                style={styles.svg}
-                width={15}
-                height={15}
-                fill="none"
-            >
-                <Path
-                stroke="#F1F1F1"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M.5 7.5h14m-7-7v14"
-                />
-            </Svg>
+            <View style={styles.textContainer}>
+                <View style={styles.dot}/>
+                <Text style={styles.text}>Nom du nouveau trait : XXX</Text>
+            </View>
+            <View style={styles.separator}/>
+            <View style={styles.middleContainer}>
+                <Animated.View style={[styles.trait, dynamicStyleLeft.style]}>
+                    <SvgComponent name={composedTraits[0]?.icon}></SvgComponent>
+                </Animated.View>
+                <Svg
+                    style={styles.svg}
+                    width={15}
+                    height={15}
+                    fill="none"
+                >
+                    <Path
+                    stroke="#F1F1F1"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M.5 7.5h14m-7-7v14"
+                    />
+                </Svg>
+                <Animated.View style={[styles.trait, dynamicStyleRight.style]}>
+                    <SvgComponent name={composedTraits[1]?.icon}></SvgComponent>
+                </Animated.View>
+            </View>
             <View style={styles.buttonContainer}>
-                <Button type="tertiary" label="Reject" icon={{name: "cross"}}/>
+                <Button type="tertiary" label="Reject" icon={{name: "cross"}} onPress={resetTraits}/>
                 <Button type="primary" label="Add" icon={{name: "lightning-bolt"}}/>
             </View>
         </Animated.View>
@@ -77,7 +89,6 @@ const SceneComposed = () => {
 const styles = StyleSheet.create({
     container: {
         height: "100%",
-        // top: DIMENSIONS.height/2,
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
@@ -104,14 +115,28 @@ const styles = StyleSheet.create({
         backgroundColor: primaryColorTokens["color-primary-medium"],
     },
 
+    middleContainer: {
+        flexDirection: "row",
+        alignItems: "center",
+        gap: 130,
+        marginVertical: 80
+    },
     svg: {
-        marginVertical: 64
     },
 
     buttonContainer: {
         flexDirection: "row",
         gap: 8
-    }
+    },
+
+    trait: {
+        // position: "absolute",
+        zIndex: 100,
+        padding: 10,
+        boxShadow: "0 0 9.7px 0 rgba(231, 229, 254, 0.49)",
+        borderRadius: 100,
+        backgroundColor: primaryColorTokens["color-tertiary-medium"]
+    },
 })
 
 export default SceneComposed
