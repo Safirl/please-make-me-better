@@ -1,4 +1,4 @@
-import {primaryColorTokens} from "@/tokens/primary/colors.tokens";
+import { primaryColorTokens } from "@/tokens/primary/colors.tokens";
 
 export const primaryFontTokens = {
     "font-family-primary": "JetBrainsMono" as const,
@@ -8,10 +8,18 @@ export const primaryFontTokens = {
 }
 
 export const subTitleFontTokens = {
+    "font-subTitleLight-size": 14 as const,
+    "font-subTitleLight-weight": "400" as const,
+    "font-subTitleLight-family": primaryFontTokens["font-family-primary"],
+    "font-subTitleLight-line": 22 as const,
+    "font-subTitleLight-letterSpacing": 0 as const,
+}
+
+export const subTitleLightFontTokens = {
     "font-subTitle-size": 14 as const,
     "font-subTitle-weight": "700" as const,
     "font-subTitle-family": primaryFontTokens["font-family-primary"],
-    "font-subTitle-line": 12 as const,
+    "font-subTitle-line": 22 as const,
     "font-subTitle-letterSpacing": 0 as const,
 }
 
@@ -48,6 +56,7 @@ export const h2FontTokens = {
 }
 export const fontTokens = {
     primary: primaryFontTokens,
+    ...subTitleLightFontTokens,
     ...subTitleFontTokens,
     ...paragraphFontTokens,
     ...bodyBoldFontTokens,
