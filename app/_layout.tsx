@@ -5,7 +5,6 @@ import { useTheme } from "@react-navigation/native";
 import { useFonts } from "expo-font";
 import { Stack } from "expo-router";
 import { StyleSheet, View } from "react-native";
-
 export default function RootLayout() {
     const [loaded, error] = useFonts({
         JetBrainsMono: require("../assets/fonts/JetBrainsMono/JetBrainsMono[wght].ttf"),
@@ -13,6 +12,8 @@ export default function RootLayout() {
 
     const { colors } = useTheme();
     colors.background = 'transparent';
+
+
 
     return <>
         <View
@@ -24,7 +25,7 @@ export default function RootLayout() {
                 backgroundColor: primaryBackgroundTokens["background-secondary"]
             }}
         >
-            <GPU/>
+            <GPU />
         </View>
         <Stack screenOptions={{
             contentStyle: { backgroundColor: 'transparent' },

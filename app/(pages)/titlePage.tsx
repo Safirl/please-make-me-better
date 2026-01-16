@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { Text, TextInput, StyleSheet, View } from "react-native";
-import SvgComponent from "@/ui/svg";
+// import Animated from "react-native-reanimated";
 import Fonts from "@/assets/styles/fonts";
 import { primaryTokens } from "@/tokens/primary/primary.token";
 import Svg, {
@@ -15,17 +15,40 @@ import Svg, {
     FeMerge,
     Filter,
 } from "react-native-svg";
+import { useProgressStorage, ProgressStateType } from "@/storage/useGameProgressStorage";
+import Animated, { withSequence, useSharedValue, withSpring, useAnimatedStyle, withTiming } from "react-native-reanimated";
+import { router } from "expo-router";
 
-import {
-    useFrameCallback
-} from 'react-native-reanimated';
 
+
+// const timeline = 
 const personalityParameters = () => {
     const [userName, setUserName] = useState("")
     const [frequency, setFrequency] = useState({ x: 2, y: 2 })
     const [octave, setOctave] = useState(1)
     const [scale, setScale] = useState(6)
 
+    const gameProgress: ProgressStateType = useProgressStorage()
+
+    const betterFade = useSharedValue(0)
+
+    useEffect(() => {
+
+        betterFade.value = withSequence(
+            withSpring(1, { duration: 1500 }),
+            withSpring(0, { duration: 2500, },
+                () => {
+                    gameProgress.nextStep("title")
+                    gameProgress.currentRoute && router.navigate(gameProgress.currentRoute.path)
+                })
+        )
+    }, [])
+
+    const animatedFadeInOut = useAnimatedStyle(
+        () => ({
+            opacity: betterFade.value,
+        })
+    )
     // useFrameCallback((e) => {
     //     setFrequency({
     //         x: Math.floor(Math.abs(
@@ -50,7 +73,8 @@ const personalityParameters = () => {
     // })
     return (
         <View style={styles.container}>
-            <View
+            <Animated.View
+                style={animatedFadeInOut}
             >
                 <Svg width="352" height="101" viewBox="0 0 352 101" fill="none">
                     <G filter="url(#filter0_g_2218_550)">
@@ -87,7 +111,7 @@ const personalityParameters = () => {
                     </Defs>
                 </Svg>
 
-            </View>
+            </Animated.View>
 
             {/*
             <View
