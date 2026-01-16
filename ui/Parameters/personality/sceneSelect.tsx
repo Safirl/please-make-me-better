@@ -29,6 +29,9 @@ const SceneSelect = (props: sceneSelectProps) => {
     const rotation = useSharedValue(0)
     const savedPosX = useSharedValue(0)
     const savedPosY = useSharedValue(0)
+    const closestTraitId = usePersonalityStorage((state) => state.closestTraitId)
+    const composedTraits = usePersonalityStorage((state) => state.composedTraits)
+    const setClosestTraitId = usePersonalityStorage((state) => state.setClosestTraitId)
     
     const rotationGesture = Gesture.Pan()
         .onUpdate((e) => {
@@ -38,6 +41,7 @@ const SceneSelect = (props: sceneSelectProps) => {
             savedPosX.value = e.absoluteX
             savedPosY.value = e.absoluteY
             rotation.value = withSpring(rotation.value + (Math.sign(deltaX) * distance) * Math.PI/30)
+            setClosestTraitId(-1)
         })
         .onEnd((e) => {
             savedPosX.value = 0
@@ -47,6 +51,9 @@ const SceneSelect = (props: sceneSelectProps) => {
     useEffect(() => {
         setContainerPosition(DIMENSIONS.width/2, -60)
     }, [])
+
+    useEffect(() => {
+    }, [closestTraitId])
 
     const traitContainerAnimatedStyle = useAnimatedStyle(() => {
         return {
@@ -65,11 +72,18 @@ const SceneSelect = (props: sceneSelectProps) => {
     <>
     <View style={[styles.container, props.style]}>
         <Text style={styles.count}>
+            {
+                composedTraits[0] && composedTraits[1] && 2
+                ||
+                composedTraits[0] && !composedTraits[1] && 1
+                ||
+                !composedTraits[0] && 0
+            }
             /2
         </Text>
         <View style={styles.selectContainer}>
             <Text style={styles.trait}>
-                Confiant
+                {closestTraitId != -1 ? traits[closestTraitId].label : "???"}
             </Text>
             <View style={styles.selectZone}>
 

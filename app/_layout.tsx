@@ -27,18 +27,20 @@ export default function RootLayout() {
         >
             <GL />
         </View>
-        <Stack screenOptions={{
-            contentStyle: { backgroundColor: 'transparent' },
-            headerStyle: { backgroundColor: 'transparent' },
-            headerTransparent: true,
-            headerShown: false,
-            // debug: false
-        }}>
-            <Stack.Screen name="index" options={{ title: 'Configurator', headerShown: false, }} />
-            <Stack.Screen name="(pages)/memoriesPage" options={{ title: '', headerStyle: styles.headerStyle }} />
-            <Stack.Screen name="(pages)/v2personalityPage" options={{ title: '', headerStyle: styles.headerStyle }} />
-            <Stack.Screen name="(pages)/emotionsPage" options={{ title: '', headerStyle: styles.headerStyle }} />
-        </Stack>
+        <View style={{height: "100%", overflow: "hidden"}}>
+            <Stack screenOptions={{
+                contentStyle: { backgroundColor: 'transparent' },
+                headerStyle: { backgroundColor: 'transparent' },
+                headerTransparent: true,
+                headerShown: false,
+                // debug: false
+            }}>
+                <Stack.Screen name="index" options={{ title: 'Configurator', headerShown: false, }} />
+                <Stack.Screen name="(pages)/memoriesPage" options={{ title: '', headerStyle: styles.headerStyle }} />
+                <Stack.Screen name="(pages)/v2personalityPage" options={{ title: '', headerStyle: styles.headerStyle }} />
+                <Stack.Screen name="(pages)/emotionsPage" options={{ title: '', headerStyle: styles.headerStyle }} />
+            </Stack>
+        </View>
         <View style={styles.validateButton}>
             <Button type="primary" icon={{name: "file"}} overridePadding={12}></Button>
         </View>

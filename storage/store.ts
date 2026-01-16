@@ -73,7 +73,7 @@ export const usePersonalityStorage = create<PersonalityState>((set) => ({
   containerCenterX: 0,
   containerCenterY: 0,
   isContainerReady: false,
-  closestTraitId: 0,
+  closestTraitId: -1,
   currentScene: 0,
 
   setContainerPosition: (x, y) => set((state) => ({containerCenterX: x, containerCenterY: y, isContainerReady: true})),

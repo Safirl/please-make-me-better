@@ -64,7 +64,7 @@ export const characters = [
             {
                 id: 0,
                 icon: "comet",
-                label: "rêveur"
+                label: "joueur"
             },
             {
                 id: 1,
@@ -74,42 +74,42 @@ export const characters = [
             {
                 id: 2,
                 icon: "beech",
-                label: "rêveur"
+                label: "penseur"
             },
             {
                 id: 3,
                 icon: "comet",
-                label: "rêveur"
+                label: "frimeur"
             },
             {
                 id: 4,
                 icon: "back-pain",
-                label: "rêveur"
+                label: "calculateur"
             },
             {
                 id: 5,
                 icon: "beech",
-                label: "rêveur"
+                label: "méchant"
             },
             {
                 id: 6,
                 icon: "comet",
-                label: "rêveur"
+                label: "gentil"
             },
             {
                 id: 7,
                 icon: "back-pain",
-                label: "rêveur"
+                label: "très méchant"
             },
             {
                 id: 8,
                 icon: "beech",
-                label: "rêveur"
+                label: "très gentil"
             },
             {
                 id: 9,
                 icon: "beech",
-                label: "rêveur"
+                label: "très très très rien"
             },
         ] as Trait[],
         emotions: [
