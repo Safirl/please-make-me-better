@@ -5,6 +5,8 @@ import { primaryBackgroundTokens } from "@/tokens/primary/backgrounds.tokens";
 import { primaryColorTokens } from "@/tokens/primary/colors.tokens";
 import MergeZone from "@/ui/Parameters/personality/mergeZone";
 import PersonalityCard from "@/ui/Parameters/personality/PersonalityCard";
+import SceneComposed from "@/ui/Parameters/personality/sceneComposed";
+import SceneSelect from "@/ui/Parameters/personality/sceneSelect";
 import TraitButton from "@/ui/Parameters/personality/traitButton";
 import { useEffect, useRef, useState } from "react";
 import { Dimensions, LayoutChangeEvent, StyleSheet, View, Text } from "react-native";
@@ -19,219 +21,60 @@ const DIMENSIONS = Dimensions.get("window")
 
 
 const personalityParameters = () => {
-    const traits = usePersonalityStorage((state) => state.traits)
-    const alphaSpacing = TOTAL_ANGLE / (traits.length)
-    const createTrait = usePersonalityStorage((state) => state.createTrait)
-    const setContainerPosition = usePersonalityStorage((state) => state.setContainerPosition)
-    const composedTraits = usePersonalityStorage((state) => state.composedTraits)
-    const left = useSharedValue(0)
-    const top = useSharedValue(0)
-    const rotation = useSharedValue(0)
-    const savedPosX = useSharedValue(0)
-    const savedPosY = useSharedValue(0)
-    const isRotating = useSharedValue(false)
-    
-    const closestTrait = useSharedValue(0)
 
-    const rotationGesture = Gesture.Pan()
-        .onUpdate((e) => {
-            const deltaX = -1 *(e.absoluteX - savedPosX.value)
-            const deltaY = -1 *(e.absoluteY - savedPosY.value)
-            const distance = Math.sqrt(deltaX*deltaX + deltaY*deltaY)
-            savedPosX.value = e.absoluteX
-            savedPosY.value = e.absoluteY
-            rotation.value = withSpring(rotation.value + (Math.sign(deltaX) * distance) * Math.PI/50)
-        })
-        .onEnd((e) => {
-            savedPosX.value = 0
-            savedPosY.value = 0
-        })
+    const composedTraits = usePersonalityStorage((state) => state.composedTraits)
+    const SceneSelectContainerOpacity = useSharedValue(0)
+    const SceneSelectContainerTop = useSharedValue(-1000)
+    
+    const SceneComposedContainerOpacity = useSharedValue(0)
+    const SceneComposedContainerTop = useSharedValue(1000)
 
     useEffect(() => {
-        if (composedTraits[0] != null && composedTraits[1] != null) {
-            moveContainer(DIMENSIONS.width/2 + 120, DIMENSIONS.height/2)
+        if ((composedTraits[0] !== null && composedTraits[1] !== null)) {
+            SceneSelectContainerOpacity.value = withSpring(0)
+            SceneSelectContainerTop.value = withSpring(-1000)
+            SceneComposedContainerOpacity.value = withSpring(1)
+            SceneComposedContainerTop.value = withSpring(0)
         }
         else {
-            moveContainer(DIMENSIONS.width/2, DIMENSIONS.height/2)
+            SceneSelectContainerOpacity.value = withSpring(1)
+            SceneSelectContainerTop.value = withSpring(0)
+
+            SceneComposedContainerOpacity.value = withSpring(0)
+            SceneComposedContainerTop.value = withSpring(1000)
         }
-    }, [composedTraits])
+    }, [composedTraits[0], composedTraits[1]])
 
-    const moveContainer = (newLeft: number, newTop: number) => {
-        left.value = withSpring(newLeft)
-        top.value = withSpring(newTop)
-        setContainerPosition(DIMENSIONS.width/2, DIMENSIONS.height/2)
-    }
-
-    useEffect(() => {
-        setContainerPosition(DIMENSIONS.width/2, -60)
-    }, [])
-
-    const traitContainerAnimatedStyle = useAnimatedStyle(() => {
-        return {
-            transform: [{ rotateZ: `${(rotation.value / Math.PI) * 180}deg` }],
+    const sceneSelectedAnimatedStyle = useAnimatedStyle(() => (
+        {
+            top: SceneSelectContainerTop.value,
+            opacity: SceneSelectContainerOpacity.value
         }
-    });
+    ))
 
-    const glowWidth = useSharedValue(0)
-    const glowHeight = useSharedValue(0)
-    const onGlowLayoutHandler = (e :LayoutChangeEvent) => {
-        glowWidth.value = e.nativeEvent.layout.width
-        glowHeight.value = e.nativeEvent.layout.height
-    }
-
-    const glowAnimatedStyle = useAnimatedStyle(() => ({
-        top: glowWidth.value/2
-    }))
+    const sceneComposedAnimatedStyle = useAnimatedStyle(() => (
+        {
+            top: SceneComposedContainerTop.value,
+            opacity: SceneComposedContainerOpacity.value
+        }
+    ))
 
     return (
     <>
-    <View style={styles.container} onLayout={()=>{}}>
-        <Text style={styles.count}>
-            /2
-        </Text>
-        <View style={styles.selectContainer}>
-            <Text style={styles.trait}>
-                Confiant
-            </Text>
-            <View style={styles.selectZone}>
-
-            </View>
-            <Svg
-                width={28}
-                height={36}
-                fill="none"
-                style={styles.arrow}
-                >
-                <Path
-                    stroke="#A897FB"
-                    strokeLinecap="round"
-                    strokeOpacity={0.6}
-                    d="M26.773.5 13.636 14.41.5.5m26.273 10.045-13.137 13.91L.5 10.544m26.273 10.046L13.636 34.5.5 20.59"
-                    />
-            </Svg>
-           
-        </View>
-        <GestureDetector gesture={rotationGesture}>
-            <Animated.View style={[styles.traitContainer, traitContainerAnimatedStyle]}>   
-            </Animated.View>
-        </GestureDetector>
-        {
-        traits.map((trait) => (
-            <TraitButton
-                key={trait.id}
-                id={trait.id}
-                iconName={trait.icon}
-                label={trait.label}
-                mergeZoneRadius={75}
-                alphaSpacing={alphaSpacing}
-                totalAngle={TOTAL_ANGLE}
-                circleRadius={CIRCLE_RADIUS}
-                scale={2.2}
-                enableDrag={false}
-                rotation={rotation}
-                isRotating={isRotating}
-            />
-        ))
-        } 
-        <View style={styles.dropZone}>
-            <View style={styles.glowZone} onLayout={onGlowLayoutHandler}>
-
-            </View>
-            <View style={styles.dropZoneMask}>
-
-            </View>
-            <View style={styles.dropZoneLight}>
-
-            </View>
-            <Text style={{...fonts.paragraph, color: primaryColorTokens["color-tertiary-lower"]}}>
-                Drag two traits down to create new one
-            </Text>
-        </View>
-    </View>
+    <Animated.View style={[{position: "relative"}, sceneSelectedAnimatedStyle]}>
+        <SceneSelect style={undefined}></SceneSelect>
+    </Animated.View>
+    <Animated.View style={[styles.composedContainer, sceneComposedAnimatedStyle]}>
+        <SceneComposed/>
+    </Animated.View>
     </>
     )
 }
 
+export default personalityParameters;
+
 const styles = StyleSheet.create({
-    container: {
-        position: "absolute",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        // backgroundColor: "red",
-        width: "100%"
-    },
-    traitContainer: {
-        position: "absolute",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        height: CIRCLE_RADIUS*2,
-        width: CIRCLE_RADIUS*2,
-        left: DIMENSIONS.width/2 - CIRCLE_RADIUS,
-        top: -CIRCLE_RADIUS,
-        // backgroundColor:"red",
-        borderRadius: 200
-    },
-    selectContainer: {
-        alignItems: "center",
-        paddingTop: 32,
-        gap: 16
-    },
-    trait: {
-        ...fonts.paragraph,
-        fontSize: 18,
-        color: primaryColorTokens["color-primary-medium"],
-    },
-    selectZone: {
-        borderWidth: 1,
-        borderRadius: 64,
-        borderColor: "#8670F9",
-        width: 120,
-        height: 120,
-        boxShadow: "0 0 26.3px 5px rgba(134, 112, 249, 0.80)"
-    },
-    dropZone: {
-        position: "absolute",
-        zIndex: 100,
-        width: "100%",
-        bottom:-72,
-        alignItems: "center",
-    },
-    dropZoneMask: {
-        position: "absolute",
-        width: "100%",
-        height: 200,
-        backgroundColor: primaryBackgroundTokens["background-secondary"]
-        // bottom:-42,
-        // alignItems: "center"
-    },
-    dropZoneLight: {
-        width: 172,
-        paddingBottom: 16,
-        borderTopWidth: 1,
-        borderColor: primaryColorTokens["color-primary-low"],
-    },
-    glowZone: {
-        position: "absolute",
-        boxShadow: "0 0 77.7px #8670F9",
-        width: 124,
-        height: 124,
-        borderRadius: 300,
-        // left: "50%"
-    },
-    count: {
-        ...fonts.paragraph,
-        color: primaryColorTokens["color-tertiary-lower"],
-        paddingTop: 12
-    },
-    circle: {
-        position: "absolute",
-        zIndex: 1,
-    },
-    arrow: {
-        paddingTop: 8
+    composedContainer: {
+        height: "100%"
     }
 })
-
-export default personalityParameters;
