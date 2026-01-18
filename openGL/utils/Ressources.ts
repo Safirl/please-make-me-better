@@ -2,6 +2,8 @@
 import * as THREE from 'three';
 import EventEmitter from "./EventEmitter";
 import loadRessources from './sources';
+import { Platform } from "react-native"
+import { Asset } from "expo-asset"
 interface Loaders {
     textureLoader: THREE.TextureLoader
 }
@@ -12,12 +14,26 @@ interface Source {
 }
 
 function loadImage(src: string): Promise<HTMLImageElement> {
-    return new Promise((resolve, reject) => {
-        const img = new Image()
-        img.onload = () => resolve(img)
-        img.onerror = reject
-        img.src = src
+
+    if (Platform.OS === "web") {
+        return new Promise((resolve, reject) => {
+            const img = new Image()
+            img.onload = () => resolve(img)
+            img.onerror = reject
+            img.src = src
+        })
+    }
+     
+    return new Promise(async (resolve, reject) => {
+        try {
+            const asset = Asset.fromURI(src)
+            await asset.downloadAsync()
+            resolve(asset)
+        } catch (err) {
+            reject(err)
+        }
     })
+
 }
 
 
