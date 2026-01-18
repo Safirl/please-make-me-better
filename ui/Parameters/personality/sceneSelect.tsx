@@ -34,18 +34,18 @@ const SceneSelect = (props: sceneSelectProps) => {
     const setClosestTraitId = usePersonalityStorage((state) => state.setClosestTraitId)
     
     const rotationGesture = Gesture.Pan()
+        .onBegin((e) => {
+            savedPosX.value = e.absoluteX
+            savedPosY.value = e.absoluteY 
+        })
         .onUpdate((e) => {
             const deltaX = -1 *(e.absoluteX - savedPosX.value)
             const deltaY = -1 *(e.absoluteY - savedPosY.value)
             const distance = Math.sqrt(deltaX*deltaX + deltaY*deltaY)
             savedPosX.value = e.absoluteX
             savedPosY.value = e.absoluteY
-            rotation.value = withSpring(rotation.value + (Math.sign(deltaX) * distance) * Math.PI/30)
+            rotation.value = rotation.value + (Math.sign(deltaX) * distance) * Math.PI/300
             setClosestTraitId(-1)
-        })
-        .onEnd((e) => {
-            savedPosX.value = 0
-            savedPosY.value = 0
         })
 
     useEffect(() => {

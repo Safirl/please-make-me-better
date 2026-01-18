@@ -21,7 +21,11 @@ const SceneComposed = () => {
     const opacity = useSharedValue(1)
     
     useEffect(() => {
-        if (!selectedTraits[0] || !selectedTraits[1]) return;
+        if (!selectedTraits[0] || !selectedTraits[1]) {
+            opacity.value = withTiming(1, {duration: 200})
+            setAnimate(false)
+            return;
+        };
 
         const currentTrait = composedTraits.find(
         t =>

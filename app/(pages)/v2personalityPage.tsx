@@ -15,14 +15,11 @@ import { RotationGesture } from "react-native-gesture-handler/lib/typescript/han
 import Animated, { useAnimatedStyle, useDerivedValue, useSharedValue, withSpring, withTiming } from "react-native-reanimated";
 import Svg, { Circle, Defs, LinearGradient, Path, Stop } from "react-native-svg";
 
-const CIRCLE_RADIUS = 450/2;
-const TOTAL_ANGLE = 2*Math.PI
 const DIMENSIONS = Dimensions.get("window")
-
 
 const personalityParameters = () => {
 
-    const composedTraits = usePersonalityStorage((state) => state.selectedTraits)
+    const selectedTraits = usePersonalityStorage((state) => state.selectedTraits)
     const SceneSelectContainerOpacity = useSharedValue(0)
     const SceneSelectContainerTop = useSharedValue(-DIMENSIONS.height)
     
@@ -30,8 +27,8 @@ const personalityParameters = () => {
     const SceneComposedContainerTop = useSharedValue(DIMENSIONS.height)
 
     useEffect(() => {
-        if ((composedTraits[0] !== null && composedTraits[1] !== null)) {
-            SceneSelectContainerOpacity.value = withSpring(0)
+        if ((selectedTraits[0] !== null && selectedTraits[1] !== null)) {
+            SceneSelectContainerOpacity.value = withSpring(0, {duration: 100})
             SceneSelectContainerTop.value = withSpring(-DIMENSIONS.height)
             SceneComposedContainerOpacity.value = withSpring(1)
             SceneComposedContainerTop.value = withSpring(0)
@@ -43,7 +40,7 @@ const personalityParameters = () => {
             SceneComposedContainerOpacity.value = withSpring(0)
             SceneComposedContainerTop.value = withSpring(DIMENSIONS.height)
         }
-    }, [composedTraits[0], composedTraits[1]])
+    }, [selectedTraits[0], selectedTraits[1]])
 
     const sceneSelectedAnimatedStyle = useAnimatedStyle(() => (
         {

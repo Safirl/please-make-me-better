@@ -5,11 +5,11 @@ import SvgComponent, { iconType } from "@/ui/svg";
 import { useEffect, useState } from "react";
 import { Dimensions, StyleSheet } from "react-native"
 import { GestureDetector } from "react-native-gesture-handler";
-import Animated, { SharedValue, useAnimatedReaction, useAnimatedStyle, useDerivedValue, useSharedValue, withSpring } from "react-native-reanimated";
+import Animated, { SharedValue, useAnimatedReaction, useAnimatedStyle, useDerivedValue, useSharedValue, withSpring, withTiming } from "react-native-reanimated";
 import { isEnabled } from "react-native/Libraries/Performance/Systrace";
 
 const DIMENSIONS = Dimensions.get("screen")
-const MERGE_RADIUS = 30
+const MERGE_RADIUS = 35
 
 interface traitButtonProps {
     id: number,
@@ -82,7 +82,7 @@ const TraitButton = (props: traitButtonProps) => {
         () => rotation.value,
         (currentRotation, previousRotation) => {
             const newPos = getPos();
-            position.left.value = withSpring(newPos.x, {}, () => {
+            position.left.value = withSpring(newPos.x, {duration: 500}, () => {
                     if (isTraitClose()) {
                         setClosestTraitId(props.id)
                         enabled.value = true

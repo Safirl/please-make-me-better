@@ -1,6 +1,7 @@
 import fonts from "@/assets/styles/fonts"
 import { ComposedTrait, Trait } from "@/data/characters"
 import { usePersonalityStorage } from "@/storage/store"
+import { primaryBackgroundTokens } from "@/tokens/primary/backgrounds.tokens"
 import { primaryColorTokens } from "@/tokens/primary/colors.tokens"
 import SvgComponent from "@/ui/svg"
 import { Blur, center } from "@shopify/react-native-skia"
@@ -20,6 +21,7 @@ const SceneNewTrait = (props: NewTraitProps) => {
     const opacity = useSharedValue(0)
     const traitScale = useSharedValue(1)
     const backgroundTranslate = useSharedValue(300)
+    const resetTraits = usePersonalityStorage((state) => state.resetTraits)
 
 
     useEffect(() => {
@@ -28,16 +30,18 @@ const SceneNewTrait = (props: NewTraitProps) => {
 
     useEffect(() => {
         if (!currentTrait) return;
-        opacity.value = animate ? withTiming(1, {duration: 1000, easing: Easing.inOut(Easing.exp)}) : withSpring(0)
+        opacity.value = withTiming(1, {duration: 1000, easing: Easing.inOut(Easing.exp)})
         backgroundTranslate.value = withSequence(withTiming(200, {duration: 2000, easing: Easing.inOut(Easing.ease)}, () => scaleUpTrait()), withDelay(500, withTiming(600, {duration: 2000,  easing: Easing.inOut(Easing.ease)}, () => completeAnimation())))
     }, [animate])
 
     const scaleUpTrait = () => {
-        traitScale.value = withDelay(1000, withTiming(1.1, {duration: 2500, easing: Easing.inOut(Easing.ease)}))
+        traitScale.value = withDelay(300, withTiming(1.1, {duration: 2500, easing: Easing.inOut(Easing.ease)}))
     }
 
     const completeAnimation = () => {
-        opacity.value = withTiming(0, {duration: 1000, easing: Easing.inOut(Easing.exp)})
+        opacity.value = withTiming(0, {duration: 1000, easing: Easing.inOut(Easing.exp)}, () => {
+            setTimeout(() => resetTraits(), 200)
+        })
     }
 
     const animatedContainerStyle = useAnimatedStyle(() => ({
@@ -74,7 +78,7 @@ const styles = StyleSheet.create({
     container: {
         position: "absolute",
         // zIndex: 200,
-        // backgroundColor: "red",
+        backgroundColor: primaryBackgroundTokens["background-secondary"],
         alignItems: "center",
         justifyContent: "center",
         gap: 32,
