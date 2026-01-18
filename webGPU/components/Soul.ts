@@ -25,34 +25,35 @@ type EntryObjectType = {
 }
 
 export default class Soul extends Component {
-    
-    
-    
+
+
+
     private params = {
         radius: 1,
         blendingFactor: 2, //transition radius
         factor: 0.25
     }
-    
+
     private pipeline: any;
     private pipelineLayout: any;
     private bindGroup: GPUBindGroup | undefined;
     private bindGroupLayout: GPUBindGroupLayout | undefined;
-    
+
     private uniforms: EntryObjectType = {}
-    
+
     private vertexShader: GPUShaderModule | undefined;
     private fragmentShader: GPUShaderModule | undefined;
-    
+    private noiseTexture: { texture: GPUTexture, sampler: GPUSampler, noiseView: GPUTextureView } | undefined
+
     constructor(experience: Experience) {
         super(experience)
-        
+
         this.confiureBuffers()
         this.configureBindGroupLayout()
         this.loadShaders(SimpleVS, SimpleFS)
         this.configurePipeline()
         this.configureBindGroup()
-        
+
         this.helpers.tweak(
             "radius",
             this.params,
@@ -80,37 +81,74 @@ export default class Soul extends Component {
             0.01,
             HELPER_FOLDER
         )
+
+        this.preapareTextureToWebGPU()
     }
-    
+    private async preapareTextureToWebGPU() {
+        if (!this.experience.device) throw new Error("Device is undefined");
+
+        const bitmap = await createImageBitmap(this.experience.ressources.items.pmb_noise);
+        const texture = this.experience.device.createTexture({
+            size: [bitmap.width, bitmap.height],
+            format: "rgba8unorm",
+            usage:
+                GPUTextureUsage.TEXTURE_BINDING |
+                GPUTextureUsage.COPY_DST |
+                GPUTextureUsage.RENDER_ATTACHMENT,
+        });
+
+        this.experience.device.queue.copyExternalImageToTexture(
+            { source: bitmap },
+            { texture },
+            [bitmap.width, bitmap.height]
+        );
+
+        const sampler = this.experience.device.createSampler({
+            magFilter: "linear",
+            minFilter: "linear",
+            addressModeU: "repeat",
+            addressModeV: "repeat",
+        });
+
+        this.noiseTexture = {
+            texture,
+            sampler,
+            noiseView: texture.createView()
+
+        };
+        console.log(this.noiseTexture)
+    }
+
     private configureBindGroupLayout() {
         if (!this.experience.device) throw new Error("Device is undefined");
-        
+
         const uniformEntryTemplate = {
             visibility: GPUShaderStage.VERTEX | GPUShaderStage.FRAGMENT,
             buffer: { type: "uniform" as GPUBufferBindingType }
         }
-        
+
         const entries: GPUBindGroupLayoutEntry[] = []
         let index = 0
         for (const uniform of Object.keys(this.uniforms)) {
-            
+
             if (!this.uniforms[uniform as SoulUniformsEntryTypes]!.buffer) {
                 throw new Error(`${uniform} buffer is not defined`)
             }
-            
+
             entries.push({
                 binding: index,
                 ...uniformEntryTemplate,
             })
-            
+
             index++
         }
-        
+
+
         this.bindGroupLayout = this.experience.device.createBindGroupLayout({
             label: "Soul Bind Group Layout",
             entries
         })
-        
+
         this.pipelineLayout = this.experience.device.createPipelineLayout({
             label: "Soul Pipeline Layout",
             bindGroupLayouts: [
@@ -118,13 +156,13 @@ export default class Soul extends Component {
             ]
         })
     }
-    
+
     private configurePipeline() {
         if (!this.experience.device) throw new Error("Device is undefined");
         if (!this.vertexShader) throw new Error("Vertex shader is undefined");
         if (!this.fragmentShader) throw new Error("Vertex shader is undefined");
         if (!this.experience.presentationFormat) throw new Error("PresentationFormat shader is undefined");
-        
+
         this.pipeline = this.experience.device.createRenderPipeline({
             label: "Soul Render Pipeline",
             layout: this.pipelineLayout,

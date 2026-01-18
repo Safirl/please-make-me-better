@@ -9,6 +9,8 @@ import Sizes from "./utils/Sizes";
 import Time from "./utils/Time";
 import Main from "./worlds/Main";
 
+import Ressources from './utils/Ressources';
+
 export default class Experience {
 
     public ctx: RNCanvasContext;
@@ -20,6 +22,9 @@ export default class Experience {
     public renderer: Renderer | undefined;
     public helpers: Helpers
     public world: World | undefined; // use the genera Page class type
+    public ressources: Ressources
+    private isGPUReady: boolean = false
+    private areRessourcesReady: boolean = false
 
     /**
      * config
@@ -43,6 +48,7 @@ export default class Experience {
 
 
         this.initGPUConfig()
+        this.ressources = new Ressources()
 
         this.sizes = new Sizes(this);
         this.time = new Time();
@@ -53,6 +59,11 @@ export default class Experience {
         this.sizes.on("resize", () => this.resize());
         this.time.setOnTickCallback(this.update)
         this.time.tick();
+        this.onReady = this.onReady.bind(this)
+        this.ressources.on("ready", () => {
+            this.areRessourcesReady = true
+            this.onReady()
+        })
 
     }
 
@@ -69,9 +80,8 @@ export default class Experience {
         this.presentationFormat = navigator.gpu.getPreferredCanvasFormat();
 
         this.renderer = new Renderer(this);
-        this.createWorld(Main)
-
-        this.onReady();
+        this.isGPUReady = true
+        this.onReady()
     }
 
     public createWorld(newWorld: new (e: Experience) => World) {
@@ -83,8 +93,13 @@ export default class Experience {
     }
 
     onReady() {
-        this.isReady = true;
-        this.world && this.world.onReady()
+        if (this.isGPUReady && this.areRessourcesReady) {
+
+            this.createWorld(Main)
+            this.isReady = true;
+            this.world && this.world.onReady()
+
+        }
     }
 
     public resize(): void {
