@@ -22,7 +22,7 @@ const DIMENSIONS = Dimensions.get("window")
 
 const personalityParameters = () => {
 
-    const composedTraits = usePersonalityStorage((state) => state.composedTraits)
+    const composedTraits = usePersonalityStorage((state) => state.selectedTraits)
     const SceneSelectContainerOpacity = useSharedValue(0)
     const SceneSelectContainerTop = useSharedValue(-DIMENSIONS.height)
     

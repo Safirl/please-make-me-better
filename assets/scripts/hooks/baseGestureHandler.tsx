@@ -34,20 +34,6 @@ export const useGestureDrag = ({
         height.value = e.nativeEvent.layout.height;
     };
 
-    // useAnimatedReaction(
-    //         () => props.enable.value,
-    //         (currentEnable, previousEnable) => {
-    //             if (!props.enable.value)  {
-    //                 return;
-    //             };
-
-    //         }
-    //     );
-
-    useDerivedValue(() => {
-        console.log("enabled: ", enable.value)
-    })
-
     const panGesture = Gesture.Pan()
         .onBegin((e) => {
             if (!enable.value) return;

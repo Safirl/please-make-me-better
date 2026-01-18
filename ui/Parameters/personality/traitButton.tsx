@@ -25,8 +25,8 @@ interface traitButtonProps {
 
 const TraitButton = (props: traitButtonProps) => {
     const setCurrentTraitPosition = usePersonalityStorage((state) => state.setCurrentTraitPosition)
-    const addComposedTrait = usePersonalityStorage((state) => state.addComposedTrait)
-    const composedTraits = usePersonalityStorage((state) => state.composedTraits)
+    const addComposedTrait = usePersonalityStorage((state) => state.addSelectedTrait)
+    const selectedTraits = usePersonalityStorage((state) => state.selectedTraits)
     const containerCenterX = usePersonalityStorage((state) => state.containerCenterX)
     const containerCenterY = usePersonalityStorage((state) => state.containerCenterY)
     const setClosestTraitId = usePersonalityStorage((state) => state.setClosestTraitId)
@@ -57,7 +57,7 @@ const TraitButton = (props: traitButtonProps) => {
         initialY: 0,
         resetOnDragFinalize: false,
         onDragEnded(x, y) {
-            if (!isTraitInMergeZoneRadius(x,y) || composedTraits['1']?.id !== undefined) {
+            if (!isTraitInMergeZoneRadius(x,y) || selectedTraits['1']?.id !== undefined) {
                 position.left.value = withSpring(getPos().x)
                 position.top.value = withSpring(getPos().y)
             }
@@ -83,7 +83,7 @@ const TraitButton = (props: traitButtonProps) => {
         (currentRotation, previousRotation) => {
             const newPos = getPos();
             position.left.value = withSpring(newPos.x, {}, () => {
-                if (isTraitClose()) {
+                    if (isTraitClose()) {
                         setClosestTraitId(props.id)
                         enabled.value = true
                     }
@@ -91,8 +91,7 @@ const TraitButton = (props: traitButtonProps) => {
                         enabled.value = false
                     }
                 });
-            if (composedTraits['0']?.id === props.id || composedTraits['1']?.id === props.id) {
-                enabled.value = false
+            if (selectedTraits['0']?.id === props.id || selectedTraits['1']?.id === props.id) {
                 position.left.value = withSpring(DIMENSIONS.width/2)
                 position.top.value = withSpring(DIMENSIONS.height/2 + DIMENSIONS.height)
             }

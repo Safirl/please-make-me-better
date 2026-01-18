@@ -14,7 +14,7 @@ const MergeZone = () => {
     const rightPlaceHolderRef = useRef<View>(null)
 
     const currentTraitPosition = usePersonalityStorage((state) => state.currentTraitPosition)
-    const composedTraits = usePersonalityStorage((state) => state.composedTraits)
+    const composedTraits = usePersonalityStorage((state) => state.selectedTraits)
     const setPlaceHolderPos = usePersonalityStorage((state) => state.setPlaceHolderPos)
     const containerCenterX = usePersonalityStorage((state) => state.containerCenterX)
     const containerCenterY = usePersonalityStorage((state) => state.containerCenterY)

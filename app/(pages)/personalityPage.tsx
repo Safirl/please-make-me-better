@@ -22,7 +22,7 @@ const personalityParameters = () => {
     const alphaSpacing = TOTAL_ANGLE / (traits.length - 1)
     const createTrait = usePersonalityStorage((state) => state.createTrait)
     const setContainerPosition = usePersonalityStorage((state) => state.setContainerPosition)
-    const composedTraits = usePersonalityStorage((state) => state.composedTraits)
+    const composedTraits = usePersonalityStorage((state) => state.selectedTraits)
     const containerHeight = useSharedValue(0)
     const containerWidth = useSharedValue(0)
     const left = useSharedValue(0)

@@ -30,7 +30,7 @@ const SceneSelect = (props: sceneSelectProps) => {
     const savedPosX = useSharedValue(0)
     const savedPosY = useSharedValue(0)
     const closestTraitId = usePersonalityStorage((state) => state.closestTraitId)
-    const composedTraits = usePersonalityStorage((state) => state.composedTraits)
+    const composedTraits = usePersonalityStorage((state) => state.selectedTraits)
     const setClosestTraitId = usePersonalityStorage((state) => state.setClosestTraitId)
     
     const rotationGesture = Gesture.Pan()
@@ -134,7 +134,7 @@ const SceneSelect = (props: sceneSelectProps) => {
 
             </View>
             <Text style={{...fonts.paragraph, color: primaryColorTokens["color-tertiary-lower"]}}>
-                Drag two traits down to create new one
+                Drag two traits down to create a new one
             </Text>
         </View>
     </View>
