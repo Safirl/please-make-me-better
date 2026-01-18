@@ -131,7 +131,7 @@ uniform float uYellowIntenisty;
 uniform float uGlobalLightIntensity;
 
 
-#define MAX_STEPS 100
+#define MAX_STEPS 90
 
 float sdSphere(vec3 p, float radius) {
   return length(p) - radius;
@@ -197,6 +197,7 @@ vec4 raymarch(vec3 rayOrigin, vec3 rayDirection) {
 
   for (int i = 0; i < MAX_STEPS; i++) {
     float density = scene(p);
+    if (res.a > 0.98) break;
 
     // We only draw the density if it's greater than 0
     if (density > .0 && density < uFilament) { /// &&  density < 0.15*/ -> create strokes
