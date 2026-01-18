@@ -2,6 +2,7 @@ import Experience from '@/openGL/Experience';
 import { ExpoWebGLRenderingContext, GLView } from 'expo-gl';
 import React, { useEffect, useRef } from 'react';
 import { LayoutChangeEvent, View } from 'react-native';
+import { useFrameCallback } from 'react-native-reanimated';
 
 
 export default function App() {
@@ -14,6 +15,12 @@ export default function App() {
   const [containerHeight, setContainerHeight] = React.useState(0)
   const [isGLReady, setIsGLReady] = React.useState(false)
 
+
+  // useFrameCallback((frameInfo) => {
+  //   if (!experience) return;
+
+  //      experience.time.tick()
+  // });
 
   const createExperience = (gl: ExpoWebGLRenderingContext) => {
     setExperience(new Experience(gl))
@@ -37,7 +44,7 @@ export default function App() {
     <View
       onLayout={onLayout}
       style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-      {isGLReady && <GLView style={{ width: containerWidth , height: containerHeight }} onContextCreate={createExperience} />}
+      {isGLReady && <GLView style={{ width: containerWidth, height: containerHeight }} onContextCreate={createExperience} />}
     </View>
   );
 }
