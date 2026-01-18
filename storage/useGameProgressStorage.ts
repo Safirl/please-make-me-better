@@ -24,7 +24,7 @@ const routes = {
     "login": { path: "/loginPage" },
     "LoreIntroduction": { path: "/LoreIntroductionPage" },
     "folders": { path: "/foldersPage" },
-    "configurator": { path: "/configurator" },
+    "configurator": { path: "/configuratorPage" },
     "end": { path: "/end" }
 } as Routes
 

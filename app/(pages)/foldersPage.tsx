@@ -17,7 +17,7 @@ const FolderPage = () => {
 
     const configure = () => {
         gameProgress.nextStep("folders")
-        gameProgress.currentRoute && router.navigate(gameProgress.currentRoute)
+        gameProgress.currentRoute && router.navigate(gameProgress.currentRoute.path)
     }
 
     return <View
