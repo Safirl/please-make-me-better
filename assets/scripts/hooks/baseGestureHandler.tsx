@@ -37,7 +37,6 @@ export const useGestureDrag = ({
     const panGesture = Gesture.Pan()
         .onBegin((e) => {
             if (!enable.value) return;
-            isDragging.value = true
             top.value = withSpring(e.absoluteY, { duration: 200 });
             left.value = withSpring(e.absoluteX, { duration: 200 });
             onPositionChanged?.(left.value, top.value);
@@ -50,7 +49,6 @@ export const useGestureDrag = ({
         })
         .onFinalize(() => {
             if (!enable.value) return;
-            isDragging.value = false
             onDragEnded?.(left.value, top.value);
             if (resetOnDragEnded) {
                 top.value = withSpring(initialY, { duration: 400 });
@@ -71,6 +69,5 @@ export const useGestureDrag = ({
         onLayoutHandler,
         position: { top, left },
         dimensions: { width, height },
-        isDragging
     };
 };

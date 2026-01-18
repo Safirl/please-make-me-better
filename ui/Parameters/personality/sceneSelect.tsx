@@ -52,9 +52,6 @@ const SceneSelect = (props: sceneSelectProps) => {
         setContainerPosition(DIMENSIONS.width/2, -60)
     }, [])
 
-    useEffect(() => {
-    }, [closestTraitId])
-
     const traitContainerAnimatedStyle = useAnimatedStyle(() => {
         return {
             transform: [{ rotateZ: `${(rotation.value / Math.PI) * 180}deg` }],

@@ -52,7 +52,7 @@ const TraitButton = (props: traitButtonProps) => {
         return {x: ox, y: oy}
     }
 
-    const { panGesture, animatedStyle, onLayoutHandler, position, isDragging } = useGestureDrag({
+    const { panGesture, animatedStyle, onLayoutHandler, position } = useGestureDrag({
         initialX: 0,
         initialY: 0,
         resetOnDragFinalize: false,
@@ -76,6 +76,10 @@ const TraitButton = (props: traitButtonProps) => {
     const isTraitClose = (): boolean => {
         return Math.abs(position.top.value - DIMENSIONS.height/2) < MERGE_RADIUS
     }
+
+    useDerivedValue(() => {
+        console.log(enabled.value)
+    })
 
     //rotate
     useAnimatedReaction(
