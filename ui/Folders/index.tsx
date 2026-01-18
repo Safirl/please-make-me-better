@@ -205,6 +205,9 @@ const Modal: React.FC<CustomModalProps> = (props) => {
             <Button
                 type="back"
                 label={"< retour"}
+                style={{
+                    height: 30
+                }}
                 onPress={() => {
                     if (history[history.length - 1] !== "") {
                         setSelectedView(history[history.length - 2])
@@ -225,7 +228,7 @@ const Modal: React.FC<CustomModalProps> = (props) => {
                     Style={Style}
                     selected={selectedTab === tab}
                     setSelectedTab={setSelectedTab}
-                    offset={backButtonWidth || 0}
+                    offset={90}
                     selectColor={selectColor}
                 />
             })
