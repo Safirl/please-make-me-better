@@ -25,12 +25,14 @@ export default function RootLayout() {
                 backgroundColor: primaryBackgroundTokens["background-secondary"]
             }}
         >
-            {/* <GPU /> */}
+            <GPU />
         </View>
         <Stack screenOptions={{
             contentStyle: { backgroundColor: 'transparent' },
             headerStyle: { backgroundColor: 'transparent' },
-            headerTransparent: true
+            headerTransparent: true,
+            headerShown: false,
+            // debug: false
         }}>
             <Stack.Screen name="index" options={{ title: 'Configurator', headerShown: false, }} />
             <Stack.Screen name="(pages)/memoriesPage" options={{ title: '', headerStyle: styles.headerStyle }} />
