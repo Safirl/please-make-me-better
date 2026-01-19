@@ -1,9 +1,9 @@
-import { primaryColorTokens } from "@/tokens/primary/colors.tokens";
+import { primaryColorTokens } from "@/assets/tokens/primary/colors.tokens";
 import { Dimensions, StyleSheet, View } from "react-native";
 import { GestureDetector } from "react-native-gesture-handler";
 import Animated from "react-native-reanimated";
 import { Circle, Svg } from "react-native-svg";
-import { useMemoryStorage } from "@/storage/store";
+import { useMemoryStorage } from "@/assets/scripts/storage/store";
 import { useGestureDrag } from "@/assets/scripts/hooks/baseGestureHandler";
 
 interface GunCursorProps {

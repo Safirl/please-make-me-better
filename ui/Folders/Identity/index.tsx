@@ -4,7 +4,7 @@ import { createStyle } from "./style";
 import Button from "@/ui/Button";
 import { Image } from 'expo-image';
 import { Svg, Path } from "react-native-svg";
-import { primaryTokens } from "@/tokens/primary/primary.token";
+import { primaryTokens } from "@/assets/tokens/primary/primary.token";
 
 interface CustomFolderProps extends ViewProps {
     //     title: string

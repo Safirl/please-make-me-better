@@ -1,7 +1,7 @@
-import { Trait } from "@/data/characters"
-import { primaryBackgroundTokens } from "@/tokens/primary/backgrounds.tokens"
-import { primaryColorTokens } from "@/tokens/primary/colors.tokens"
-import { primaryFontTokens } from "@/tokens/primary/font.tokens"
+import { Trait } from "@/assets/data/characters"
+import { primaryBackgroundTokens } from "@/assets/tokens/primary/backgrounds.tokens"
+import { primaryColorTokens } from "@/assets/tokens/primary/colors.tokens"
+import { primaryFontTokens } from "@/assets/tokens/primary/font.tokens"
 import Button from "@/ui/Button"
 import { View, Text, StyleSheet, Dimensions, LayoutChangeEvent } from "react-native"
 import { Platform } from "react-native"
@@ -9,7 +9,7 @@ import Animated, { useAnimatedStyle, useSharedValue, withSpring, withTiming } fr
 import Svg, { Circle } from "react-native-svg"
 import Font from "@/assets/styles/fonts";
 import { useEffect, useState } from "react"
-import { usePersonalityStorage } from "@/storage/store"
+import { usePersonalityStorage } from "@/assets/scripts/storage/store"
 
 interface PersonalityCardProps {
     trait0: Trait

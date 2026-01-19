@@ -1,4 +1,4 @@
-import { primaryColorTokens } from "@/tokens/primary/colors.tokens";
+import { primaryColorTokens } from "@/assets/tokens/primary/colors.tokens";
 import { LayoutChangeEvent, StyleSheet, View } from "react-native";
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 import Animated, { clamp, useAnimatedStyle, useDerivedValue, useSharedValue, withSpring, withTiming } from "react-native-reanimated";
