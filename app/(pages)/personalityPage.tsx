@@ -1,141 +1,86 @@
-import { Trait } from "@/data/characters";
 import { usePersonalityStorage } from "@/storage/store";
-import { primaryColorTokens } from "@/tokens/primary/colors.tokens";
-import MergeZone from "@/ui/Parameters/personality/mergeZone";
-import PersonalityCard from "@/ui/Parameters/personality/PersonalityCard";
-import TraitButton from "@/ui/Parameters/personality/traitButton";
+import SceneComposed from "@/ui/Parameters/personality/sceneComposed";
+import SceneSelect from "@/ui/Parameters/personality/sceneSelect";
 import { useEffect, useRef, useState } from "react";
-import { Dimensions, LayoutChangeEvent, StyleSheet, View } from "react-native";
-import Animated, { useAnimatedStyle, useSharedValue, withSpring, withTiming } from "react-native-reanimated";
-import Svg, { Circle, Defs, LinearGradient, Stop } from "react-native-svg";
+import { Dimensions, LayoutChangeEvent, StyleSheet, View, Text } from "react-native";
+import Animated, { useAnimatedStyle, useDerivedValue, useSharedValue, withSpring, withTiming } from "react-native-reanimated";
+import { router } from "expo-router";
 import Button from "@/ui/Button";
 import SvgComponent from "@/ui/svg";
-import { router } from "expo-router";
 
-const CIRCLE_RADIUS = 154;
-const TOTAL_ANGLE = (Math.PI * 3) / 2
 const DIMENSIONS = Dimensions.get("window")
 
-
 const personalityParameters = () => {
-    const traits = usePersonalityStorage((state) => state.traits)
-    const alphaSpacing = TOTAL_ANGLE / (traits.length - 1)
-    const createTrait = usePersonalityStorage((state) => state.selectTrait)
-    const setContainerPosition = usePersonalityStorage((state) => state.setContainerPosition)
-    const composedTraits = usePersonalityStorage((state) => state.selectedTraits)
-    const containerHeight = useSharedValue(0)
-    const containerWidth = useSharedValue(0)
-    const left = useSharedValue(0)
-    const top = useSharedValue(0)
-    // const isContainerReady = usePersonalityStorage((state) => state.isContainerReady)
 
-    const onContainerLayoutHandler = (e: LayoutChangeEvent) => {
-        containerHeight.value = e.nativeEvent.layout.height
-        containerWidth.value = e.nativeEvent.layout.width
-        moveContainer(DIMENSIONS.width / 2, DIMENSIONS.height / 2)
-    }
+    const selectedTraits = usePersonalityStorage((state) => state.selectedTraits)
+    const SceneSelectContainerOpacity = useSharedValue(0)
+    const SceneSelectContainerTop = useSharedValue(-DIMENSIONS.height)
+    
+    const SceneComposedContainerOpacity = useSharedValue(0)
+    const SceneComposedContainerTop = useSharedValue(DIMENSIONS.height)
 
     useEffect(() => {
-        if (composedTraits[0] != null && composedTraits[1] != null) {
-            moveContainer(DIMENSIONS.width / 2 + 120, DIMENSIONS.height / 2)
+        if ((selectedTraits[0] !== null && selectedTraits[1] !== null)) {
+            SceneSelectContainerOpacity.value = withSpring(0, {duration: 100})
+            SceneSelectContainerTop.value = withSpring(-DIMENSIONS.height)
+            SceneComposedContainerOpacity.value = withSpring(1)
+            SceneComposedContainerTop.value = withSpring(-DIMENSIONS.height)
         }
         else {
-            moveContainer(DIMENSIONS.width / 2, DIMENSIONS.height / 2)
-        }
-    }, [composedTraits])
+            SceneSelectContainerOpacity.value = withSpring(1)
+            SceneSelectContainerTop.value = withSpring(0)
 
-    const moveContainer = (newLeft: number, newTop: number) => {
-        left.value = withSpring(newLeft)
-        top.value = withSpring(newTop)
-        setContainerPosition(newLeft, newTop)
-    }
-
-    const animatedStyle = useAnimatedStyle(() => {
-        return {
-            top: top.value - containerHeight.value / 2,
-            left: left.value - containerWidth.value / 2,
+            SceneComposedContainerOpacity.value = withSpring(0)
+            SceneComposedContainerTop.value = withSpring(DIMENSIONS.height)
         }
-    });
+    }, [selectedTraits[0], selectedTraits[1]])
+
+    const sceneSelectedAnimatedStyle = useAnimatedStyle(() => (
+        {
+            top: SceneSelectContainerTop.value,
+            opacity: SceneSelectContainerOpacity.value
+        }
+    ))
+
+    const sceneComposedAnimatedStyle = useAnimatedStyle(() => (
+        {
+            top: SceneComposedContainerTop.value,
+            opacity: SceneComposedContainerOpacity.value
+        }
+    ))
+
     const back = () => {
         router.navigate("/configuratorPage")
     }
 
     return (
-        <View>
-            <View
-                style={{
-                    position: "absolute",
-                    top: 24,
-                    left: 16,
-                    zIndex: 100
-                }}
-            >
-                <Button onPress={back} type="icon">
-                    <SvgComponent name="back-chevron" />
-                </Button>
-            </View>
-            <Animated.View style={[styles.container, animatedStyle]} onLayout={onContainerLayoutHandler}>
-
-                <Svg
-                    width={308}
-                    height={308}
-                    viewBox="0 0 308 308"
-                    fill="none"
-                    style={styles.circle}
-                >
-                    <Circle cx={154} cy={154} r={153.5} stroke="url(#a)" />
-                    <Defs>
-                        <LinearGradient
-                            id="a"
-                            x1={154}
-                            x2={154}
-                            y1={0}
-                            y2={308}
-                            gradientUnits="userSpaceOnUse"
-                        >
-                            <Stop stopColor="#BFBFBF" />
-                            <Stop offset={1} stopColor="#999" stopOpacity={0} />
-                        </LinearGradient>
-                    </Defs>
-                </Svg>
-                {
-                    <MergeZone />
-                }
-            </Animated.View>
-            {
-                // isContainerReady &&
-                traits.map((trait) => (
-                    <TraitButton
-                        key={trait.id}
-                        id={trait.id}
-                        iconName={trait.icon}
-                        label={trait.label}
-                        mergeZoneRadius={75}
-                        alphaSpacing={alphaSpacing}
-                        totalAngle={TOTAL_ANGLE}
-                        circleRadius={CIRCLE_RADIUS}
-                    />
-                ))
-            }
-            {
-                composedTraits[0] != null && composedTraits[1] != null &&
-                <PersonalityCard trait0={composedTraits[0]} trait1={composedTraits[1]}></PersonalityCard>
-            }
+    <View>
+        <View
+            style={{
+                position: "absolute",
+                top: 24,
+                left: 16,
+                zIndex: 100
+            }}
+        >
+            <Button onPress={back} type="icon">
+                <SvgComponent name="back-chevron" />
+            </Button>
         </View>
+        <Animated.View style={[{position: "relative", height: "100%"}, sceneSelectedAnimatedStyle]}>
+            <SceneSelect style={undefined}></SceneSelect>
+        </Animated.View>
+        <Animated.View style={[styles.composedContainer, sceneComposedAnimatedStyle]}>
+            <SceneComposed/>
+        </Animated.View>
+    </View>
     )
 }
 
+export default personalityParameters;
+
 const styles = StyleSheet.create({
-    container: {
-        position: "absolute",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-    },
-    circle: {
-        position: "absolute",
-        zIndex: 1,
+    composedContainer: {
+        height: "100%"
     }
 })
-
-export default personalityParameters;

@@ -44,7 +44,6 @@ const SceneComposed = () => {
     
     const dynamicStyleLeft = StyleSheet.create({
         style: {
-            // transform: [{translateX: 80}, {scale: 2.2}],
             transform: [{translateX: 0}, {scale: 2.2}],
 
         }
@@ -52,7 +51,6 @@ const SceneComposed = () => {
 
     const dynamicStyleRight = StyleSheet.create({
         style: {
-            // transform: [{translateX: -80}, {scale: 2.2}],
             transform: [{translateX: 0}, {scale: 2.2}],
         }
     })
@@ -156,8 +154,6 @@ const styles = StyleSheet.create({
         transform: [{translateY: 20}]
     },
     traitText: {
-        // position:"absolute",
-        // transform: [{translateY: 46}],
         ...fonts.paragraph,
         color: primaryColorTokens["color-primary-medium"]
     },
@@ -168,8 +164,6 @@ const styles = StyleSheet.create({
     },
 
     trait: {
-        // position: "absolute",
-        // alignItems: "center",
         width: 44,
         height: 44,
         flexShrink: 0,
