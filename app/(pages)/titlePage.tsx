@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { Text, TextInput, StyleSheet, View } from "react-native";
 // import Animated from "react-native-reanimated";
 import Fonts from "@/assets/styles/fonts";
-import { primaryTokens } from "@/tokens/primary/primary.token";
+import { primaryTokens } from "@/assets/tokens/primary/primary.token";
 import Svg, {
     Defs,
     Path,
@@ -15,7 +15,7 @@ import Svg, {
     FeMerge,
     Filter,
 } from "react-native-svg";
-import { useProgressStorage, ProgressStateType } from "@/storage/useGameProgressStorage";
+import { useProgressStorage, ProgressStateType } from "@/assets/scripts/storage/useGameProgressStorage";
 import Animated, { withSequence, useSharedValue, withSpring, useAnimatedStyle, withTiming } from "react-native-reanimated";
 import { router } from "expo-router";
 

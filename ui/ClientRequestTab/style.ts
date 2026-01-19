@@ -1,7 +1,7 @@
 import {StyleSheet} from "react-native";
 
-import {primaryColorTokens} from "@/tokens/primary/colors.tokens";
-import {primaryFontTokens} from "@/tokens/primary/font.tokens";
+import {primaryColorTokens} from "@/assets/tokens/primary/colors.tokens";
+import {primaryFontTokens} from "@/assets/tokens/primary/font.tokens";
 import Fonts from "@/assets/styles/fonts"
 import {
     COMPONENT_NAME,

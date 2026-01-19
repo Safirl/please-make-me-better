@@ -1,8 +1,8 @@
 import fonts from "@/assets/styles/fonts";
-import { Trait } from "@/data/characters";
-import { usePersonalityStorage } from "@/storage/store";
-import { primaryBackgroundTokens } from "@/tokens/primary/backgrounds.tokens";
-import { primaryColorTokens } from "@/tokens/primary/colors.tokens";
+import { Trait } from "@/assets/data/characters";
+import { usePersonalityStorage } from "@/assets/scripts/storage/store";
+import { primaryBackgroundTokens } from "@/assets/tokens/primary/backgrounds.tokens";
+import { primaryColorTokens } from "@/assets/tokens/primary/colors.tokens";
 import TraitButton from "@/ui/Parameters/personality/traitButton";
 import SvgComponent from "@/ui/svg";
 import { useEffect, useRef, useState } from "react";
@@ -11,8 +11,8 @@ import { Gesture, GestureDetector, GestureHandlerRootView } from "react-native-g
 import Animated, { Easing, useAnimatedStyle, useDerivedValue, useSharedValue, withDelay, withSpring, withTiming } from "react-native-reanimated";
 import Svg, { Circle, Defs, LinearGradient, Path, Stop } from "react-native-svg";
 
-const CIRCLE_RADIUS = 450/2;
-const TOTAL_ANGLE = 2*Math.PI
+const CIRCLE_RADIUS = 450 / 2;
+const TOTAL_ANGLE = 2 * Math.PI
 const DIMENSIONS = Dimensions.get("window")
 
 interface sceneSelectProps {
@@ -30,24 +30,24 @@ const SceneSelect = (props: sceneSelectProps) => {
     const createdComposedTraits = usePersonalityStorage((state) => state.createdComposedTraits)
     const selectedTraits = usePersonalityStorage((state) => state.selectedTraits)
     const setClosestTraitId = usePersonalityStorage((state) => state.setClosestTraitId)
-    
+
     const rotationGesture = Gesture.Pan()
         .onBegin((e) => {
             savedPosX.value = e.absoluteX
-            savedPosY.value = e.absoluteY 
+            savedPosY.value = e.absoluteY
         })
         .onUpdate((e) => {
-            const deltaX = -1 *(e.absoluteX - savedPosX.value)
-            const deltaY = -1 *(e.absoluteY - savedPosY.value)
-            const distance = Math.sqrt(deltaX*deltaX + deltaY*deltaY)
+            const deltaX = -1 * (e.absoluteX - savedPosX.value)
+            const deltaY = -1 * (e.absoluteY - savedPosY.value)
+            const distance = Math.sqrt(deltaX * deltaX + deltaY * deltaY)
             savedPosX.value = e.absoluteX
             savedPosY.value = e.absoluteY
-            rotation.value = rotation.value + (Math.sign(deltaX) * distance) * Math.PI/300
+            rotation.value = rotation.value + (Math.sign(deltaX) * distance) * Math.PI / 300
             setClosestTraitId(-1)
         })
 
     useEffect(() => {
-        setContainerPosition(DIMENSIONS.width/2, -60)
+        setContainerPosition(DIMENSIONS.width / 2, -60)
     }, [])
 
     const traitContainerAnimatedStyle = useAnimatedStyle(() => {
@@ -58,34 +58,34 @@ const SceneSelect = (props: sceneSelectProps) => {
 
     useEffect(() => {
         if (createdComposedTraits[0]) {
-            resultIcon1Scale.value = withDelay(400, withTiming(1, {easing: Easing.inOut(Easing.back(0.6)), duration: 2500}))
+            resultIcon1Scale.value = withDelay(400, withTiming(1, { easing: Easing.inOut(Easing.back(0.6)), duration: 2500 }))
         }
         if (createdComposedTraits[1]) {
-            resultIcon2Scale.value = withDelay(400, withTiming(1, {easing: Easing.inOut(Easing.back(0.6)), duration: 2500}))
+            resultIcon2Scale.value = withDelay(400, withTiming(1, { easing: Easing.inOut(Easing.back(0.6)), duration: 2500 }))
         }
         if (createdComposedTraits[2]) {
-            resultIcon3Scale.value = withDelay(400, withTiming(1, {easing: Easing.inOut(Easing.back(0.6)), duration: 2500}))
+            resultIcon3Scale.value = withDelay(400, withTiming(1, { easing: Easing.inOut(Easing.back(0.6)), duration: 2500 }))
         }
     }, [createdComposedTraits[0], createdComposedTraits[1], createdComposedTraits[2]])
 
     //result icons
     const resultIcon1Scale = useSharedValue(0)
     const animatedResultIcon1 = useAnimatedStyle(() => ({
-        transform: [{scale: resultIcon1Scale.value}]
+        transform: [{ scale: resultIcon1Scale.value }]
     }))
     const resultIcon2Scale = useSharedValue(0)
     const animatedResultIcon2 = useAnimatedStyle(() => ({
-        transform: [{scale: resultIcon2Scale.value}]
+        transform: [{ scale: resultIcon2Scale.value }]
     }))
     const resultIcon3Scale = useSharedValue(0)
     const animatedResultIcon3 = useAnimatedStyle(() => ({
-        transform: [{scale: resultIcon3Scale.value}]
+        transform: [{ scale: resultIcon3Scale.value }]
     }))
 
     //glow
     const glowWidth = useSharedValue(0)
     const glowHeight = useSharedValue(0)
-    const onGlowLayoutHandler = (e :LayoutChangeEvent) => {
+    const onGlowLayoutHandler = (e: LayoutChangeEvent) => {
         glowWidth.value = e.nativeEvent.layout.width
         glowHeight.value = e.nativeEvent.layout.height
     }
@@ -103,104 +103,104 @@ const SceneSelect = (props: sceneSelectProps) => {
     }
 
     return (
-    <>
-        <View style={[styles.container, props.style]}>
-            <Text style={styles.count}>
-                {
-                    selectedTraits[0] && selectedTraits[1] && 2
-                    ||
-                    selectedTraits[0] && !selectedTraits[1] && 1
-                    ||
-                    !selectedTraits[0] && 0
-                }
-                /2
-            </Text>
-            <View style={styles.selectContainer}>
-                <Text style={styles.trait}>
-                    {getCurrentLabel()}
+        <>
+            <View style={[styles.container, props.style]}>
+                <Text style={styles.count}>
+                    {
+                        selectedTraits[0] && selectedTraits[1] && 2
+                        ||
+                        selectedTraits[0] && !selectedTraits[1] && 1
+                        ||
+                        !selectedTraits[0] && 0
+                    }
+                    /2
                 </Text>
-                <View style={styles.selectZone}>
+                <View style={styles.selectContainer}>
+                    <Text style={styles.trait}>
+                        {getCurrentLabel()}
+                    </Text>
+                    <View style={styles.selectZone}>
 
-                </View>
-                <Svg
-                    width={28}
-                    height={36}
-                    fill="none"
-                    style={styles.arrow}
+                    </View>
+                    <Svg
+                        width={28}
+                        height={36}
+                        fill="none"
+                        style={styles.arrow}
                     >
-                    <Path
-                        stroke="#A897FB"
-                        strokeLinecap="round"
-                        strokeOpacity={0.6}
-                        d="M26.773.5 13.636 14.41.5.5m26.273 10.045-13.137 13.91L.5 10.544m26.273 10.046L13.636 34.5.5 20.59"
+                        <Path
+                            stroke="#A897FB"
+                            strokeLinecap="round"
+                            strokeOpacity={0.6}
+                            d="M26.773.5 13.636 14.41.5.5m26.273 10.045-13.137 13.91L.5 10.544m26.273 10.046L13.636 34.5.5 20.59"
                         />
-                </Svg>
-            
-            </View>
-            <GestureDetector gesture={rotationGesture}>
-                <Animated.View style={[styles.traitContainer, traitContainerAnimatedStyle]}>   
-                </Animated.View>
-            </GestureDetector>
-            {
-                traits.map((trait) => (
-                
-                    <TraitButton
-                        key={trait.id}
-                        id={trait.id}
-                        iconName={trait.icon}
-                        label={trait.label}
-                        mergeZoneRadius={75}
-                        alphaSpacing={alphaSpacing}
-                        circleRadius={CIRCLE_RADIUS}
-                        scale={2.2}
-                        emptyButton={isButtonEmpty(trait.id)}
-                        rotation={rotation}
-                    />
-                ))
-            }
-            <View style={styles.dropZone}>
-                <View style={styles.glowZone} onLayout={onGlowLayoutHandler}>
+                    </Svg>
 
                 </View>
-                <View style={styles.dropZoneMask}>
+                <GestureDetector gesture={rotationGesture}>
+                    <Animated.View style={[styles.traitContainer, traitContainerAnimatedStyle]}>
+                    </Animated.View>
+                </GestureDetector>
+                {
+                    traits.map((trait) => (
 
+                        <TraitButton
+                            key={trait.id}
+                            id={trait.id}
+                            iconName={trait.icon}
+                            label={trait.label}
+                            mergeZoneRadius={75}
+                            alphaSpacing={alphaSpacing}
+                            circleRadius={CIRCLE_RADIUS}
+                            scale={2.2}
+                            emptyButton={isButtonEmpty(trait.id)}
+                            rotation={rotation}
+                        />
+                    ))
+                }
+                <View style={styles.dropZone}>
+                    <View style={styles.glowZone} onLayout={onGlowLayoutHandler}>
+
+                    </View>
+                    <View style={styles.dropZoneMask}>
+
+                    </View>
+                    <View style={styles.dropZoneLight}>
+
+                    </View>
+                    <Text style={{ ...fonts.paragraph, color: primaryColorTokens["color-tertiary-lower"] }}>
+                        Drag two traits down to create a new one
+                    </Text>
                 </View>
-                <View style={styles.dropZoneLight}>
+            </View>
 
+            <View style={styles.resultContainer}>
+                <View style={styles.resultIconContainer}>
+                    {
+                        createdComposedTraits[0] &&
+                        <Animated.View style={[styles.resultIcon, animatedResultIcon1]}>
+                            <SvgComponent name={createdComposedTraits[0].icon}></SvgComponent>
+                        </Animated.View>
+                    }
                 </View>
-                <Text style={{...fonts.paragraph, color: primaryColorTokens["color-tertiary-lower"]}}>
-                    Drag two traits down to create a new one
-                </Text>
+                <View style={styles.resultIconContainer}>
+                    {
+                        createdComposedTraits[1] &&
+                        <Animated.View style={[styles.resultIcon, animatedResultIcon2]}>
+                            <SvgComponent name={createdComposedTraits[1].icon}></SvgComponent>
+                        </Animated.View>
+                    }
+                </View>
+                <View style={styles.resultIconContainer}>
+                    {
+                        createdComposedTraits[2] &&
+                        <Animated.View style={[styles.resultIcon, animatedResultIcon3]}>
+                            <SvgComponent name={createdComposedTraits[2].icon}></SvgComponent>
+                        </Animated.View>
+                    }
+                </View>
             </View>
-        </View>
-
-        <View style={styles.resultContainer}>
-            <View style={styles.resultIconContainer}>
-                {
-                    createdComposedTraits[0] &&
-                    <Animated.View style={[styles.resultIcon, animatedResultIcon1]}>
-                        <SvgComponent name={createdComposedTraits[0].icon}></SvgComponent>
-                    </Animated.View>
-                }
-            </View>
-            <View style={styles.resultIconContainer}>
-                {
-                    createdComposedTraits[1] &&
-                    <Animated.View style={[styles.resultIcon, animatedResultIcon2]}>
-                        <SvgComponent name={createdComposedTraits[1].icon}></SvgComponent>
-                    </Animated.View>
-                }
-            </View>
-            <View style={styles.resultIconContainer}>
-                {
-                    createdComposedTraits[2] &&
-                    <Animated.View style={[styles.resultIcon, animatedResultIcon3]}>
-                        <SvgComponent name={createdComposedTraits[2].icon}></SvgComponent>
-                    </Animated.View>
-                }
-            </View>
-        </View>
-    </>
+        </>
     )
 }
 
@@ -217,9 +217,9 @@ const styles = StyleSheet.create({
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
-        height: CIRCLE_RADIUS*2 + 100,
-        width: CIRCLE_RADIUS*2 + 100,
-        left: DIMENSIONS.width/2 - CIRCLE_RADIUS - 50,
+        height: CIRCLE_RADIUS * 2 + 100,
+        width: CIRCLE_RADIUS * 2 + 100,
+        left: DIMENSIONS.width / 2 - CIRCLE_RADIUS - 50,
         top: -CIRCLE_RADIUS,
         // backgroundColor:"red",
         borderRadius: 200
@@ -246,7 +246,7 @@ const styles = StyleSheet.create({
         position: "absolute",
         zIndex: 100,
         width: "100%",
-        bottom:-72,
+        bottom: -72,
         alignItems: "center",
     },
     dropZoneMask: {

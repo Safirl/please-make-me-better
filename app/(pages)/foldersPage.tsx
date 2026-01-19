@@ -1,5 +1,5 @@
 import { Text, TextInput, StyleSheet, View } from "react-native";
-import { useProgressStorage, ProgressStateType } from "@/storage/useGameProgressStorage";
+import { useProgressStorage, ProgressStateType } from "@/assets/scripts/storage/useGameProgressStorage";
 
 import Folder from "@/ui/Folders/";
 import { router } from "expo-router";

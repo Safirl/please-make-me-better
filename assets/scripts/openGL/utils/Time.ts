@@ -1,16 +1,14 @@
-import EventEmitter from "./EventEmitter"
-export default class Time extends EventEmitter {
+export default class Time {
 
     public start: number
     public current: number
     public elapsedTime: number
     public delta: number
     public isAnimating: boolean
-
+    private cb: () => void = () => { }
 
 
     constructor() {
-        super()
         //Setup
         this.start = Date.now()
         this.current = this.start
@@ -23,15 +21,17 @@ export default class Time extends EventEmitter {
         this.delta = currentTime - this.current
         this.current = currentTime
         this.elapsedTime = this.current - this.start
-        this.trigger("tick")
+        // this.trigger("tick")
         if (this.isAnimating) {
-            requestAnimationFrame(() => { this.tick() })
+            this.cb()
         }
+    }
+    setCb(cb: () => void) {
+        this.cb = cb
     }
     reset() {
         this.elapsedTime = 0
         this.start = Date.now()
-
     }
     stop() {
         this.isAnimating = false

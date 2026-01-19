@@ -1,15 +1,15 @@
-import { usePersonalityStorage } from "@/storage/store"
+import { usePersonalityStorage } from "@/assets/scripts/storage/store"
 import Animated, { useAnimatedStyle, useDerivedValue, useSharedValue, withTiming } from "react-native-reanimated"
 import { View, Text } from "react-native"
 import TraitButton from "./traitButton"
 import { useEffect, useState } from "react"
 import { Dimensions, StyleSheet } from "react-native"
 import fonts from "@/assets/styles/fonts"
-import { primaryColorTokens } from "@/tokens/primary/colors.tokens"
+import { primaryColorTokens } from "@/assets/tokens/primary/colors.tokens"
 import SvgComponent from "@/ui/svg"
 import Svg, { Path } from "react-native-svg"
 import Button from "@/ui/Button"
-import { ComposedTrait } from "@/data/characters"
+import { ComposedTrait } from "@/assets/data/characters"
 import SceneNewTrait from "./sceneNewTrait"
 
 const SceneComposed = () => {
@@ -19,46 +19,46 @@ const SceneComposed = () => {
     const [currentComposedTrait, setCurrentComposedTrait] = useState<ComposedTrait>()
     const [animate, setAnimate] = useState(false)
     const opacity = useSharedValue(1)
-    
+
     useEffect(() => {
         if (!selectedTraits[0] || !selectedTraits[1]) {
-            opacity.value = withTiming(1, {duration: 200})
+            opacity.value = withTiming(1, { duration: 200 })
             setAnimate(false)
             return;
         };
 
         const currentTrait = composedTraits.find(
-        t =>
-            [t.traitA, t.traitB].includes(selectedTraits[0]!.id) &&
-            [t.traitA, t.traitB].includes(selectedTraits[1]!.id)
+            t =>
+                [t.traitA, t.traitB].includes(selectedTraits[0]!.id) &&
+                [t.traitA, t.traitB].includes(selectedTraits[1]!.id)
         );
-        if (!currentTrait) return; 
-        
+        if (!currentTrait) return;
+
         setCurrentComposedTrait(currentTrait)
     }, [selectedTraits[0], selectedTraits[1]])
 
     const selectTrait = () => {
-        opacity.value = withTiming(0, {duration: 200})
+        opacity.value = withTiming(0, { duration: 200 })
         setAnimate(true)
     }
-    
+
     const dynamicStyleLeft = StyleSheet.create({
         style: {
-            transform: [{translateX: 0}, {scale: 2.2}],
+            transform: [{ translateX: 0 }, { scale: 2.2 }],
 
         }
     })
 
     const dynamicStyleRight = StyleSheet.create({
         style: {
-            transform: [{translateX: 0}, {scale: 2.2}],
+            transform: [{ translateX: 0 }, { scale: 2.2 }],
         }
     })
 
     const animatedContainerStyle = useAnimatedStyle(() => ({
         opacity: opacity.value
     }))
-    
+
     if (!selectedTraits[0] || !selectedTraits[1] || !currentComposedTrait) {
         return (
             <></>
@@ -66,20 +66,20 @@ const SceneComposed = () => {
     }
     return (
         <>
-            <SceneNewTrait traitId={currentComposedTrait.id} animate={animate}/>
+            <SceneNewTrait traitId={currentComposedTrait.id} animate={animate} />
             <Animated.View style={[styles.container, animatedContainerStyle]}>
                 <View style={styles.textContainer}>
-                    <View style={styles.dot}/>
+                    <View style={styles.dot} />
                     <Text style={styles.text}>Nom du nouveau trait : {currentComposedTrait.label}</Text>
                 </View>
-                <View style={styles.separator}/>
+                <View style={styles.separator} />
                 <View style={styles.middleContainer}>
                     <View style={styles.composedTraitContainer}>
                         <Animated.View style={[styles.trait, dynamicStyleLeft.style]}>
                             <SvgComponent name={selectedTraits[0]?.icon}></SvgComponent>
                         </Animated.View>
                         <Text style={styles.traitText}>
-                                {selectedTraits[0]?.label}
+                            {selectedTraits[0]?.label}
                         </Text>
                     </View>
                     <Svg
@@ -88,10 +88,10 @@ const SceneComposed = () => {
                         fill="none"
                     >
                         <Path
-                        stroke="#F1F1F1"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        d="M.5 7.5h14m-7-7v14"
+                            stroke="#F1F1F1"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            d="M.5 7.5h14m-7-7v14"
                         />
                     </Svg>
                     <View style={styles.composedTraitContainer}>
@@ -104,8 +104,8 @@ const SceneComposed = () => {
                     </View>
                 </View>
                 <View style={styles.buttonContainer}>
-                    <Button type="tertiary" label="Reject" icon={{name: "cross"}} onPress={resetTraits}/>
-                    <Button type="primary" label="Add" icon={{name: "lightning-bolt"}} onPress={selectTrait}/>
+                    <Button type="tertiary" label="Reject" icon={{ name: "cross" }} onPress={resetTraits} />
+                    <Button type="primary" label="Add" icon={{ name: "lightning-bolt" }} onPress={selectTrait} />
                 </View>
             </Animated.View>
         </>
@@ -151,7 +151,7 @@ const styles = StyleSheet.create({
         alignItems: "center",
         flexDirection: "column",
         gap: 42,
-        transform: [{translateY: 20}]
+        transform: [{ translateY: 20 }]
     },
     traitText: {
         ...fonts.paragraph,

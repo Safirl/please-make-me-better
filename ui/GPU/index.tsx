@@ -1,5 +1,5 @@
 
-import Experience from "@/webGPU/Experience";
+import Experience from "@/assets/scripts/webGPU/Experience";
 import React from "react";
 import { LayoutChangeEvent, View } from "react-native";
 import { useFrameCallback } from 'react-native-reanimated';

@@ -1,6 +1,6 @@
 import GL from "@/ui/GL";
-import { primaryBackgroundTokens } from "@/tokens/primary/backgrounds.tokens";
 import Button from "@/ui/Button";
+import { primaryBackgroundTokens } from "@/assets/tokens/primary/backgrounds.tokens";
 import { useTheme } from "@react-navigation/native";
 import { useFonts } from "expo-font";
 import { Stack } from "expo-router";
@@ -25,9 +25,9 @@ export default function RootLayout() {
                 backgroundColor: primaryBackgroundTokens["background-secondary"]
             }}
         >
-            {/* <GL /> */}
+            <GL />
         </View>
-        <View style={{height: "100%", overflow: "hidden"}}>
+        <View style={{ height: "100%", overflow: "hidden" }}>
             <Stack screenOptions={{
                 contentStyle: { backgroundColor: 'transparent' },
                 headerStyle: { backgroundColor: 'transparent' },
@@ -42,7 +42,7 @@ export default function RootLayout() {
             </Stack>
         </View>
         <View style={styles.validateButton}>
-            <Button type="primary" icon={{name: "file"}} overridePadding={12}></Button>
+            <Button type="primary" icon={{ name: "file" }} overridePadding={12}></Button>
         </View>
     </>;
 }
@@ -55,9 +55,9 @@ const styles = StyleSheet.create({
     },
 
     validateButton: {
-        display:"flex",
+        display: "flex",
         alignItems: "center",
-        position:"absolute",
+        position: "absolute",
         bottom: 0,
         right: 0,
         padding: 24
