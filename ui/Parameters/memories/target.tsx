@@ -1,11 +1,11 @@
-import { primaryColorTokens } from "@/tokens/primary/colors.tokens";
-import { primaryFontTokens } from "@/tokens/primary/font.tokens";
-import { primaryTextTokens } from "@/tokens/primary/text.tokens";
+import { primaryColorTokens } from "@/assets/tokens/primary/colors.tokens";
+import { primaryFontTokens } from "@/assets/tokens/primary/font.tokens";
+import { primaryTextTokens } from "@/assets/tokens/primary/text.tokens";
 import { View, Text, Pressable, StyleSheet, LayoutChangeEvent, Dimensions } from "react-native";
 import fonts from "@/assets/styles/fonts";
 import Animated, { useAnimatedStyle, useSharedValue } from "react-native-reanimated";
 import Svg, { Rect } from "react-native-svg";
-import { useMemoryStorage } from "@/storage/store";
+import { useMemoryStorage } from "@/assets/scripts/storage/store";
 
 const dimensions = Dimensions.get("screen");
 

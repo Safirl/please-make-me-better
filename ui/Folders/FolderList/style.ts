@@ -1,7 +1,7 @@
 import { StyleSheet } from "react-native";
 
 import Fonts from "@/assets/styles/fonts";
-import { primaryTokens } from "@/tokens/primary/primary.token";
+import { primaryTokens } from "@/assets/tokens/primary/primary.token";
 
 const titleFont = {
     ...Fonts.subTitle,

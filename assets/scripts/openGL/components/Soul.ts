@@ -1,5 +1,5 @@
 import Helpers from "@/app/utils/Helpers";
-import { useSoulStorage } from "@/storage/store";
+import { useSoulStorage } from "@/assets/scripts/storage/store";
 import Experience from "../Experience";
 import Component from "../classes/Component";
 import fragment from "./fragment";

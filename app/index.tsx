@@ -1,7 +1,7 @@
 import { router } from "expo-router";
 import { useEffect } from "react";
 import { Dimensions, Pressable, View } from "react-native";
-import { useStorage } from "../storage/store";
+import { useStorage } from "../assets/scripts/storage/store";
 import Button from "@/ui/Button";
 import Helpers from "./utils/Helpers";
 import Svg, { Circle } from "react-native-svg";

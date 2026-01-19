@@ -1,6 +1,6 @@
 import Fonts from "@/assets/styles/fonts";
 import { StyleSheet } from "react-native";
-// import { primaryFontTokens } from "@/tokens/primary/font.tokens";
+// import { primaryFontTokens } from "@/assets/tokens/primary/font.tokens";
 import {
     COMPONENT_NAME,
     clientRequestTabTokens,

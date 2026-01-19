@@ -1,4 +1,4 @@
-import { useWordParameterStorage, Word, WordParameterState } from "@/storage/store";
+import { useWordParameterStorage, Word, WordParameterState } from "@/assets/scripts/storage/store";
 import { StyleSheet, View } from "react-native";
 import { WordLabel } from "./wordLabel";
 

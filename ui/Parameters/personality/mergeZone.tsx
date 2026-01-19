@@ -1,6 +1,6 @@
 import fonts from "@/assets/styles/fonts";
-import { usePersonalityStorage } from "@/storage/store";
-import { primaryColorTokens } from "@/tokens/primary/colors.tokens";
+import { usePersonalityStorage } from "@/assets/scripts/storage/store";
+import { primaryColorTokens } from "@/assets/tokens/primary/colors.tokens";
 import { useEffect, useRef, useState } from "react";
 import { StyleSheet, View, Text, Dimensions, LayoutChangeEvent } from "react-native";
 import Animated, { runOnJS, SharedValue, useAnimatedStyle, useSharedValue, withTiming } from "react-native-reanimated";

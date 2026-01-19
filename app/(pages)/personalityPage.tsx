@@ -1,6 +1,6 @@
-import { Trait } from "@/data/characters";
-import { usePersonalityStorage } from "@/storage/store";
-import { primaryColorTokens } from "@/tokens/primary/colors.tokens";
+import { Trait } from "@/assets/data/characters";
+import { usePersonalityStorage } from "@/assets/scripts/storage/store";
+import { primaryColorTokens } from "@/assets/tokens/primary/colors.tokens";
 import MergeZone from "@/ui/Parameters/personality/mergeZone";
 import PersonalityCard from "@/ui/Parameters/personality/PersonalityCard";
 import TraitButton from "@/ui/Parameters/personality/traitButton";

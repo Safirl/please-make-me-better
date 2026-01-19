@@ -1,4 +1,4 @@
-import Experience from '@/openGL/Experience';
+import Experience from '@/assets/scripts/openGL/Experience';
 import { ExpoWebGLRenderingContext, GLView } from 'expo-gl';
 import React, { useEffect, useRef } from 'react';
 import { LayoutChangeEvent, View } from 'react-native';

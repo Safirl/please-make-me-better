@@ -1,5 +1,5 @@
 // import GL from "@/ui/GL";
-import { primaryBackgroundTokens } from "@/tokens/primary/backgrounds.tokens";
+import { primaryBackgroundTokens } from "@/assets/tokens/primary/backgrounds.tokens";
 import GPU from "@/ui/GL";
 import { useTheme } from "@react-navigation/native";
 import { useFonts } from "expo-font";

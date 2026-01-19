@@ -1,5 +1,5 @@
 import Font from "@/assets/styles/fonts";
-import { primaryColorTokens } from "@/tokens/primary/colors.tokens";
+import { primaryColorTokens } from "@/assets/tokens/primary/colors.tokens";
 import { LinearGradient } from "expo-linear-gradient";
 import React, { useState } from "react";
 import {
@@ -242,7 +242,7 @@ const Button: React.FC<CustomButtonProps> = (props) => {
         <View
             style={[
                 styles.layout,
-                {paddingHorizontal:overrideWidth},
+                { paddingHorizontal: overrideWidth },
                 /**
                  * 
                  * As we already send the information in creteStyle with the current type, we sould build the correct style object, we sould only have 

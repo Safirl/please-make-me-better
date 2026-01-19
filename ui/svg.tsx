@@ -1,4 +1,4 @@
-import { primaryColorTokens } from "@/tokens/primary/colors.tokens";
+import { primaryColorTokens } from "@/assets/tokens/primary/colors.tokens";
 import Svg, {
     Circle, ClipPath, Defs, G, Path, SvgProps,
     FeFlood,
