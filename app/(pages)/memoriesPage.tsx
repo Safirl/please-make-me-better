@@ -6,32 +6,51 @@ import { primaryColorTokens } from "@/tokens/primary/colors.tokens";
 import { fontTokens } from "@/tokens/primary/font.tokens";
 import { StyleSheet, View, Text } from "react-native";
 import { useMemoryStorage } from "@/storage/store";
+import Button from "@/ui/Button";
+import SvgComponent from "@/ui/svg";
+import { router } from "expo-router";
+
 
 const MemoriesParameters = () => {
     const memories = useMemoryStorage((state) => state.memories)
     const shootMemory = useMemoryStorage((state) => state.removeMemory)
 
-    const shoot = (posX:number,posY:number) => {
-        memories.forEach((memory)=> {
+    const shoot = (posX: number, posY: number) => {
+        memories.forEach((memory) => {
             const distance = Math.sqrt(Math.pow((posX - memory.posX), 2) + Math.pow((posY - memory.posY), 2))
             if (distance < 75) {
                 shootMemory(memory)
             }
         })
     }
+    const back = () => {
+        router.navigate("/configuratorPage")
+    }
 
     return (
         <View style={styles.container}>
+
+            <View
+                style={{
+                    position: "absolute",
+                    top: 24,
+                    left: 16
+                }}
+            >
+                <Button onPress={back} type="icon">
+                    <SvgComponent name="back-chevron" />
+                </Button>
+            </View>
             <View style={styles.titleContainer}>
                 <Text style={styles.text}>Souvenirs</Text>
                 <Text style={[styles.text, styles.instructionText]}>Trier sa mémoire</Text>
             </View>
-            <GunCursor onDragEnded={shoot}/>
+            <GunCursor onDragEnded={shoot} />
             {memories.map((memory) => (
-                <Target key={memory.id} x={memory.posX} y={memory.posY} type={memory.type} label={memory.label}/>
+                <Target key={memory.id} x={memory.posX} y={memory.posY} type={memory.type} label={memory.label} />
             ))}
             {/* <Target x={memories[0].posX} y={memories[0].posY} type={memories[0].type} label={memories[0].label}/> */}
-            
+
         </View>
     )
 }

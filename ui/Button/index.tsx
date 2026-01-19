@@ -13,7 +13,7 @@ import SvgComponent, { SvgComponentProps } from "../svg";
 
 //ommit styles
 interface CustomButtonProps extends PressableProps {
-    type: 'primary' | 'secondary' | 'tertiary' | 'back' | 'verticalIcon';
+    type: 'primary' | 'secondary' | 'tertiary' | 'back' | 'verticalIcon' | "icon";
     state?: 'none' | 'disabled' | 'active' | 'accent'
     label?: string;
     children?: React.ReactNode;
@@ -23,7 +23,7 @@ interface CustomButtonProps extends PressableProps {
 
 }
 
-const createStyles = (type: 'primary' | 'secondary' | 'tertiary' | 'back' | 'verticalIcon', state?: 'none' | 'disabled' | 'active' | 'accent') => {
+const createStyles = (type: 'primary' | 'secondary' | 'tertiary' | 'back' | 'verticalIcon' | "icon", state?: 'none' | 'disabled' | 'active' | 'accent') => {
     return StyleSheet.create({
         layout: {
             position: "relative",
@@ -44,8 +44,13 @@ const createStyles = (type: 'primary' | 'secondary' | 'tertiary' | 'back' | 'ver
                 gap: 12,
                 paddingVertical: 16,
                 paddingHorizontal: 16,
-            })
+            }),
 
+            ...(type === "icon" && {
+                backgroundColor: 'transparent',
+                paddingVertical: 0,
+                paddingHorizontal: 0,
+            }),
         },
 
         border: {
@@ -140,7 +145,7 @@ const createStyles = (type: 'primary' | 'secondary' | 'tertiary' | 'back' | 'ver
     })
 }
 
-const getBorderGradient = (type: 'primary' | 'secondary' | 'tertiary' | 'back' | 'verticalIcon', state?: 'none' | 'disabled' | 'active' | 'accent') => {
+const getBorderGradient = (type: 'primary' | 'secondary' | 'tertiary' | 'back' | 'verticalIcon' | "icon", state?: 'none' | 'disabled' | 'active' | 'accent') => {
 
     if (type === "verticalIcon" && state === "accent") {
         return primaryColorTokens["primart-accent-border"]
@@ -235,14 +240,17 @@ const Button: React.FC<CustomButtonProps> = (props) => {
         {...rest}
     >
 
-        <LinearGradient
-            colors={borderGradient}
-            style={styles.border}
-        />
+        {
+            !["icon"].includes(type) && <LinearGradient
+                colors={borderGradient}
+                style={styles.border}
+            />
+        }
+
         <View
             style={[
                 styles.layout,
-                {paddingHorizontal:overrideWidth},
+                { paddingHorizontal: overrideWidth },
                 /**
                  * 
                  * As we already send the information in creteStyle with the current type, we sould build the correct style object, we sould only have 
