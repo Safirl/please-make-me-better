@@ -153,12 +153,12 @@ export const characters = [
             },
             {
                 id: 2,
-                intensity: 1,
+                intensity: 0,
                 label: "Tristesse"
             },
             {
                 id: 3,
-                intensity: 1,
+                intensity: 0,
                 label: "Peur"
             },
         ] as Emotion[]
