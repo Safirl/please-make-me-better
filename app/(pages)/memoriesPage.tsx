@@ -34,7 +34,8 @@ const MemoriesParameters = () => {
                 style={{
                     position: "absolute",
                     top: 24,
-                    left: 16
+                    left: 16,
+                    zIndex: 100
                 }}
             >
                 <Button onPress={back} type="icon">
