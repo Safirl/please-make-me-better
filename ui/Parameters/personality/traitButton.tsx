@@ -3,13 +3,12 @@ import { primaryColorTokens } from "@/tokens/primary/colors.tokens";
 import { useGestureDrag } from "@/assets/scripts/hooks/baseGestureHandler";
 import SvgComponent, { iconType } from "@/ui/svg";
 import { useEffect, useState } from "react";
-import { Dimensions, StyleSheet } from "react-native"
+import { Dimensions, StyleSheet, View } from "react-native"
 import { GestureDetector } from "react-native-gesture-handler";
 import Animated, { SharedValue, useAnimatedReaction, useAnimatedStyle, useDerivedValue, useSharedValue, withSpring, withTiming } from "react-native-reanimated";
-import { isEnabled } from "react-native/Libraries/Performance/Systrace";
 
 const DIMENSIONS = Dimensions.get("screen")
-const MERGE_RADIUS = 35
+const MERGE_RADIUS = 43
 
 interface traitButtonProps {
     id: number,
@@ -19,11 +18,12 @@ interface traitButtonProps {
     alphaSpacing: number,
     circleRadius: number,
     scale: number,
-    enableDrag: boolean,
+    emptyButton: boolean,
     rotation: SharedValue<number>
 }
 
 const TraitButton = (props: traitButtonProps) => {
+    const {emptyButton} = props
     const setCurrentTraitPosition = usePersonalityStorage((state) => state.setCurrentTraitPosition)
     const addComposedTrait = usePersonalityStorage((state) => state.addSelectedTrait)
     const selectedTraits = usePersonalityStorage((state) => state.selectedTraits)
@@ -58,16 +58,19 @@ const TraitButton = (props: traitButtonProps) => {
         resetOnDragFinalize: false,
         onDragEnded(x, y) {
             if (!isTraitInMergeZoneRadius(x,y) || selectedTraits['1']?.id !== undefined) {
+                if (emptyButton) return;
                 position.left.value = withSpring(getPos().x)
                 position.top.value = withSpring(getPos().y)
             }
             else {
+                if (emptyButton) return;
                 enabled.value = false
                 addComposedTrait({id: props.id, icon: props.iconName, label: props.label})
                 setClosestTraitId(-1)
             }
         },
         onPositionChanged(x, y) {
+            if (emptyButton) return;
             setCurrentTraitPosition(x,y)
         },
         enable: enabled
@@ -77,10 +80,6 @@ const TraitButton = (props: traitButtonProps) => {
         return Math.abs(position.top.value - DIMENSIONS.height/2) < MERGE_RADIUS
     }
 
-    useDerivedValue(() => {
-        console.log(enabled.value)
-    })
-
     //rotate
     useAnimatedReaction(
         () => rotation.value,
@@ -89,13 +88,14 @@ const TraitButton = (props: traitButtonProps) => {
             position.left.value = withSpring(newPos.x, {duration: 500}, () => {
                     if (isTraitClose()) {
                         setClosestTraitId(props.id)
-                        enabled.value = true
+                        if (!emptyButton)
+                            enabled.value = true
                     }
                     else {
                         enabled.value = false
                     }
                 });
-            if (selectedTraits['0']?.id === props.id || selectedTraits['1']?.id === props.id) {
+            if (selectedTraits['0']?.id === props.id || selectedTraits['1']?.id === props.id && !emptyButton) {
                 position.left.value = withSpring(DIMENSIONS.width/2)
                 position.top.value = withSpring(DIMENSIONS.height/2 + DIMENSIONS.height)
             }
@@ -119,13 +119,20 @@ const TraitButton = (props: traitButtonProps) => {
     const dynamicStyle = StyleSheet.create({
         style: {
             transform: [{scale: props.scale}],
+        },
+        empty: {
+            backgroundColor: "none",
+            borderWidth: 1,
+            borderColor: primaryColorTokens["color-tertiary-lower"],
+            boxShadow: "none",
+            opacity: .5
         }
     })
 
     return (
         <GestureDetector gesture={panGesture}>
-            <Animated.View style={[styles.button, animatedStyle, opacityAnimatedStyle, dynamicStyle.style]} onLayout={onLayoutHandler}>
-                <SvgComponent name={props.iconName}></SvgComponent>
+            <Animated.View style={[styles.button, animatedStyle, opacityAnimatedStyle, dynamicStyle.style, emptyButton && dynamicStyle.empty]} onLayout={onLayoutHandler}>
+                {emptyButton ? <View style={{width: 24, height: 24}}/> : <SvgComponent name={props.iconName}></SvgComponent>}
             </Animated.View>
         </GestureDetector>
     )

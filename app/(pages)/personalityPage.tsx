@@ -20,7 +20,7 @@ const DIMENSIONS = Dimensions.get("window")
 const personalityParameters = () => {
     const traits = usePersonalityStorage((state) => state.traits)
     const alphaSpacing = TOTAL_ANGLE / (traits.length - 1)
-    const createTrait = usePersonalityStorage((state) => state.createTrait)
+    const createTrait = usePersonalityStorage((state) => state.selectTrait)
     const setContainerPosition = usePersonalityStorage((state) => state.setContainerPosition)
     const composedTraits = usePersonalityStorage((state) => state.selectedTraits)
     const containerHeight = useSharedValue(0)

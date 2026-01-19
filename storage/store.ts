@@ -50,7 +50,7 @@ interface PersonalityState {
   //set the trait that are going to be merged
   selectedTraits: {0: Trait | null, 1: Trait | null}
   currentTraitPosition: {x:number, y:number}
-  createdComposedTraits: Trait[]
+  createdComposedTraits: ComposedTrait[]
   containerCenterX: number
   containerCenterY: number
   isContainerReady: boolean
@@ -59,11 +59,12 @@ interface PersonalityState {
 
   setContainerPosition: (x: number, y: number) => void
   addSelectedTrait: (trait: Trait) => void
-  createTrait: (trait0: Trait, trait1: Trait) => void
+  selectTrait: (trait0: Trait, trait1: Trait) => void
   setCurrentTraitPosition: (x: number, y: number) => void
   resetTraits: () => void;
   setClosestTraitId: (id: number) => void;
   setCurrentScene: (id: number) => void;
+  createComposedTrait: (trait: ComposedTrait) => void;
 }
 
 export const usePersonalityStorage = create<PersonalityState>((set) => ({
@@ -92,11 +93,12 @@ export const usePersonalityStorage = create<PersonalityState>((set) => ({
     // Si les deux sont pleins, ne rien faire
     return state;
   }),
-  createTrait: (trait0, trait1) => set((state) => ({traits: state.traits.filter((t: Trait) => t === trait0 || t === trait1)})),
+  selectTrait: (trait0, trait1) => set((state) => ({traits: state.traits.filter((t: Trait) => t === trait0 || t === trait1)})),
   setCurrentTraitPosition: (x,y) => set(() =>({currentTraitPosition: {x,y}})),
   resetTraits: () => set(() => ({selectedTraits: {0:null,1:null}})),
   setClosestTraitId: (id) => set(() => ({closestTraitId: id})),
   setCurrentScene: (id) => set(() => ({currentScene: id})),
+  createComposedTrait: (trait) => set((state) => ({createdComposedTraits: [...state.createdComposedTraits, trait]}))
 }))
 
 interface EmotionState {

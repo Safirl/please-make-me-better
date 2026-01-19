@@ -22,6 +22,8 @@ const SceneNewTrait = (props: NewTraitProps) => {
     const traitScale = useSharedValue(1)
     const backgroundTranslate = useSharedValue(300)
     const resetTraits = usePersonalityStorage((state) => state.resetTraits)
+    const createComposedTrait = usePersonalityStorage((state) => state.createComposedTrait)
+    const createdComposedTraits = usePersonalityStorage((state) => state.createdComposedTraits)
 
 
     useEffect(() => {
@@ -39,8 +41,10 @@ const SceneNewTrait = (props: NewTraitProps) => {
     }
 
     const completeAnimation = () => {
+        if (!currentTrait) return;
+
         opacity.value = withTiming(0, {duration: 1000, easing: Easing.inOut(Easing.exp)}, () => {
-            setTimeout(() => resetTraits(), 200)
+            setTimeout(() =>{resetTraits(); createComposedTrait(currentTrait);}, 200)
         })
     }
 

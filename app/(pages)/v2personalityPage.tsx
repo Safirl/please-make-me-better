@@ -1,19 +1,9 @@
-import fonts from "@/assets/styles/fonts";
-import { Trait } from "@/data/characters";
 import { usePersonalityStorage } from "@/storage/store";
-import { primaryBackgroundTokens } from "@/tokens/primary/backgrounds.tokens";
-import { primaryColorTokens } from "@/tokens/primary/colors.tokens";
-import MergeZone from "@/ui/Parameters/personality/mergeZone";
-import PersonalityCard from "@/ui/Parameters/personality/PersonalityCard";
 import SceneComposed from "@/ui/Parameters/personality/sceneComposed";
 import SceneSelect from "@/ui/Parameters/personality/sceneSelect";
-import TraitButton from "@/ui/Parameters/personality/traitButton";
 import { useEffect, useRef, useState } from "react";
 import { Dimensions, LayoutChangeEvent, StyleSheet, View, Text } from "react-native";
-import { Gesture, GestureDetector, GestureHandlerRootView } from "react-native-gesture-handler";
-import { RotationGesture } from "react-native-gesture-handler/lib/typescript/handlers/gestures/rotationGesture";
 import Animated, { useAnimatedStyle, useDerivedValue, useSharedValue, withSpring, withTiming } from "react-native-reanimated";
-import Svg, { Circle, Defs, LinearGradient, Path, Stop } from "react-native-svg";
 
 const DIMENSIONS = Dimensions.get("window")
 
@@ -31,7 +21,7 @@ const personalityParameters = () => {
             SceneSelectContainerOpacity.value = withSpring(0, {duration: 100})
             SceneSelectContainerTop.value = withSpring(-DIMENSIONS.height)
             SceneComposedContainerOpacity.value = withSpring(1)
-            SceneComposedContainerTop.value = withSpring(0)
+            SceneComposedContainerTop.value = withSpring(-DIMENSIONS.height)
         }
         else {
             SceneSelectContainerOpacity.value = withSpring(1)
@@ -58,12 +48,12 @@ const personalityParameters = () => {
 
     return (
     <>
-    <Animated.View style={[{position: "relative"}, sceneSelectedAnimatedStyle]}>
-        <SceneSelect style={undefined}></SceneSelect>
-    </Animated.View>
-    <Animated.View style={[styles.composedContainer, sceneComposedAnimatedStyle]}>
-        <SceneComposed/>
-    </Animated.View>
+        <Animated.View style={[{position: "relative", height: "100%"}, sceneSelectedAnimatedStyle]}>
+            <SceneSelect style={undefined}></SceneSelect>
+        </Animated.View>
+        <Animated.View style={[styles.composedContainer, sceneComposedAnimatedStyle]}>
+            <SceneComposed/>
+        </Animated.View>
     </>
     )
 }
