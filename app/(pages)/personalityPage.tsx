@@ -54,7 +54,7 @@ const personalityParameters = () => {
     }
 
     return (
-    <View>
+    <>
         <View
             style={{
                 position: "absolute",
@@ -73,7 +73,7 @@ const personalityParameters = () => {
         <Animated.View style={[styles.composedContainer, sceneComposedAnimatedStyle]}>
             <SceneComposed/>
         </Animated.View>
-    </View>
+    </>
     )
 }
 

@@ -25,7 +25,7 @@ export default function RootLayout() {
                 backgroundColor: primaryBackgroundTokens["background-secondary"]
             }}
         >
-            <GL />
+            {/* <GL /> */}
         </View>
         <View style={{height: "100%", overflow: "hidden"}}>
             <Stack screenOptions={{
@@ -61,5 +61,5 @@ const styles = StyleSheet.create({
         bottom: 0,
         right: 0,
         padding: 24
-    }
+    },
 }) 

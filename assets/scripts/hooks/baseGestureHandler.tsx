@@ -12,7 +12,7 @@ interface UseGestureDragProps {
     initialX?: number;
     initialY?: number;
     resetOnDragFinalize?: boolean;
-    enable: SharedValue<boolean>
+    enable?: SharedValue<boolean>
 }
 
 export const useGestureDrag = ({
@@ -21,7 +21,7 @@ export const useGestureDrag = ({
     initialX = sizes.width / 2,
     initialY = sizes.height / 2,
     resetOnDragFinalize: resetOnDragEnded = false,
-    enable
+    enable = useSharedValue(true)
 }: UseGestureDragProps) => {
     const width = useSharedValue(0);
     const height = useSharedValue(0);
