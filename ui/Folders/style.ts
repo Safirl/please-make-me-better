@@ -47,8 +47,9 @@ export const createStyle = (selectColor: "primary" | "secondary" | "tertiary" = 
     },
     folderSection: {
         backgroundColor: clientRequestTabTokens[`${COMPONENT_NAME}-folderSection-background-color`],
-    
-        gap: 16,
+
+        height: 243,
+        gap: 12,
 
         paddingTop: 16,
         paddingBottom: 16,

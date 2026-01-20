@@ -47,7 +47,10 @@ const FolderHero: React.FC<CustomFolderProps> = (props) => {
             {...rest}
             style={Style.main}
         >
-            <View style={[Style.line]}>
+            <View style={[Style.line, {
+                height: 48,
+                maxHeight: 48
+            }]}>
                 <View style={[Style.headingTextSection]}>
                     <Text style={[Style.title]}>Reconfigurer Mia</Text>
                     <Text style={[Style.paragraph, Style.secondaryText]}>Votre mission consiste à déplacer :</Text>

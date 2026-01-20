@@ -50,6 +50,11 @@ export const createStyle = () => StyleSheet.create({
         paddingVertical: 4,
 
     },
+    accentParagraph2: {
+        color: primaryTokens["color-primary-high"],
+        paddingVertical: 4,
+
+    },
     marker: {
         position: "absolute",
         top: 21,

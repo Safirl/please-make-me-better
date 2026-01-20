@@ -39,6 +39,7 @@ export const createStyle = () => StyleSheet.create({
     },
     name: {
         ...Fonts.paragraph,
+        height: 12,
         color: primaryTokens["color-tertiary-lower"],
     },
     label: {

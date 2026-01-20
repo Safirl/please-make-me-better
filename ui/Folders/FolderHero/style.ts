@@ -5,10 +5,16 @@ import { primaryFontTokens } from "@/assets/tokens/primary/font.tokens";
 
 const titleFont = {
     ...Fonts.subTitle,
-    paddingBottom: 8
+    height: 12,
+    minHeight: 12,
+    marginBottom: 8,
+    shrink: 0,
 }
 const paragraphFont = {
     ...Fonts.paragraph,
+    shrink: 0,
+    height: 12,
+    minHeight: 12,
     color: primaryFontTokens["font-color-secondary"],
 }
 const main = () => ({

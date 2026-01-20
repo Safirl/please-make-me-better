@@ -20,7 +20,8 @@ export const createStyle = () => StyleSheet.create({
     },
 
     headingTextSection: {
-        gap: 4
+        gap: 4,
+        height: 48
     },
     title: {
         ...Fonts["h2"],
