@@ -44,26 +44,26 @@ const TraitButton = (props: traitButtonProps) => {
         return n;
     }
 
-    const getPos = (): {x: number, y: number} => {
-        let ox = containerCenterX /* + DIMENSIONS.width/2*/
-        let oy = containerCenterY /*+ DIMENSIONS.height/2*/
-        const currentAngle = props.alphaSpacing * (props.id + 1) + closestMultiple(rotation.value, props.alphaSpacing) + Math.PI/2;
-        savedRotation = rotation.value;
-        ox += props.circleRadius * Math.cos(currentAngle)
-        oy += props.circleRadius * Math.sin(currentAngle)
-        return {x: ox, y: oy}
-    }
+    // const getPos = (): {x: number, y: number} => {
+    //     let ox = containerCenterX /* + DIMENSIONS.width/2*/
+    //     let oy = containerCenterY /*+ DIMENSIONS.height/2*/
+    //     const currentAngle = props.alphaSpacing * (props.id + 1) + closestMultiple(rotation.value, props.alphaSpacing) + Math.PI/2;
+    //     savedRotation = rotation.value;
+    //     ox += props.circleRadius * Math.cos(currentAngle)
+    //     oy += props.circleRadius * Math.sin(currentAngle)
+    //     return {x: ox, y: oy}
+    // }
 
     const baseAngle = useDerivedValue(() =>
         props.alphaSpacing * (props.id + 1) + Math.PI / 2
     )
 
     const rotatedX = useDerivedValue(() =>
-        containerCenterX + props.circleRadius * Math.cos(baseAngle.value + rotation.value)
+        containerCenterX + props.circleRadius * Math.cos(baseAngle.value + closestMultiple(rotation.value, props.alphaSpacing)) + closestMultiple(rotation.value, props.alphaSpacing) + Math.PI/2
     )
 
     const rotatedY = useDerivedValue(() =>
-        containerCenterY + props.circleRadius * Math.sin(baseAngle.value + rotation.value)
+        containerCenterY + props.circleRadius * Math.sin(baseAngle.value + closestMultiple(rotation.value, props.alphaSpacing)) + closestMultiple(rotation.value, props.alphaSpacing) + Math.PI/2
     )
 
 
@@ -118,11 +118,7 @@ const TraitButton = (props: traitButtonProps) => {
     // );
 
     const derivedPosition = useDerivedValue(() => {
-        const angle =
-            props.alphaSpacing * (props.id + 1) +
-            rotation.value +
-            Math.PI / 2
-
+        const angle = props.alphaSpacing * (props.id + 1) + closestMultiple(rotation.value, props.alphaSpacing) + Math.PI/2;
         const x = containerCenterX + props.circleRadius * Math.cos(angle)
         const y = containerCenterY + props.circleRadius * Math.sin(angle)
 
@@ -163,7 +159,7 @@ const TraitButton = (props: traitButtonProps) => {
         () => closestTraitId.value,
         (value, prev) => {
             if (value !== prev) {
-                console.log("isClose: ", value, " prev: ", prev, " for: ", props.label)
+                // console.log("isClose: ", value, " prev: ", prev, " for: ", props.label)
                 scheduleOnRN(setClosestTraitId, value)
             }
         }
