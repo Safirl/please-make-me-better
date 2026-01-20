@@ -69,15 +69,16 @@ export const characters = [
             }
         ] as Memory[],
         traits: [
-            { id: 0, icon: "empathique", label: "empathique" },
-            { id: 1, icon: "travailleur", label: "travailleur" },
-            { id: 2, icon: "egocentrique", label: "égocentrique" },
-            { id: 3, icon: "anxieux", label: "anxieux" },
-            { id: 4, icon: "impulsif", label: "impulsif" },
-            { id: 5, icon: "curieux", label: "curieux" },
-            { id: 6, icon: "sociable", label: "sociable" },
-            { id: 7, icon: "confiant", label: "confiant" },
-            { id: 8, icon: "calme", label: "calme" }
+            { id: 0, icon: "empathique", label: "Empathique" },
+            { id: 1, icon: "travailleur", label: "Travailleur" },
+            { id: 2, icon: "egocentrique", label: "Egocentrique" },
+            { id: 3, icon: "anxieux", label: "Anxieux" },
+            { id: 4, icon: "impulsif", label: "Impulsif" },
+            { id: 5, icon: "curieux", label: "Curieux" },
+            { id: 6, icon: "sociable", label: "Sociable" },
+            { id: 7, icon: "confiant", label: "Confiant" },
+            { id: 8, icon: "calme", label: "Calme" },
+            { id: 9, icon: "creatif", label: "Créatif" }
         ] as Trait[],
         composedTraits: [
             // Empathique
@@ -126,7 +127,18 @@ export const characters = [
             { id: 32, label: "Observateur", traitA: 5, traitB: 8, icon: "observateur" },
             { id: 33, label: "Charismatique", traitA: 6, traitB: 7, icon: "charismatique" },
             { id: 34, label: "Agréable", traitA: 6, traitB: 8, icon: "agreable" },
-            { id: 35, label: "Assuré", traitA: 7, traitB: 8, icon: "assure" }
+            { id: 35, label: "Assuré", traitA: 7, traitB: 8, icon: "assure" },
+
+            // Créatif
+            { id: 36, label: "Sensible", traitA: 9, traitB: 0, icon: "sensible" },
+            { id: 37, label: "Ingénieux", traitA: 9, traitB: 1, icon: "ingenieux" },
+            { id: 38, label: "Vaniteux", traitA: 9, traitB: 2, icon: "vaniteux" },
+            { id: 39, label: "Tourmenté", traitA: 9, traitB: 3, icon: "tourmente" },
+            { id: 40, label: "Spontané", traitA: 9, traitB: 4, icon: "spontane" },
+            { id: 41, label: "Inventif", traitA: 9, traitB: 5, icon: "inventif" },
+            { id: 42, label: "Excentrique", traitA: 9, traitB: 6, icon: "excentrique" },
+            { id: 43, label: "Audacieux", traitA: 9, traitB: 7, icon: "audacieux" },
+            { id: 44, label: "Inspiré", traitA: 9, traitB: 8, icon: "inspire" }
         ] as ComposedTrait[],
         emotions: [
             {
