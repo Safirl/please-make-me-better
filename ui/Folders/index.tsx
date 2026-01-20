@@ -141,11 +141,6 @@ const Modal: React.FC<CustomModalProps> = (props) => {
             ],
             [
                 {
-                    text: "Le regard des autres devient un repère. Elle intériorise les jugements. Les attentes des autres prennent le pas sur sa propre voix.",
-                    style: "neutral" as const
-                },
-
-                {
                     text: "Elle aspire à des relations sincères, où son apparence n'est plus centrale.",
                     style: "accent" as const
                 },
@@ -184,7 +179,8 @@ const Modal: React.FC<CustomModalProps> = (props) => {
 
     return <View
         style={{
-            width: "100%"
+            width: "100%",
+            // height: 100%
         }}
         {...rest}
     >
