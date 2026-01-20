@@ -26,10 +26,11 @@ const SceneSelect = (props: sceneSelectProps) => {
     const rotation = useSharedValue(0)
     const savedPosX = useSharedValue(0)
     const savedPosY = useSharedValue(0)
-    const closestTraitId = usePersonalityStorage((state) => state.closestTraitId)
+    // const closestTraitId = usePersonalityStorage((state) => state.closestTraitId)
     const createdComposedTraits = usePersonalityStorage((state) => state.createdComposedTraits)
     const selectedTraits = usePersonalityStorage((state) => state.selectedTraits)
-    const setClosestTraitId = usePersonalityStorage((state) => state.setClosestTraitId)
+    // const setClosestTraitId = usePersonalityStorage((state) => state.setClosestTraitId)
+    const closestTraitId = useSharedValue(-1)
     
     const rotationGesture = Gesture.Pan()
         .onBegin((e) => {
@@ -43,7 +44,7 @@ const SceneSelect = (props: sceneSelectProps) => {
             savedPosX.value = e.absoluteX
             savedPosY.value = e.absoluteY
             rotation.value = rotation.value + (Math.sign(deltaX) * distance) * Math.PI/300
-            setClosestTraitId(-1)
+            // closestTraitId.value = -1
         })
 
     useEffect(() => {
@@ -92,11 +93,11 @@ const SceneSelect = (props: sceneSelectProps) => {
 
     const isButtonEmpty = (id: number) => createdComposedTraits.find((composedTrait) => composedTrait.traitA === id || composedTrait.traitB === id) !== undefined
     const getCurrentLabel = () => {
-        if (closestTraitId != -1) {
-            if (isButtonEmpty(closestTraitId))
+        if (closestTraitId.value != -1) {
+            if (isButtonEmpty(closestTraitId.value))
                 return "XXX"
             else
-                return traits[closestTraitId].label
+                return traits[closestTraitId.value].label
         }
 
         return "?"
@@ -155,6 +156,7 @@ const SceneSelect = (props: sceneSelectProps) => {
                         scale={2.2}
                         emptyButton={isButtonEmpty(trait.id)}
                         rotation={rotation}
+                        closestTraitId={closestTraitId}
                     />
                 ))
             }

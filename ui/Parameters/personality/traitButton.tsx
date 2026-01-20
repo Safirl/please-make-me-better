@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import { Dimensions, StyleSheet, View } from "react-native"
 import { GestureDetector } from "react-native-gesture-handler";
 import Animated, { SharedValue, useAnimatedReaction, useAnimatedStyle, useDerivedValue, useSharedValue, withSpring, withTiming } from "react-native-reanimated";
+import { scheduleOnRN } from "react-native-worklets";
 
 const DIMENSIONS = Dimensions.get("screen")
 const MERGE_RADIUS = 43
@@ -20,10 +21,11 @@ interface traitButtonProps {
     scale: number,
     emptyButton: boolean,
     rotation: SharedValue<number>
+    closestTraitId: SharedValue<number>
 }
 
 const TraitButton = (props: traitButtonProps) => {
-    const {emptyButton} = props
+    const {emptyButton, closestTraitId} = props
     const setCurrentTraitPosition = usePersonalityStorage((state) => state.setCurrentTraitPosition)
     const addComposedTrait = usePersonalityStorage((state) => state.addSelectedTrait)
     const selectedTraits = usePersonalityStorage((state) => state.selectedTraits)
@@ -52,6 +54,20 @@ const TraitButton = (props: traitButtonProps) => {
         return {x: ox, y: oy}
     }
 
+    const baseAngle = useDerivedValue(() =>
+        props.alphaSpacing * (props.id + 1) + Math.PI / 2
+    )
+
+    const rotatedX = useDerivedValue(() =>
+        containerCenterX + props.circleRadius * Math.cos(baseAngle.value + rotation.value)
+    )
+
+    const rotatedY = useDerivedValue(() =>
+        containerCenterY + props.circleRadius * Math.sin(baseAngle.value + rotation.value)
+    )
+
+
+
     const { panGesture, animatedStyle, onLayoutHandler, position } = useGestureDrag({
         initialX: 0,
         initialY: 0,
@@ -59,51 +75,99 @@ const TraitButton = (props: traitButtonProps) => {
         onDragEnded(x, y) {
             if (!isTraitInMergeZoneRadius(x,y) || selectedTraits['1']?.id !== undefined) {
                 if (emptyButton) return;
-                position.left.value = withSpring(getPos().x)
-                position.top.value = withSpring(getPos().y)
+                position.left.value = withSpring(rotatedX.value)
+                position.top.value = withSpring(rotatedY.value)
             }
             else {
                 if (emptyButton) return;
                 enabled.value = false
                 addComposedTrait({id: props.id, icon: props.iconName, label: props.label})
-                setClosestTraitId(-1)
+                // setClosestTraitId(-1)
             }
         },
-        onPositionChanged(x, y) {
-            if (emptyButton) return;
-            setCurrentTraitPosition(x,y)
-        },
+        // onPositionChanged(x, y) {
+        //     if (emptyButton) return;
+        //     // setCurrentTraitPosition(x,y)
+        // },
         enable: enabled
     });
-    
-    const isTraitClose = (): boolean => {
-        return Math.abs(position.top.value - DIMENSIONS.height/2) < MERGE_RADIUS
-    }
 
     //rotate
+    // useAnimatedReaction(
+    //     () => rotation.value,
+    //     (currentRotation, previousRotation) => {
+    //         const newPos = getPos();
+    //         position.left.value = withSpring(newPos.x, {duration: 500}, () => {
+    //                 if (isTraitClose()) {
+    //                     setClosestTraitId(props.id)
+    //                     if (!emptyButton)
+    //                         enabled.value = true
+    //                 }
+    //                 else {
+    //                     enabled.value = false
+    //                 }
+    //             });
+    //         if (selectedTraits['0']?.id === props.id || selectedTraits['1']?.id === props.id && !emptyButton) {
+    //             position.left.value = withSpring(DIMENSIONS.width/2)
+    //             position.top.value = withSpring(DIMENSIONS.height/2 + DIMENSIONS.height)
+    //         }
+    //         else {
+    //             position.top.value = withSpring(newPos.y);
+    //         }
+    //     }
+    // );
+
+    const derivedPosition = useDerivedValue(() => {
+        const angle =
+            props.alphaSpacing * (props.id + 1) +
+            rotation.value +
+            Math.PI / 2
+
+        const x = containerCenterX + props.circleRadius * Math.cos(angle)
+        const y = containerCenterY + props.circleRadius * Math.sin(angle)
+
+        return { x, y }
+    })
+    
     useAnimatedReaction(
-        () => rotation.value,
-        (currentRotation, previousRotation) => {
-            const newPos = getPos();
-            position.left.value = withSpring(newPos.x, {duration: 500}, () => {
-                    if (isTraitClose()) {
-                        setClosestTraitId(props.id)
-                        if (!emptyButton)
-                            enabled.value = true
-                    }
-                    else {
-                        enabled.value = false
-                    }
-                });
-            if (selectedTraits['0']?.id === props.id || selectedTraits['1']?.id === props.id && !emptyButton) {
-                position.left.value = withSpring(DIMENSIONS.width/2)
-                position.top.value = withSpring(DIMENSIONS.height/2 + DIMENSIONS.height)
+        () => derivedPosition.value,
+        (pos) => {
+            position.left.value = withSpring(pos.x)
+            position.top.value = withSpring(pos.y)
+        }
+    )
+
+    const isClose = useDerivedValue(() => {
+        const dx = derivedPosition.value.x - DIMENSIONS.width / 2
+        const dy = derivedPosition.value.y - DIMENSIONS.height / 2
+        // if (props.id === 0)
+            // console.log(Math.sqrt(dx * dx + dy * dy))
+        // console.log("isClose: ", Math.sqrt(dx * dx + dy * dy) < MERGE_RADIUS)
+        return Math.sqrt(dx * dx + dy * dy) < MERGE_RADIUS
+    })
+
+    useAnimatedReaction(
+        () => isClose.value,
+        (close, prev) => {
+            if (close && !prev) {
+                closestTraitId.value = props.id
+                enabled.value = !emptyButton
             }
-            else {
-                position.top.value = withSpring(newPos.y);
+            if (!close && prev) {
+                enabled.value = false
             }
         }
-    );
+    )
+
+    useAnimatedReaction(
+        () => closestTraitId.value,
+        (value, prev) => {
+            if (value !== prev) {
+                console.log("isClose: ", value, " prev: ", prev, " for: ", props.label)
+                scheduleOnRN(setClosestTraitId, value)
+            }
+        }
+    )
 
     const isTraitInMergeZoneRadius = (x: number, y: number): boolean => {
         const dx = x - DIMENSIONS.width/2
