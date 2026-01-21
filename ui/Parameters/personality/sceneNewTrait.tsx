@@ -37,17 +37,19 @@ const SceneNewTrait = (props: NewTraitProps) => {
     // })
     useEffect(() => {
         if (!currentTrait) return;
-        console.log("animate")
+        // console.log("animate")
         opacity.value = withTiming(1, { duration: 1000, easing: Easing.inOut(Easing.exp) },
             () => {
-                scheduleOnRN(() => opacity.value = withDelay(2000, withTiming(0, { duration: 1000, easing: Easing.inOut(Easing.exp) })))
+                scheduleOnRN(() => opacity.value = withDelay(2000, withTiming(0, { duration: 1000, easing: Easing.inOut(Easing.exp) }, () => {
+                    resetTraits(); createComposedTrait(currentTrait);
+                })))
             })
 
-        // backgroundTranslate.value = withSequence(
-        //     withTiming(200, { duration: 2000, easing: Easing.inOut(Easing.ease) }),
-        //     withTiming(200, { duration: 500, easing: Easing.inOut(Easing.ease) }),
-        //     withTiming(600, { duration: 2000, easing: Easing.inOut(Easing.ease) })
-        // )
+        backgroundTranslate.value = withSequence(
+            withTiming(200, { duration: 2000, easing: Easing.inOut(Easing.ease) }),
+            withTiming(200, { duration: 500, easing: Easing.inOut(Easing.ease) }),
+            withTiming(600, { duration: 2000, easing: Easing.inOut(Easing.ease) })
+        )
 
         traitScale.value = withTiming(1.1, { duration: 2500, easing: Easing.inOut(Easing.ease) })
 
