@@ -6,7 +6,6 @@ interface MemoryState {
   gunPosition: {x: number, y: number}
   setGunPosition: (newPosition: {x: number, y: number}) => void
 
-  pushMemory: (newMemory: Memory) => void
   removeMemory: (oldMemory: Memory) => void
 }
 
@@ -14,7 +13,6 @@ export const useMemoryStorage = create<MemoryState>((set) => ({
   memories: characters[0].memories,
   gunPosition: {x:0,y:0},
   setGunPosition: (newPosition) => set((state) => ({gunPosition: newPosition})),
-  pushMemory: (newMemory: Memory) => set((state) => ({memories: [...state.memories, newMemory]})),
   removeMemory: (oldMemory: Memory) => set((state) => ({memories: state.memories.filter((i: Memory) => i !== oldMemory)}))
 }))
 

@@ -4,7 +4,7 @@ import Target from "@/ui/Parameters/memories/target";
 import { primaryBackgroundTokens } from "@/assets/tokens/primary/backgrounds.tokens";
 import { primaryColorTokens } from "@/assets/tokens/primary/colors.tokens";
 import { fontTokens } from "@/assets/tokens/primary/font.tokens";
-import { StyleSheet, View, Text } from "react-native";
+import { StyleSheet, View, Text, Dimensions } from "react-native";
 import { useMemoryStorage } from "@/assets/scripts/storage/useParametersStorage";
 import Button from "@/ui/Button";
 import SvgComponent from "@/ui/svg";
@@ -12,6 +12,7 @@ import { router } from "expo-router";
 import { useEffect } from "react";
 import { useParametersDisplayStateStorage } from "@/assets/scripts/storage/useParametersProgressStorage";
 
+const DIMENSIONS = Dimensions.get("screen")
 
 const MemoriesParameters = () => {
     const setCurrentParameter = useParametersDisplayStateStorage((state) => state.setCurrentParameter)
@@ -22,15 +23,17 @@ const MemoriesParameters = () => {
 
     const shoot = (posX: number, posY: number) => {
         memories.forEach((memory) => {
-            const distance = Math.sqrt(Math.pow((posX - memory.posX), 2) + Math.pow((posY - memory.posY), 2))
+            const distance = Math.sqrt(Math.pow((posX - memory.posX * DIMENSIONS.width), 2) + Math.pow((posY - memory.posY * DIMENSIONS.height), 2))
             if (distance < 75) {
                 shootMemory(memory)
             }
         })
     }
+
     const back = () => {
         router.navigate("/configuratorPage")
     }
+
     useEffect(() => {
         setCurrentParameter("memories")
         setHasParameterBeenModified(true)
@@ -57,9 +60,8 @@ const MemoriesParameters = () => {
             </View>
             <GunCursor onDragEnded={shoot} />
             {memories.map((memory) => (
-                <Target key={memory.id} x={memory.posX} y={memory.posY} type={memory.type} label={memory.label} />
+                <Target key={memory.id} x={memory.posX * DIMENSIONS.width} y={memory.posY * DIMENSIONS.height} type={memory.type} label={memory.label} />
             ))}
-            {/* <Target x={memories[0].posX} y={memories[0].posY} type={memories[0].type} label={memories[0].label}/> */}
 
         </View>
     )

@@ -9,6 +9,9 @@ import { useParametersDisplayStateStorage } from "@/assets/scripts/storage/usePa
 import { useEffect } from "react";
 import FolderPage from "./(pages)/foldersPage";
 import { useSharedValue, withTiming } from "react-native-reanimated";
+import { useChoicesCalculator } from "@/assets/scripts/hooks/usePathCalculator";
+import { useProgressStorage } from "@/assets/scripts/storage/useGameProgressStorage";
+import { useEmotionStorage, useMemoryStorage, usePersonalityStorage } from "@/assets/scripts/storage/useParametersStorage";
 
 
 export default function RootLayout() {
@@ -17,6 +20,10 @@ export default function RootLayout() {
     const isFolderVisible = useParametersDisplayStateStorage((state) => state.isFolderVisible)
     const setFolderVisibility = useParametersDisplayStateStorage((state) => state.setFolderVisibility)
     const opacity = useSharedValue(1)
+    const setChoices = useProgressStorage((state) => state.setChoices)
+    const selectedMemories = useMemoryStorage((state) => state.memories)
+    const composedTrait = usePersonalityStorage((state) => state.createdComposedTraits)
+    const emotions = useEmotionStorage((state) => state.emotions)
     
     const [loaded, error] = useFonts({
         JetBrainsMono: require("../assets/fonts/JetBrainsMono/JetBrainsMono[wght].ttf"),
@@ -26,8 +33,11 @@ export default function RootLayout() {
     const { colors } = useTheme();
     colors.background = 'transparent';
 
+    const {getFinalChoices} = useChoicesCalculator({selectedMemories, composedTrait, emotions})
+
     const showEnding = () => {
-        console.log("wsh")
+        console.log(getFinalChoices())
+        setChoices(getFinalChoices())
         opacity.value = withTiming(0, {duration: 2000, easing: Easing.out(Easing.ease)}, () => {
             router.navigate(endingRoute)
         })

@@ -12,6 +12,7 @@ export type ProgressStateType = {
     nextStep: (cs?: Step) => void
     prevStep: (cs?: Step) => void
     addChoice: (choice: number) => void
+    setChoices: (choices: number[]) => void
 }
 type Routes = {
     [key: string]: Route
@@ -107,5 +108,6 @@ export const useProgressStorage = create<ProgressStateType>((set) => ({
             return state
         })
     },
-    addChoice: (choice) => set((state) => ({choices: [...state.choices, choice]}))
+    addChoice: (choice) => set((state) => ({choices: [...state.choices, choice]})),
+    setChoices: (choices) => set(() => ({choices: choices}))
 }))
