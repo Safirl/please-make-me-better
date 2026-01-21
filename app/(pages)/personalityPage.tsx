@@ -7,7 +7,7 @@ import Animated, { useAnimatedStyle, useDerivedValue, useSharedValue, withSpring
 import { router } from "expo-router";
 import Button from "@/ui/Button";
 import SvgComponent from "@/ui/svg";
-import { useParametersProgressStorage } from "@/storage/useParametersProgressStorage";
+import { useParametersProgressStorage } from "@/assets/scripts/storage/useParametersProgressStorage";
 
 const DIMENSIONS = Dimensions.get("window")
 

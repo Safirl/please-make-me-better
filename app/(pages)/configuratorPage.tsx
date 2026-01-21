@@ -7,7 +7,7 @@ import Helpers from "../utils/Helpers";
 import Svg, { Circle } from "react-native-svg";
 import { StyleSheet } from "react-native";
 import { Href } from "expo-router";
-import { useParametersProgressStorage } from "@/storage/useParametersProgressStorage";
+import { useParametersProgressStorage } from "@/assets/scripts/storage/useParametersProgressStorage";
 
 const dimensions = Dimensions.get("window")
 

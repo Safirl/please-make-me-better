@@ -7,7 +7,7 @@ import Button from "@/ui/Button";
 import SvgComponent from "@/ui/svg";
 import { router } from "expo-router";
 import { useEmotionStorage } from "@/assets/scripts/storage/store";
-import { useParametersProgressStorage } from "@/assets/storage/useParametersProgressStorage";
+import { useParametersProgressStorage } from "@/assets/scripts/storage/useParametersProgressStorage";
 
 const OFFSET = 70
 

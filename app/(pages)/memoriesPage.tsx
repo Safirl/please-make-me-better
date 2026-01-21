@@ -10,7 +10,7 @@ import Button from "@/ui/Button";
 import SvgComponent from "@/ui/svg";
 import { router } from "expo-router";
 import { useEffect } from "react";
-import { useParametersProgressStorage } from "@/storage/useParametersProgressStorage";
+import { useParametersProgressStorage } from "@/assets/scripts/storage/useParametersProgressStorage";
 
 
 const MemoriesParameters = () => {

@@ -2,7 +2,7 @@ import { Text, TextInput, StyleSheet, View } from "react-native";
 import { useProgressStorage, ProgressStateType } from "@/assets/scripts/storage/useGameProgressStorage";
 
 import Folder from "@/ui/Folders/";
-import { router } from "expo-router";
+import { RelativePathString, router } from "expo-router";
 
 interface FolderPageProps {
     showConfigureButton?: boolean
@@ -21,7 +21,7 @@ const FolderPage = ({showConfigureButton = true}: FolderPageProps) => {
 
     const configure = () => {
         gameProgress.nextStep("folders")
-        gameProgress.currentRoute && router.navigate(gameProgress.currentRoute.path)
+        gameProgress.currentRoute && router.navigate(gameProgress.currentRoute.path as RelativePathString)
     }
 
     return <View
