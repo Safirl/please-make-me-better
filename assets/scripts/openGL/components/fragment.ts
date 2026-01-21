@@ -174,7 +174,7 @@ float fbm(vec3 p) {
 }
 
 float scene(vec3 p) {
-  float displacement = noise(p) * .65 * sin(uTime * 2.) * cos(uTime * 2.);
+  float displacement = noise(p) * .65 * sin(uTime * uSpeed) * cos(uTime * uSpeed);
   float distance = sdSphere(p + vec3(0, 0, 2), uRadius) + displacement;
   float f = fbm(p);
   

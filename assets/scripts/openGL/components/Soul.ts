@@ -1,5 +1,5 @@
 import Helpers from "@/app/utils/Helpers";
-import { useEmotionStorage, useMemoryStorage, useSoulStorage } from "@/assets/scripts/storage/store";
+import { useEmotionStorage, useMemoryStorage, useSoulStorage, usePersonalityStorage } from "@/assets/scripts/storage/store";
 import Experience from "../Experience";
 import Component from "../classes/Component";
 import fragment from "./fragment";
@@ -18,7 +18,7 @@ export default class Soul extends Component {
     private params = {
         blendingFactor: (useSoulStorage.getState() as any).fluidity * this.paramsFactors.fluidityFactor, //8 is the factor. TODO Change later
         factor: 0.25,
-        speed: 0.25,
+        speed: 2,
 
 
         /**
@@ -50,7 +50,7 @@ export default class Soul extends Component {
     private targetNoiseFactor = this.params.noiseFactor
     private targetFilaments = this.params.filaments
     private targetRadius = this.params.radius
-
+    private displacementTarget = 1
 
     /**
      * Sphere color
@@ -202,6 +202,19 @@ export default class Soul extends Component {
 
         })
 
+        usePersonalityStorage.subscribe(state => {
+            if (state.createdComposedTraits.length > 0) {
+
+                const moy = state.createdComposedTraits.reduce((acc, value) => acc + value.value, 0) / state.createdComposedTraits.length
+
+                this.displacementTarget = moy / .5 * 10.
+            } else {
+
+                this.displacementTarget = 2
+            }
+
+
+        })
         useMemoryStorage.subscribe(state => {
             this.targetNoiseFactor = state.memories.length / 3 * 2.02
             this.targetFilaments = Math.max(state.memories.length / 3 * 1, 0.15)
@@ -342,6 +355,7 @@ export default class Soul extends Component {
         this.params.filaments = lerp(this.targetFilaments, this.params.filaments, .95)
         this.params.noiseFactor = lerp(this.targetNoiseFactor, this.params.noiseFactor, .95)
         this.params.radius = lerp(this.targetRadius, this.params.radius, .95)
+        this.params.speed = lerp(this.displacementTarget, this.params.speed, .95)
 
 
         /**
