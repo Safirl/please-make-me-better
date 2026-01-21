@@ -3,25 +3,35 @@ import Button from "@/ui/Button";
 import { primaryBackgroundTokens } from "@/assets/tokens/primary/backgrounds.tokens";
 import { useTheme } from "@react-navigation/native";
 import { useFonts } from "expo-font";
-import { Stack } from "expo-router";
-import { Pressable, StyleSheet, View } from "react-native";
-import { useParametersProgressStorage } from "@/assets/scripts/storage/useParametersProgressStorage";
+import { router, Stack } from "expo-router";
+import { Easing, Pressable, StyleSheet, View } from "react-native";
+import { useParametersDisplayStateStorage } from "@/assets/scripts/storage/useParametersProgressStorage";
 import { useEffect } from "react";
 import FolderPage from "./(pages)/foldersPage";
+import { useSharedValue, withTiming } from "react-native-reanimated";
 
 
 export default function RootLayout() {
-    const currentParameter = useParametersProgressStorage((state) => state.currentParameter)
-    const hasParameterBeenModified = useParametersProgressStorage((state) => state.hasParameterBeenModified)
-    const isFolderVisible = useParametersProgressStorage((state) => state.isFolderVisible)
-    const setFolderVisibility = useParametersProgressStorage((state) => state.setFolderVisibility)
+    const currentParameter = useParametersDisplayStateStorage((state) => state.currentParameter)
+    const hasParameterBeenModified = useParametersDisplayStateStorage((state) => state.hasParameterBeenModified)
+    const isFolderVisible = useParametersDisplayStateStorage((state) => state.isFolderVisible)
+    const setFolderVisibility = useParametersDisplayStateStorage((state) => state.setFolderVisibility)
+    const opacity = useSharedValue(1)
     
     const [loaded, error] = useFonts({
         JetBrainsMono: require("../assets/fonts/JetBrainsMono/JetBrainsMono[wght].ttf"),
     });
+    const endingRoute = "/endingPage"
 
     const { colors } = useTheme();
     colors.background = 'transparent';
+
+    const showEnding = () => {
+        console.log("wsh")
+        opacity.value = withTiming(0, {duration: 2000, easing: Easing.out(Easing.ease)}, () => {
+            router.navigate(endingRoute)
+        })
+    }
 
     return <>
         <View
@@ -51,10 +61,10 @@ export default function RootLayout() {
             </Stack>
         </View>
         <View style={styles.validateButton}>
-            <Button type="primary" icon={{name: "file"}} overridePadding={12} onPress={hasParameterBeenModified ? ()=>setFolderVisibility(true) : ()=>{}}></Button>
+            <Button type="primary" icon={{name: "file"}} overridePadding={12} onPress={()=>setFolderVisibility(true)}></Button>
             {
                 currentParameter === "" &&
-                <Button type={hasParameterBeenModified ? "primary" : "secondary"} label="Finaliser" overridePadding={24}></Button>
+                <Button type={hasParameterBeenModified ? "primary" : "secondary"} label="Finaliser" overridePadding={24} onPress={hasParameterBeenModified ? () => showEnding() : () => {}}></Button>
             }
         </View>
 

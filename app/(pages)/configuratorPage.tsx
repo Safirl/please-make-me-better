@@ -1,18 +1,17 @@
 import { router, useFocusEffect } from "expo-router";
 import { useCallback, useEffect } from "react";
 import { Dimensions, Pressable, View } from "react-native";
-import { useStorage } from "../../assets/scripts/storage/store";
 import Button from "@/ui/Button";
 import Helpers from "../utils/Helpers";
 import Svg, { Circle } from "react-native-svg";
 import { StyleSheet } from "react-native";
 import { Href } from "expo-router";
-import { useParametersProgressStorage } from "@/assets/scripts/storage/useParametersProgressStorage";
+import { useParametersDisplayStateStorage } from "@/assets/scripts/storage/useParametersProgressStorage";
 
 const DIMENSIONS = Dimensions.get("window")
 
 export default function configuratorPage() {
-  const setCurrentParameter = useParametersProgressStorage((state) => state.setCurrentParameter)
+  const setCurrentParameter = useParametersDisplayStateStorage((state) => state.setCurrentParameter)
 
   useEffect(() => {
     if (!Helpers.isDevMode) return;

@@ -1,19 +1,19 @@
 import SceneComposed from "@/ui/Parameters/personality/sceneComposed";
 import SceneSelect from "@/ui/Parameters/personality/sceneSelect";
-import { usePersonalityStorage } from "@/assets/scripts/storage/store";
+import { usePersonalityStorage } from "@/assets/scripts/storage/useParametersStorage";
 import { useEffect, useRef, useState } from "react";
 import { Dimensions, LayoutChangeEvent, StyleSheet, View, Text } from "react-native";
 import Animated, { useAnimatedStyle, useDerivedValue, useSharedValue, withSpring, withTiming } from "react-native-reanimated";
 import { router } from "expo-router";
 import Button from "@/ui/Button";
 import SvgComponent from "@/ui/svg";
-import { useParametersProgressStorage } from "@/assets/scripts/storage/useParametersProgressStorage";
+import { useParametersDisplayStateStorage } from "@/assets/scripts/storage/useParametersProgressStorage";
 
 const DIMENSIONS = Dimensions.get("window")
 
 const personalityParameters = () => {
-    const setCurrentParameter = useParametersProgressStorage((state) => state.setCurrentParameter)
-    const setHasParameterBeenModified = useParametersProgressStorage((state) => state.setHasParameterBeenModified)
+    const setCurrentParameter = useParametersDisplayStateStorage((state) => state.setCurrentParameter)
+    const setHasParameterBeenModified = useParametersDisplayStateStorage((state) => state.setHasParameterBeenModified)
     const selectedTraits = usePersonalityStorage((state) => state.selectedTraits)
     const SceneSelectContainerOpacity = useSharedValue(0)
     const SceneSelectContainerTop = useSharedValue(-DIMENSIONS.height)

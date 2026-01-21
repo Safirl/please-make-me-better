@@ -1,5 +1,5 @@
 import { Trait } from "@/assets/data/characters";
-import { usePersonalityStorage } from "@/assets/scripts/storage/store";
+import { usePersonalityStorage } from "@/assets/scripts/storage/useParametersStorage";
 import { primaryColorTokens } from "@/assets/tokens/primary/colors.tokens";
 import MergeZone from "@/ui/Parameters/personality/mergeZone";
 import PersonalityCard from "@/ui/Parameters/personality/PersonalityCard";

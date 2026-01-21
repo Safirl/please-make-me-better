@@ -11,7 +11,7 @@ import FolderList from "./FolderList/index"
 import Identity from "./Identity"
 import File from "./File"
 import Mission from "./Mission"
-import { useParametersProgressStorage } from "@/assets/scripts/storage/useParametersProgressStorage";
+import { useParametersDisplayStateStorage } from "@/assets/scripts/storage/useParametersProgressStorage";
 interface CustomModalProps extends ViewProps {
     selectColor?: "primary" | "secondary" | "tertiary";
     type: '' | ''
@@ -55,8 +55,8 @@ const Modal: React.FC<CustomModalProps> = (props) => {
     const [backButtonWidth, setBackButtonWidth] = React.useState()
     const [backButtonHeight, setBackButtonHeight] = React.useState()
     const [history, setHistory] = React.useState<Array<"" | "identity" | "mission" | "image" | "autrui" | "rupture">>([])
-    const isFolderVisible = useParametersProgressStorage((state) => state.isFolderVisible)
-    const setFolderVisibility = useParametersProgressStorage((state) => state.setFolderVisibility)
+    const isFolderVisible = useParametersDisplayStateStorage((state) => state.isFolderVisible)
+    const setFolderVisibility = useParametersDisplayStateStorage((state) => state.setFolderVisibility)
 
 
     const image = {

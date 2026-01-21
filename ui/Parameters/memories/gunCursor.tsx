@@ -3,7 +3,7 @@ import { Dimensions, StyleSheet, View } from "react-native";
 import { GestureDetector } from "react-native-gesture-handler";
 import Animated from "react-native-reanimated";
 import { Circle, Svg } from "react-native-svg";
-import { useMemoryStorage } from "@/assets/scripts/storage/store";
+import { useMemoryStorage } from "@/assets/scripts/storage/useParametersStorage";
 import { useGestureDrag } from "@/assets/scripts/hooks/baseGestureHandler";
 
 interface GunCursorProps {

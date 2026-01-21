@@ -10,7 +10,7 @@ interface useParametersProgressStorage {
     setFolderVisibility: (visible: boolean) => void;
 }
 
-export const useParametersProgressStorage = create<useParametersProgressStorage>((set) => ({
+export const useParametersDisplayStateStorage = create<useParametersProgressStorage>((set) => ({
     currentParameter: "",
     hasParameterBeenModified: false,
     isFolderVisible: false,

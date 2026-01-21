@@ -1,4 +1,4 @@
-import { usePersonalityStorage } from "@/assets/scripts/storage/store";
+import { usePersonalityStorage } from "@/assets/scripts/storage/useParametersStorage";
 import { primaryColorTokens } from "@/assets/tokens/primary/colors.tokens";
 import { useGestureDrag } from "@/assets/scripts/hooks/baseGestureHandler";
 import SvgComponent, { iconType } from "@/ui/svg";

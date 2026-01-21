@@ -1,4 +1,4 @@
-import { useSoulStorage } from "@/assets/scripts/storage/store";
+import { useSoulStorage } from "@/assets/scripts/storage/useParametersStorage";
 import { StyleSheet, View } from "react-native";
 import { Cursor } from "./cursor";
 

@@ -5,17 +5,17 @@ import { primaryBackgroundTokens } from "@/assets/tokens/primary/backgrounds.tok
 import { primaryColorTokens } from "@/assets/tokens/primary/colors.tokens";
 import { fontTokens } from "@/assets/tokens/primary/font.tokens";
 import { StyleSheet, View, Text } from "react-native";
-import { useMemoryStorage } from "@/assets/scripts/storage/store";
+import { useMemoryStorage } from "@/assets/scripts/storage/useParametersStorage";
 import Button from "@/ui/Button";
 import SvgComponent from "@/ui/svg";
 import { router } from "expo-router";
 import { useEffect } from "react";
-import { useParametersProgressStorage } from "@/assets/scripts/storage/useParametersProgressStorage";
+import { useParametersDisplayStateStorage } from "@/assets/scripts/storage/useParametersProgressStorage";
 
 
 const MemoriesParameters = () => {
-    const setCurrentParameter = useParametersProgressStorage((state) => state.setCurrentParameter)
-    const setHasParameterBeenModified = useParametersProgressStorage((state) => state.setHasParameterBeenModified)
+    const setCurrentParameter = useParametersDisplayStateStorage((state) => state.setCurrentParameter)
+    const setHasParameterBeenModified = useParametersDisplayStateStorage((state) => state.setHasParameterBeenModified)
     
     const memories = useMemoryStorage((state) => state.memories)
     const shootMemory = useMemoryStorage((state) => state.removeMemory)

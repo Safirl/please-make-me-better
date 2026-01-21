@@ -6,14 +6,14 @@ import { Gesture, GestureDetector } from "react-native-gesture-handler";
 import Button from "@/ui/Button";
 import SvgComponent from "@/ui/svg";
 import { router } from "expo-router";
-import { useEmotionStorage } from "@/assets/scripts/storage/store";
-import { useParametersProgressStorage } from "@/assets/scripts/storage/useParametersProgressStorage";
+import { useEmotionStorage } from "@/assets/scripts/storage/useParametersStorage";
+import { useParametersDisplayStateStorage } from "@/assets/scripts/storage/useParametersProgressStorage";
 
 const OFFSET = 70
 
 const emotionsParameters = () => {
-    const setCurrentParameter = useParametersProgressStorage((state) => state.setCurrentParameter)
-    const setHasParameterBeenModified = useParametersProgressStorage((state) => state.setHasParameterBeenModified)
+    const setCurrentParameter = useParametersDisplayStateStorage((state) => state.setCurrentParameter)
+    const setHasParameterBeenModified = useParametersDisplayStateStorage((state) => state.setHasParameterBeenModified)
     const emotions = useEmotionStorage((state) => state.emotions)
     const setEmotionIntensity = useEmotionStorage((state) => state.setEmotionIntensity)
 

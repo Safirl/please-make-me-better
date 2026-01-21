@@ -1,7 +1,6 @@
 import { router } from "expo-router";
 import { useEffect } from "react";
 import { Dimensions, Pressable, View } from "react-native";
-import { useStorage } from "../assets/scripts/storage/store";
 import Button from "@/ui/Button";
 import Helpers from "./utils/Helpers";
 import Svg, { Circle } from "react-native-svg";
@@ -11,9 +10,6 @@ import { Href } from "expo-router";
 const dimensions = Dimensions.get("window")
 
 export default function Index() {
-  const currentParameter: string = useStorage((state: any) => state.currentParameter)
-  const setCurrentParameter = useStorage((state: any) => state.setCurrentParameter)
-
   useEffect(() => {
     if (!Helpers.isDevMode) return;
     let root = Helpers.instance.getGUIFolder();

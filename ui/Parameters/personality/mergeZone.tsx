@@ -1,5 +1,5 @@
 import fonts from "@/assets/styles/fonts";
-import { usePersonalityStorage } from "@/assets/scripts/storage/store";
+import { usePersonalityStorage } from "@/assets/scripts/storage/useParametersStorage";
 import { primaryColorTokens } from "@/assets/tokens/primary/colors.tokens";
 import { useEffect, useRef, useState } from "react";
 import { StyleSheet, View, Text, Dimensions, LayoutChangeEvent } from "react-native";

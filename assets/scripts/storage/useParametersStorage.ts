@@ -1,31 +1,5 @@
-import { characters, Emotion, Memory, Trait } from '@/assets/data/characters'
-import { Label } from '@react-navigation/elements'
-import { Vec3, Vector } from '@shopify/react-native-skia'
+import { characters, ComposedTrait, Emotion, Memory, Trait } from '@/assets/data/characters'
 import { create } from 'zustand'
-
-//@TODO We should split in multiple storage according to the complexity of the project
-export const useStorage = create((set) => ({
-  currentParameter: "",
-  isModalOpened: false,
-
-  resetCurrentParameter: () => set({ currentParameter: "", isModalOpened: false }),
-  setCurrentParameter: (newParameter: string) => set({ currentParameter: newParameter, isModalOpened: true }),
-}))
-
-export interface Word {
-  text: string,
-  isSelected?: boolean
-}
-
-export const useSoulStorage = create((set) => ({
-  fluidity: 0,
-  blur: 0,
-  grain: 0,
-
-  setFluidity: (newValue: number) => set({ fluidity: newValue }),
-  setGrain: (newValue: number) => set({ grain: newValue }),
-  setBlur: (newValue: number) => set({ blur: newValue }),
-}))
 
 interface MemoryState {
   memories: Memory[]
@@ -109,29 +83,4 @@ interface EmotionState {
 export const useEmotionStorage = create<EmotionState>((set) => ({
   emotions: characters[0].emotions,
   setEmotionIntensity: (id, intensity) => set((state) => ({emotions: state.emotions.map((e,i) => i === id ? {id: id, label: e.label, intensity: intensity} as Emotion : e)}))
-}))
-
-export const useGameStorage = create((set) => ({
-  previousStep: "none",
-  currentStep: "intro",
-  companySatisfaction: 0, //between 0 and 1
-  characterSanity: 1,
-  playerState: [],
-  characterStates: [],
-  currentDay: 0,
-}))
-
-export const useDayStorage = create((set) => ({
-  dailyOrder: [],
-  currentOrder: 0,
-  currentEmotions: [
-    {joy: 0},
-    {confidence: 0},
-    {fear: 1.},
-    {surprise: .2},
-    {sadness: .2},
-    {disgust: .2},
-    {anger: .2},
-    {vigilance: .2},
-  ],
 }))
