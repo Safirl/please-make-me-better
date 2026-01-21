@@ -9,7 +9,7 @@ import { StyleSheet } from "react-native";
 import { Href } from "expo-router";
 import { useParametersProgressStorage } from "@/assets/scripts/storage/useParametersProgressStorage";
 
-const dimensions = Dimensions.get("window")
+const DIMENSIONS = Dimensions.get("window")
 
 export default function configuratorPage() {
   const setCurrentParameter = useParametersProgressStorage((state) => state.setCurrentParameter)
@@ -58,14 +58,14 @@ export default function configuratorPage() {
 
       <Svg
         style={styles.circle}
-        width={490}
-        height={394}
+        width={500}
+        height={500}
         fill="none"
       >
         <Circle
-          cx={245}
-          cy={197}
-          r={(dimensions.width / 2) * .7}
+          cx={250}
+          cy={220}
+          r={250}
           stroke="#969696"
           strokeDasharray="11 11"
         />
