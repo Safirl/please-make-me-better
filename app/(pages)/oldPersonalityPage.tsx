@@ -1,6 +1,6 @@
-import { Trait } from "@/data/characters";
-import { usePersonalityStorage } from "@/storage/store";
-import { primaryColorTokens } from "@/tokens/primary/colors.tokens";
+import { Trait } from "@/assets/data/characters";
+import { usePersonalityStorage } from "@/assets/scripts/storage/store";
+import { primaryColorTokens } from "@/assets/tokens/primary/colors.tokens";
 import MergeZone from "@/ui/Parameters/personality/mergeZone";
 import PersonalityCard from "@/ui/Parameters/personality/PersonalityCard";
 import TraitButton from "@/ui/Parameters/personality/traitButton";
@@ -10,7 +10,7 @@ import Animated, { useAnimatedStyle, useSharedValue, withSpring, withTiming } fr
 import Svg, { Circle, Defs, LinearGradient, Stop } from "react-native-svg";
 
 const CIRCLE_RADIUS = 154;
-const TOTAL_ANGLE = (Math.PI * 3)/2
+const TOTAL_ANGLE = (Math.PI * 3) / 2
 const DIMENSIONS = Dimensions.get("window")
 
 
@@ -29,15 +29,15 @@ const personalityParameters = () => {
     const onContainerLayoutHandler = (e: LayoutChangeEvent) => {
         containerHeight.value = e.nativeEvent.layout.height
         containerWidth.value = e.nativeEvent.layout.width
-        moveContainer(DIMENSIONS.width/2, DIMENSIONS.height/2)
+        moveContainer(DIMENSIONS.width / 2, DIMENSIONS.height / 2)
     }
 
     useEffect(() => {
         if (composedTraits[0] != null && composedTraits[1] != null) {
-            moveContainer(DIMENSIONS.width/2 + 120, DIMENSIONS.height/2)
+            moveContainer(DIMENSIONS.width / 2 + 120, DIMENSIONS.height / 2)
         }
         else {
-            moveContainer(DIMENSIONS.width/2, DIMENSIONS.height/2)
+            moveContainer(DIMENSIONS.width / 2, DIMENSIONS.height / 2)
         }
     }, [composedTraits])
 
@@ -55,54 +55,54 @@ const personalityParameters = () => {
     });
 
     return (
-    <>
-    <Animated.View style={[styles.container, animatedStyle]} onLayout={onContainerLayoutHandler}>
-        <Svg
-            width={308}
-            height={308}
-            viewBox="0 0 308 308"
-            fill="none"
-            style={styles.circle}
-        >
-            <Circle cx={154} cy={154} r={153.5} stroke="url(#a)"/>
-            <Defs>
-            <LinearGradient
-                id="a"
-                x1={154}
-                x2={154}
-                y1={0}
-                y2={308}
-                gradientUnits="userSpaceOnUse"
-            >
-                <Stop stopColor="#BFBFBF" />
-                <Stop offset={1} stopColor="#999" stopOpacity={0} />
-            </LinearGradient>
-            </Defs>
-        </Svg>
-        {
-            <MergeZone />
-        }
-    </Animated.View>
-    {
-        // isContainerReady &&
-        traits.map((trait) => (
-            <TraitButton
-                key={trait.id}
-                id={trait.id}
-                iconName={trait.icon}
-                label={trait.label}
-                mergeZoneRadius={75}
-                alphaSpacing={alphaSpacing}
-                totalAngle={TOTAL_ANGLE}
-                circleRadius={CIRCLE_RADIUS}
-            />
-        ))
-    }
-    {
-        composedTraits[0] != null && composedTraits[1] != null && 
-        <PersonalityCard trait0={composedTraits[0]} trait1={composedTraits[1]}></PersonalityCard>
-    }
-    </>
+        <>
+            <Animated.View style={[styles.container, animatedStyle]} onLayout={onContainerLayoutHandler}>
+                <Svg
+                    width={308}
+                    height={308}
+                    viewBox="0 0 308 308"
+                    fill="none"
+                    style={styles.circle}
+                >
+                    <Circle cx={154} cy={154} r={153.5} stroke="url(#a)" />
+                    <Defs>
+                        <LinearGradient
+                            id="a"
+                            x1={154}
+                            x2={154}
+                            y1={0}
+                            y2={308}
+                            gradientUnits="userSpaceOnUse"
+                        >
+                            <Stop stopColor="#BFBFBF" />
+                            <Stop offset={1} stopColor="#999" stopOpacity={0} />
+                        </LinearGradient>
+                    </Defs>
+                </Svg>
+                {
+                    <MergeZone />
+                }
+            </Animated.View>
+            {
+                // isContainerReady &&
+                traits.map((trait) => (
+                    <TraitButton
+                        key={trait.id}
+                        id={trait.id}
+                        iconName={trait.icon}
+                        label={trait.label}
+                        mergeZoneRadius={75}
+                        alphaSpacing={alphaSpacing}
+                        totalAngle={TOTAL_ANGLE}
+                        circleRadius={CIRCLE_RADIUS}
+                    />
+                ))
+            }
+            {
+                composedTraits[0] != null && composedTraits[1] != null &&
+                <PersonalityCard trait0={composedTraits[0]} trait1={composedTraits[1]}></PersonalityCard>
+            }
+        </>
     )
 }
 

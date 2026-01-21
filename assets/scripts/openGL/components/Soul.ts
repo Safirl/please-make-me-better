@@ -1,10 +1,12 @@
 import Helpers from "@/app/utils/Helpers";
-import { useSoulStorage } from "@/storage/store";
+import { useEmotionStorage, useMemoryStorage, useSoulStorage } from "@/assets/scripts/storage/store";
 import Experience from "../Experience";
 import Component from "../classes/Component";
 import fragment from "./fragment";
 const HELPER_FOLDER = "Sphere"
 
+
+const lerp = (t: number, i: number, e: number) => t * (1 - e) + i * e
 
 export default class Soul extends Component {
 
@@ -12,8 +14,9 @@ export default class Soul extends Component {
         fluidityFactor: 10
     }
 
+
     private params = {
-        blendingFactor: useSoulStorage.getState().fluidity * this.paramsFactors.fluidityFactor, //8 is the factor. TODO Change later
+        blendingFactor: (useSoulStorage.getState() as any).fluidity * this.paramsFactors.fluidityFactor, //8 is the factor. TODO Change later
         factor: 0.25,
         speed: 0.25,
 
@@ -30,7 +33,7 @@ export default class Soul extends Component {
         /**
          * Sphere shape
          */
-        radius: 1,
+        radius: 2,
         form: 1,
         noiseFactor: 2.02,
         noiseScale: 0.5,
@@ -43,6 +46,11 @@ export default class Soul extends Component {
     private uFactorLoc: WebGLUniformLocation | null = null
     private uNoise: WebGLUniformLocation | null = null
     private uSpeed: WebGLUniformLocation | null = null
+
+    private targetNoiseFactor = this.params.noiseFactor
+    private targetFilaments = this.params.filaments
+    private targetRadius = this.params.radius
+
 
     /**
      * Sphere color
@@ -171,15 +179,33 @@ export default class Soul extends Component {
         )
 
 
-
-
+        const emotionState = useEmotionStorage.getState()
+        this.params.redIntenisty = emotionState.emotions[0].intensity
+        this.params.blueIntenisty = emotionState.emotions[1].intensity
+        this.params.greenIntenisty = emotionState.emotions[2].intensity
+        this.params.yellowIntenisty = emotionState.emotions[3].intensity
 
         this.onSoulStorageChanged();
     }
 
     onSoulStorageChanged = () => {
-        useSoulStorage.subscribe((state) => {
+        useSoulStorage.subscribe((state: any) => {
             this.params.blendingFactor = state.fluidity * this.paramsFactors.fluidityFactor;
+
+        })
+        useEmotionStorage.subscribe(state => {
+
+            this.params.redIntenisty = state.emotions[0].intensity
+            this.params.blueIntenisty = state.emotions[1].intensity
+            this.params.greenIntenisty = state.emotions[2].intensity
+            this.params.yellowIntenisty = state.emotions[3].intensity
+
+        })
+
+        useMemoryStorage.subscribe(state => {
+            this.targetNoiseFactor = state.memories.length / 3 * 2.02
+            this.targetFilaments = Math.max(state.memories.length / 3 * 1, 0.15)
+            this.targetRadius = [1.5, 2, 2, 2][state.memories.length]
         })
     }
 
@@ -312,6 +338,11 @@ export default class Soul extends Component {
     }
 
     update() {
+
+        this.params.filaments = lerp(this.targetFilaments, this.params.filaments, .95)
+        this.params.noiseFactor = lerp(this.targetNoiseFactor, this.params.noiseFactor, .95)
+        this.params.radius = lerp(this.targetRadius, this.params.radius, .95)
+
 
         /**
          * Update Uniforms

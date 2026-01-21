@@ -4,7 +4,7 @@ import { createStyle } from "./style";
 import Button from "@/ui/Button";
 import { Image } from 'expo-image';
 import { Svg, Path } from "react-native-svg";
-import { primaryTokens } from "@/tokens/primary/primary.token";
+import { primaryTokens } from "@/assets/tokens/primary/primary.token";
 import SvgComponent from "@/ui/svg";
 
 interface CustomFolderProps extends ViewProps {
@@ -47,7 +47,10 @@ const FolderHero: React.FC<CustomFolderProps> = (props) => {
             {...rest}
             style={Style.main}
         >
-            <View style={[Style.line]}>
+            <View style={[Style.line, {
+                height: 48,
+                maxHeight: 48
+            }]}>
                 <View style={[Style.headingTextSection]}>
                     <Text style={[Style.title]}>Reconfigurer Mia</Text>
                     <Text style={[Style.paragraph, Style.secondaryText]}>Votre mission consiste à déplacer :</Text>

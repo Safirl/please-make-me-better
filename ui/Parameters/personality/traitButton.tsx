@@ -1,5 +1,5 @@
-import { usePersonalityStorage } from "@/storage/store";
-import { primaryColorTokens } from "@/tokens/primary/colors.tokens";
+import { usePersonalityStorage } from "@/assets/scripts/storage/store";
+import { primaryColorTokens } from "@/assets/tokens/primary/colors.tokens";
 import { useGestureDrag } from "@/assets/scripts/hooks/baseGestureHandler";
 import SvgComponent, { iconType } from "@/ui/svg";
 import { useEffect, useState } from "react";

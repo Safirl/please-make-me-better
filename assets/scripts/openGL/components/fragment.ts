@@ -158,13 +158,12 @@ float fbm(vec3 p) {
 
 
   vec3 q = p + uTime * 0.5 * vec3(1.0, -0.2, -1.0) * uSpeed; // Speed
-  float g = noise(q);
 
   float f = 0.0;
   float scale = uNoiseScale;//0.5; // How splitted it is
   float factor = uNoiseFactor;//2.02; // How noisy it is
 
-  for (int i = 0; i < 6; i++) {
+  for (int i = 0; i < 3; i++) {
       f += scale * noise(q);
       q *= factor;
       factor += 0.21;
@@ -283,7 +282,7 @@ void main() {
   vec3 sunDirection = normalize(SUN_POSITION);
   float sun = clamp(dot(sunDirection, rd), 0.0, 1.0 );
   // Base sky color
-  color = vec3(0.,0.,0.);
+  color = vec3(0.114,0.118,0.134);
   // // Add vertical gradient
   // color -= 0.8 * vec3(0.90,0.75,0.90) * rd.y;
   // // Add sun color to sky

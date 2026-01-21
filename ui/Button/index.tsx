@@ -1,5 +1,5 @@
 import Font from "@/assets/styles/fonts";
-import { primaryColorTokens } from "@/tokens/primary/colors.tokens";
+import { primaryColorTokens } from "@/assets/tokens/primary/colors.tokens";
 import { LinearGradient } from "expo-linear-gradient";
 import React, { useState } from "react";
 import {

@@ -2,17 +2,10 @@ import { useEffect, useRef, useState } from "react";
 import { Text, TextInput, StyleSheet, View } from "react-native";
 import Button from "@/ui/Button";
 import Fonts from "@/assets/styles/fonts";
-import { primaryTokens } from "@/tokens/primary/primary.token";
-import { useProgressStorage, ProgressStateType } from "@/storage/useGameProgressStorage";
-import { usePlayerNameStorage } from "@/storage/usePlayerNameStorage";
-import Svg, {
-    Defs,
-    Path,
-    Mask,
-    Rect,
-    LinearGradient,
-    Stop,
-} from "react-native-svg";
+import { primaryTokens } from "@/assets/tokens/primary/primary.token";
+import { useProgressStorage, ProgressStateType } from "@/assets/scripts/storage/useGameProgressStorage";
+import { usePlayerNameStorage } from "@/assets/scripts/storage/usePlayerNameStorage";
+import Svg, { Defs, Path, Mask, Rect, LinearGradient, Stop } from "react-native-svg";
 import { router } from "expo-router";
 import Animated, { withSequence, useSharedValue, withSpring, useAnimatedStyle, withTiming } from "react-native-reanimated";
 

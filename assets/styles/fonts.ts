@@ -1,4 +1,4 @@
-import { fontTokens } from "@/tokens/primary/font.tokens";
+import { fontTokens } from "@/assets/tokens/primary/font.tokens";
 
 const createFont = (style: "paragraph" | "subTitle" | "body-bold" | "h1" | "h2" | "subTitleLight") => {
     return {

@@ -1,7 +1,7 @@
 import { StyleSheet } from "react-native";
 
 import Fonts from "@/assets/styles/fonts";
-import { primaryTokens } from "@/tokens/primary/primary.token";
+import { primaryTokens } from "@/assets/tokens/primary/primary.token";
 
 
 
@@ -47,6 +47,11 @@ export const createStyle = () => StyleSheet.create({
     },
     accentParagraph: {
         color: primaryTokens["color-secondary-high"],
+        paddingVertical: 4,
+
+    },
+    accentParagraph2: {
+        color: primaryTokens["color-primary-high"],
         paddingVertical: 4,
 
     },

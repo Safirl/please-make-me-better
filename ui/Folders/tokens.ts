@@ -1,4 +1,4 @@
-import { primaryColorTokens } from "@/tokens/primary/colors.tokens";
+import { primaryColorTokens } from "@/assets/tokens/primary/colors.tokens";
 
 export const COMPONENT_NAME = "folder";
 

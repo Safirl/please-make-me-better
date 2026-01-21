@@ -1,11 +1,11 @@
 import fonts from "@/assets/styles/fonts";
 import GunCursor from "@/ui/Parameters/memories/gunCursor";
 import Target from "@/ui/Parameters/memories/target";
-import { primaryBackgroundTokens } from "@/tokens/primary/backgrounds.tokens";
-import { primaryColorTokens } from "@/tokens/primary/colors.tokens";
-import { fontTokens } from "@/tokens/primary/font.tokens";
+import { primaryBackgroundTokens } from "@/assets/tokens/primary/backgrounds.tokens";
+import { primaryColorTokens } from "@/assets/tokens/primary/colors.tokens";
+import { fontTokens } from "@/assets/tokens/primary/font.tokens";
 import { StyleSheet, View, Text } from "react-native";
-import { useMemoryStorage } from "@/storage/store";
+import { useMemoryStorage } from "@/assets/scripts/storage/store";
 import Button from "@/ui/Button";
 import SvgComponent from "@/ui/svg";
 import { router } from "expo-router";

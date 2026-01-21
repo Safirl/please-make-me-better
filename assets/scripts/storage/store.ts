@@ -1,4 +1,4 @@
-import { characters, ComposedTrait, Emotion, Memory, Trait } from '@/data/characters'
+import { characters, Emotion, Memory, Trait } from '@/assets/data/characters'
 import { Label } from '@react-navigation/elements'
 import { Vec3, Vector } from '@shopify/react-native-skia'
 import { create } from 'zustand'

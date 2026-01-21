@@ -1,7 +1,7 @@
 import { StyleSheet } from "react-native";
 
 import Fonts from "@/assets/styles/fonts";
-import { primaryTokens } from "@/tokens/primary/primary.token";
+import { primaryTokens } from "@/assets/tokens/primary/primary.token";
 
 
 
@@ -20,7 +20,8 @@ export const createStyle = () => StyleSheet.create({
     },
 
     headingTextSection: {
-        gap: 4
+        gap: 4,
+        height: 48
     },
     title: {
         ...Fonts["h2"],

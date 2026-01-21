@@ -3,10 +3,10 @@ import { StyleSheet, View, Text } from "react-native"
 import Font from "@/assets/styles/fonts";
 import React from "react";
 import { Gesture, GestureDetector } from "react-native-gesture-handler";
-import { useEmotionStorage } from "@/storage/store";
 import Button from "@/ui/Button";
 import SvgComponent from "@/ui/svg";
 import { router } from "expo-router";
+import { useEmotionStorage } from "@/assets/scripts/storage/store";
 
 const OFFSET = 70
 

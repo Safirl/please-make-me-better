@@ -1,4 +1,4 @@
-import { useProgressStorage, ProgressStateType } from "@/storage/useGameProgressStorage";
+import { useProgressStorage, ProgressStateType } from "@/assets/scripts/storage/useGameProgressStorage";
 import { useRef } from "react";
 
 export const useStoryProgress = (gameProgress: ProgressStateType) => {

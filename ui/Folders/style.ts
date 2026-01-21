@@ -1,6 +1,6 @@
 import Fonts from "@/assets/styles/fonts";
 import { StyleSheet } from "react-native";
-// import { primaryFontTokens } from "@/tokens/primary/font.tokens";
+// import { primaryFontTokens } from "@/assets/tokens/primary/font.tokens";
 import {
     COMPONENT_NAME,
     clientRequestTabTokens,
@@ -47,8 +47,9 @@ export const createStyle = (selectColor: "primary" | "secondary" | "tertiary" = 
     },
     folderSection: {
         backgroundColor: clientRequestTabTokens[`${COMPONENT_NAME}-folderSection-background-color`],
-    
-        gap: 16,
+
+        height: 243,
+        gap: 12,
 
         paddingTop: 16,
         paddingBottom: 16,

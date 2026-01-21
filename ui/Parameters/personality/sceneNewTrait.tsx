@@ -1,21 +1,22 @@
 import fonts from "@/assets/styles/fonts"
-import { ComposedTrait, Trait } from "@/data/characters"
-import { usePersonalityStorage } from "@/storage/store"
-import { primaryBackgroundTokens } from "@/tokens/primary/backgrounds.tokens"
-import { primaryColorTokens } from "@/tokens/primary/colors.tokens"
+import { ComposedTrait, Trait } from "@/assets/data/characters"
+import { usePersonalityStorage } from "@/assets/scripts/storage/store"
+import { primaryBackgroundTokens } from "@/assets/tokens/primary/backgrounds.tokens"
+import { primaryColorTokens } from "@/assets/tokens/primary/colors.tokens"
 import SvgComponent from "@/ui/svg"
 import { Blur, center } from "@shopify/react-native-skia"
 import { useEffect, useState } from "react"
 import { StyleSheet, Text, View } from "react-native"
-import Animated, { Easing, useAnimatedReaction, useAnimatedStyle, useSharedValue, withDelay, withSequence, withSpring, withTiming } from "react-native-reanimated"
 
+import Animated, { Easing, useAnimatedReaction, useAnimatedStyle, useSharedValue, withDelay, withSequence, withSpring, withTiming } from "react-native-reanimated"
+import { scheduleOnRN } from "react-native-worklets"
 interface NewTraitProps {
     traitId: number
     animate: boolean
 }
 
 const SceneNewTrait = (props: NewTraitProps) => {
-    const {traitId, animate} = props
+    const { traitId, animate } = props
     const composedTraits = usePersonalityStorage((state) => state.composedTraits)
     const [currentTrait, setCurrentTrait] = useState<ComposedTrait>()
     const opacity = useSharedValue(0)
@@ -25,26 +26,42 @@ const SceneNewTrait = (props: NewTraitProps) => {
     const createComposedTrait = usePersonalityStorage((state) => state.createComposedTrait)
     const createdComposedTraits = usePersonalityStorage((state) => state.createdComposedTraits)
 
-
     useEffect(() => {
         setCurrentTrait(composedTraits.find(t => t.id === traitId))
     }, [traitId])
 
+    // useAnimatedReaction(null, () => {
+    /**
+     * Essayer ici
+     */
+    // })
     useEffect(() => {
         if (!currentTrait) return;
-        opacity.value = withTiming(1, {duration: 1000, easing: Easing.inOut(Easing.exp)})
-        backgroundTranslate.value = withSequence(withTiming(200, {duration: 2000, easing: Easing.inOut(Easing.ease)}, () => scaleUpTrait()), withDelay(500, withTiming(600, {duration: 2000,  easing: Easing.inOut(Easing.ease)}, () => completeAnimation())))
+        console.log("animate")
+        opacity.value = withTiming(1, { duration: 1000, easing: Easing.inOut(Easing.exp) },
+            () => {
+                scheduleOnRN(() => opacity.value = withDelay(2000, withTiming(0, { duration: 1000, easing: Easing.inOut(Easing.exp) })))
+            })
+
+        // backgroundTranslate.value = withSequence(
+        //     withTiming(200, { duration: 2000, easing: Easing.inOut(Easing.ease) }),
+        //     withTiming(200, { duration: 500, easing: Easing.inOut(Easing.ease) }),
+        //     withTiming(600, { duration: 2000, easing: Easing.inOut(Easing.ease) })
+        // )
+
+        traitScale.value = withTiming(1.1, { duration: 2500, easing: Easing.inOut(Easing.ease) })
+
     }, [animate])
 
     const scaleUpTrait = () => {
-        traitScale.value = withDelay(300, withTiming(1.1, {duration: 2500, easing: Easing.inOut(Easing.ease)}))
+        traitScale.value = withDelay(300, withTiming(1.1, { duration: 2500, easing: Easing.inOut(Easing.ease) }))
     }
 
     const completeAnimation = () => {
         if (!currentTrait) return;
 
-        opacity.value = withTiming(0, {duration: 1000, easing: Easing.inOut(Easing.exp)}, () => {
-            setTimeout(() =>{resetTraits(); createComposedTrait(currentTrait);}, 200)
+        opacity.value = withTiming(0, { duration: 1000, easing: Easing.inOut(Easing.exp) }, () => {
+            setTimeout(() => { resetTraits(); createComposedTrait(currentTrait); }, 200)
         })
     }
 
@@ -53,14 +70,17 @@ const SceneNewTrait = (props: NewTraitProps) => {
     }))
 
     const animatedTraitStyle = useAnimatedStyle(() => ({
-        transform: [{scale: traitScale.value}]
+        transform: [{ scale: traitScale.value }]
     }))
 
     const animatedBackgroundtyle = useAnimatedStyle(() => ({
-        transform: [{translateY: backgroundTranslate.value}]
+        transform: [{ translateY: backgroundTranslate.value }]
     }))
 
-    if (!currentTrait) return (<></>)
+
+
+    console.log("rerender")
+
 
     return (
         <Animated.View style={[styles.container, animatedContainerStyle]}>
@@ -68,13 +88,13 @@ const SceneNewTrait = (props: NewTraitProps) => {
                 {currentTrait?.label}
             </Text>
             <Animated.View style={[styles.trait, animatedTraitStyle]}>
-                <SvgComponent style={{transform: [{scale: 4}]}} name={currentTrait.icon}></SvgComponent>
+                <SvgComponent style={{ transform: [{ scale: 4 }] }} name={currentTrait ? currentTrait.icon : "curieux"}></SvgComponent>
             </Animated.View>
             <Animated.View style={[styles.background, animatedBackgroundtyle]}>
                 <View style={styles.backgroundCenter}>
                 </View>
             </Animated.View>
-        </Animated.View>
+        </Animated.View >
     )
 }
 
@@ -96,7 +116,7 @@ const styles = StyleSheet.create({
         backgroundColor: primaryColorTokens["color-primary-low"],
         borderRadius: 600,
         filter: "blur(50px)",
-        transform: [{translateY: 300}],
+        transform: [{ translateY: 300 }],
         display: "flex",
         justifyContent: "center",
         alignItems: "center"

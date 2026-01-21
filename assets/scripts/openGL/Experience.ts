@@ -35,7 +35,9 @@ export default class Experience {
 
         this.onReady = this.onReady.bind(this)
         this.sizes.on("resize", () => this.resize());
-        this.time.on("tick", () => this.update());
+        this.update = this.update.bind(this)
+        this.time.setCb(this.update)
+        // this.time.on("tick", () => this.update());
         this.ressources.on("ready", this.onReady)
     }
 
