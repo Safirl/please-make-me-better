@@ -4,6 +4,9 @@ import EventEmitter from "./EventEmitter";
 import loadRessources from './sources';
 import { Platform } from "react-native"
 import { Asset } from "expo-asset"
+import * as FileSystem from 'expo-file-system/legacy'
+
+
 interface Loaders {
     textureLoader: THREE.TextureLoader
 }
@@ -23,7 +26,7 @@ function loadImage(src: string): Promise<HTMLImageElement> {
             img.src = src
         })
     }
-     
+
     return new Promise(async (resolve, reject) => {
         try {
             const asset = Asset.fromURI(src)
@@ -34,6 +37,39 @@ function loadImage(src: string): Promise<HTMLImageElement> {
         }
     })
 
+}
+function load3DTexture(src: string): Promise<Uint8Array<ArrayBuffer>> {
+
+    return new Promise(async (resolve, reject) => {
+        try {
+
+
+            if (Platform.OS === "web") {
+
+                const res = await fetch("/textures/noise3d_128.raw")
+                const buffer = await res.arrayBuffer()
+                resolve(new Uint8Array(buffer))
+
+            } else {
+
+                const asset = Asset.fromModule('@/assets/textures/noise3d_128.raw')
+                await asset.downloadAsync()
+
+                const buffer = await FileSystem.readAsStringAsync(
+                    `${asset.localUri}`,
+                    { encoding: "base64" }
+                )
+
+                const bytes = Uint8Array.from(atob(buffer), c => c.charCodeAt(0))
+
+                resolve(bytes)
+            }
+        } catch (err) {
+            reject(err)
+        }
+
+
+    })
 }
 
 
@@ -85,6 +121,10 @@ export default class Ressources extends EventEmitter {
                 const img = await loadImage(source.path[0])
                 this.sourceLoaded(source, img)
             }
+            if (source.type === "3Dtexture") {
+                const tex = await load3DTexture(source.path[0])
+                this.sourceLoaded(source, tex)
+            }
         })
 
         await Promise.all(promises)
@@ -94,7 +134,7 @@ export default class Ressources extends EventEmitter {
 
         return hasBeenLoaded
     }
-    sourceLoaded(source: Source, file: HTMLImageElement) {
+    sourceLoaded(source: Source, file: HTMLImageElement | Uint8Array<ArrayBuffer>) {
         this.items[source.name] = file
         this.loaded++
         if (this.loaded === this.toLoad) {

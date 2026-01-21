@@ -21,6 +21,8 @@ float smoothmin(float a, float b, float k) {
  */
 const scene = /* glsl */`
 float scene(vec3 p) {
+
+  
   float displacement = sin(5.0 * p.x) * sin(5.0 * p.y) * sin(5.0 * p.z) * (uFactor + sin(uTime))+ sin(uTime) ;
     float sphere1 = sdSphere(p - vec3(1.0 + cos(uTime), 0.7, 0.0), 1.0) + displacement;
     float sphere2 = sdSphere(p + vec3(1.0, 0.5 + sin(uTime)/2.0, 0.0), 1.0);
@@ -114,6 +116,7 @@ precision mediump float;
 uniform float uTime;
 uniform vec2 uResolution;
 uniform sampler2D uNoise;
+uniform sampler2D uNoise3DTexture;
 uniform float uSpeed;
 
 // SPHERE SHAPE
@@ -132,11 +135,71 @@ uniform float uGlobalLightIntensity;
 
 
 #define MAX_STEPS 90
+#define ATLAS_SIZE 128.0
+
+
+// float sample3DTexture(vec3 uvw, float size) {
+//     // uvw : 0..1
+//     float slice = floor(uvw.z * size);
+
+//     // atlas UV
+//     float atlasX = uvw.x;
+//     float atlasY = (uvw.y + slice) / size; // atlas height = size * size
+
+//     vec2 atlasUV = vec2(atlasX, atlasY);
+
+//     // WebGL1 : texture2D pas texture()
+//     return texture2D(uNoise3DTexture, atlasUV).r;
+// }
+
+
+
+
+// float fbmt3D2(vec3 p) {
+//     float f = 0.0;
+//     float amp = 0.5;
+//     float freq = 1.0;
+
+//     for(int i = 0; i < 5; i++) {
+//         // vec3 uvw = p * freq;
+//         // uvw = uvw * 0.5 + 0.5;   
+//         // uvw.z += uTime * 0.05;
+
+//         vec3 uvw = p * 0.15;   
+// uvw += vec3(0.5); 
+// uvw.z += uTime * 0.05 + 50.;
+
+//         f += amp * sample3DTexture(uvw, 128.0);
+//         freq *= 2.0;
+//         amp *= 0.5;
+//     }
+//     return f;
+// }
+
+
+// float fbmt3D(vec3 p) {
+//     float f = 0.0;
+//     float amp = 0.5;
+//     float freq = 1.0;
+
+//     for(int i = 0; i < 5; i++) {
+//         vec3 uvw = p * freq;
+//         uvw = uvw * 0.5 + 0.5;   
+//         uvw.z += uTime * 0.05;
+
+//         f += amp * sample3DTexture(uvw, 128.0);
+//         freq *= 2.0;
+//         amp *= 0.5;
+//     }
+//     return f;
+// }
 
 float sdSphere(vec3 p, float radius) {
   return length(p) - radius;
 }
-
+/*
+ * TEXTURE 2D NOISE
+*/
 float noise( in vec3 x ) {
   vec3 p = floor(x);
   vec3 f = fract(x);
@@ -147,7 +210,7 @@ float noise( in vec3 x ) {
 
   return mix(tex.x, tex.y, f.z) * 2.0 - 1.0;
 }
-
+/** */
 float fbm(vec3 p) {
 
   p += vec3(
@@ -172,7 +235,95 @@ float fbm(vec3 p) {
 
   return f * uForm; // Ability to multiply by a factor to have a smaller sphere (<0)
 }
+/* END */
 
+// float cheapNoise(vec3 p) {
+//     return fract(sin(dot(p ,vec3(127.1,311.7, 74.7))) * 43758.5453) * 2.0 - 1.0;
+// }
+
+// float cheapFBM(vec3 p) {
+//     float f = 0.0;
+//     float amp = uNoiseScale;
+//     float freq = uNoiseFactor;
+
+//     for(int i=0;i<4;i++) { // on peut réduire à 4 octaves pour encore plus de perf
+//         f += amp * cheapNoise(p * freq);
+//         freq *= 2.0;
+//         amp *= 0.5;
+//     }
+//     return f;
+// }
+
+// float fbm(vec3 p) {
+//     float f = 0.0;
+//     float amp = 0.5;
+//     float freq = 1.0;
+
+//     for(int i = 0; i < 5; i++) {
+//         vec3 uvw = p * freq / ATLAS_SIZE;
+//         uvw.z += uTime * 0.05; // scroll du bruit en Z
+//         f += amp * sample3DTexture(uvw, 128.0);
+//         freq *= 2.0;
+//         amp *= 0.5;
+//     }
+//     return f;
+// }
+
+
+/* 
+ * VOLUMETRIC COMPUTE NOISE 
+ 
+float hash(vec3 p)
+{
+    p = fract(p * 0.3183099 + vec3(0.1, 0.2, 0.3));
+    p *= 17.0;
+    return fract(p.x * p.y * p.z * (p.x + p.y + p.z));
+}
+
+float noise(vec3 p)
+{
+    vec3 i = floor(p);
+    vec3 f = fract(p);
+
+    // Smooth interpolation
+    f = f * f * (3.0 - 2.0 * f);
+
+    float n000 = hash(i + vec3(0,0,0));
+    float n100 = hash(i + vec3(1,0,0));
+    float n010 = hash(i + vec3(0,1,0));
+    float n110 = hash(i + vec3(1,1,0));
+    float n001 = hash(i + vec3(0,0,1));
+    float n101 = hash(i + vec3(1,0,1));
+    float n011 = hash(i + vec3(0,1,1));
+    float n111 = hash(i + vec3(1,1,1));
+
+    float nx00 = mix(n000, n100, f.x);
+    float nx10 = mix(n010, n110, f.x);
+    float nx01 = mix(n001, n101, f.x);
+    float nx11 = mix(n011, n111, f.x);
+
+    float nxy0 = mix(nx00, nx10, f.y);
+    float nxy1 = mix(nx01, nx11, f.y);
+
+    return mix(nxy0, nxy1, f.z) * 2.0 - 1.0;
+}
+
+float fbm(vec3 p)
+{
+    float f = 0.0;
+    float amp = 0.5;
+    float freq = 1.0;
+
+    for(int i = 0; i < 5; i++)
+    {
+        f += amp * noise(p * freq);
+        freq *= 2.0;
+        amp *= 0.5;
+    }
+
+    return f;
+}
+*/
 float scene(vec3 p) {
   float displacement = noise(p) * .65 * sin(uTime * uSpeed) * cos(uTime * uSpeed);
   float distance = sdSphere(p + vec3(0, 0, 2), uRadius) + displacement;
@@ -187,6 +338,7 @@ const float MARCH_SIZE = 0.08;
 
 
 
+
 vec4 raymarch(vec3 rayOrigin, vec3 rayDirection) {
   float depth = 0.0;
   vec3 p = rayOrigin + depth * rayDirection;
@@ -195,6 +347,17 @@ vec4 raymarch(vec3 rayOrigin, vec3 rayDirection) {
   vec4 res = vec4(0.0);
 
   for (int i = 0; i < MAX_STEPS; i++) {
+    // float angle = uTime * 0.5; // rotation speed
+
+// mat2 rotY = mat2(cos(angle), -sin(angle),
+//                  sin(angle),  cos(angle));
+
+// // Rotate sphere around Y-axis
+// vec3 p_rotated = vec3(rotY * p.xz, p.y - 2.);
+
+// Use p_rotated in scene() instead of p
+
+
     float density = scene(p);
     if (res.a > 0.98) break;
 
@@ -266,6 +429,7 @@ vec4 raymarch(vec3 rayOrigin, vec3 rayDirection) {
   return res;
 }
 
+
 void main() {
   vec2 uv = gl_FragCoord.xy/uResolution.xy;
   uv -= 0.5;
@@ -278,6 +442,9 @@ void main() {
   
   vec3 color = vec3(0.0);
 
+      // vec3 test = vec3(0.5, 0.5, 0.5); 
+    // float noiseValue = sample3DTexture(test, 128.0);
+    
   // Sun and Sky
   vec3 sunDirection = normalize(SUN_POSITION);
   float sun = clamp(dot(sunDirection, rd), 0.0, 1.0 );

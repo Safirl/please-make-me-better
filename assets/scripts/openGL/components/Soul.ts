@@ -69,6 +69,7 @@ export default class Soul extends Component {
     private uNoiseFactor: WebGLUniformLocation | null = null
     private uNoiseScale: WebGLUniformLocation | null = null
     private uFilament: WebGLUniformLocation | null = null
+    private uNoise3DTexture: WebGLUniformLocation | null = null
 
 
     private texture: WebGLTexture | undefined
@@ -78,106 +79,106 @@ export default class Soul extends Component {
 
         this.createSphere()
 
-/*
-         Helpers.instance.tweak(
-             "speed",
-             this.params,
-             (e: number) => { },
-             0,
-             10,
-             0.1,
-             HELPER_FOLDER
-         )
-         Helpers.instance.tweak(
-             "blendingFactor",
-             this.params,
-             (e: number) => { },
-             0,
-             10,
-             0.1,
-             HELPER_FOLDER
-         )
-        Helpers.instance.tweak(
-            "factor",
-            this.params,
-            (e: number) => { },
-            0,
-            10,
-            0.01,
-            HELPER_FOLDER
-        );
-
-        /**
-         * Sphere color
-
-        [
-            "redIntenisty",
-            "greenIntenisty",
-            "blueIntenisty",
-            "yellowIntenisty",
-            "globalLightIntensity",
-        ].map((color) => {
-            Helpers.instance.tweak(
-                color,
-                this.params,
-                (e: number) => { },
-                0,
-                1,
-                0.01,
-                "SPHERE COLOR"
-            )
-        })
-
-        /**
-         * Sphere shape
-         
-        Helpers.instance.tweak(
-            "radius",
-            this.params,
-            (e: number) => { },
-            0,
-            2,
-            0.1,
-            "SPHERE SHAPE"
-        )
-        Helpers.instance.tweak(
-            "form",
-            this.params,
-            (e: number) => { },
-            0,
-            5,
-            0.01,
-            "SPHERE SHAPE"
-        )
-        Helpers.instance.tweak(
-            "noiseFactor",
-            this.params,
-            (e: number) => { },
-            0,
-            50,
-            0.01,
-            "SPHERE SHAPE"
-        )
-        Helpers.instance.tweak(
-            "noiseScale",
-            this.params,
-            (e: number) => { },
-            0,
-            1000,
-            0.01,
-            "SPHERE SHAPE"
-        )
-
-         Helpers.instance.tweak(
-             "filaments",
-             this.params,
-             (e: number) => { },
-             0,
-             1,
-             0.01,
-             "SPHERE SHAPE"
-         )
-*/
+        /*
+                 Helpers.instance.tweak(
+                     "speed",
+                     this.params,
+                     (e: number) => { },
+                     0,
+                     10,
+                     0.1,
+                     HELPER_FOLDER
+                 )
+                 Helpers.instance.tweak(
+                     "blendingFactor",
+                     this.params,
+                     (e: number) => { },
+                     0,
+                     10,
+                     0.1,
+                     HELPER_FOLDER
+                 )
+                Helpers.instance.tweak(
+                    "factor",
+                    this.params,
+                    (e: number) => { },
+                    0,
+                    10,
+                    0.01,
+                    HELPER_FOLDER
+                );
+        
+                /**
+                 * Sphere color
+        
+                [
+                    "redIntenisty",
+                    "greenIntenisty",
+                    "blueIntenisty",
+                    "yellowIntenisty",
+                    "globalLightIntensity",
+                ].map((color) => {
+                    Helpers.instance.tweak(
+                        color,
+                        this.params,
+                        (e: number) => { },
+                        0,
+                        1,
+                        0.01,
+                        "SPHERE COLOR"
+                    )
+                })
+        
+                /**
+                 * Sphere shape
+                 
+                Helpers.instance.tweak(
+                    "radius",
+                    this.params,
+                    (e: number) => { },
+                    0,
+                    2,
+                    0.1,
+                    "SPHERE SHAPE"
+                )
+                Helpers.instance.tweak(
+                    "form",
+                    this.params,
+                    (e: number) => { },
+                    0,
+                    5,
+                    0.01,
+                    "SPHERE SHAPE"
+                )
+                Helpers.instance.tweak(
+                    "noiseFactor",
+                    this.params,
+                    (e: number) => { },
+                    0,
+                    50,
+                    0.01,
+                    "SPHERE SHAPE"
+                )
+                Helpers.instance.tweak(
+                    "noiseScale",
+                    this.params,
+                    (e: number) => { },
+                    0,
+                    1000,
+                    0.01,
+                    "SPHERE SHAPE"
+                )
+        
+                 Helpers.instance.tweak(
+                     "filaments",
+                     this.params,
+                     (e: number) => { },
+                     0,
+                     1,
+                     0.01,
+                     "SPHERE SHAPE"
+                 )
+        */
 
         const emotionState = useEmotionStorage.getState()
         this.params.redIntenisty = emotionState.emotions[0].intensity
@@ -312,6 +313,7 @@ export default class Soul extends Component {
         this.uBlendingFactor = this.gl.getUniformLocation(program, "uBlendingFactor");
         this.uFactorLoc = this.gl.getUniformLocation(program, "uFactor");
         this.uNoise = this.gl.getUniformLocation(program, "uNoise");
+        this.uNoise3DTexture = this.gl.getUniformLocation(program, "uNoise3DTexture");
         this.uSpeed = this.gl.getUniformLocation(program, "uSpeed");
 
         /**
@@ -331,6 +333,84 @@ export default class Soul extends Component {
         this.uNoiseFactor = this.gl.getUniformLocation(program, "uNoiseFactor")
         this.uNoiseScale = this.gl.getUniformLocation(program, "uNoiseScale")
         this.uFilament = this.gl.getUniformLocation(program, "uFilament")
+
+
+
+        // console.log(this.experience.ressources.items["3DTextureNsoise"].length)
+        /**
+         * 3D Texture
+        */
+
+
+        const SIZE = 128;
+        const data3D = this.experience.ressources.items["3DTextureNsoise"]; // 128*128*128
+
+        // Atlas 2D : width = SIZE, height = SIZE*SIZE
+        const atlasWidth = SIZE;
+        const atlasHeight = SIZE * SIZE;
+
+        const atlas = new Uint8Array(atlasWidth * atlasHeight);
+
+        for (let z = 0; z < SIZE; z++) {
+            for (let y = 0; y < SIZE; y++) {
+                for (let x = 0; x < SIZE; x++) {
+                    const value = data3D[x + y * SIZE + z * SIZE * SIZE];
+                    const atlasX = x;
+                    const atlasY = y + z * SIZE;
+                    atlas[atlasX + atlasY * atlasWidth] = value;
+                }
+            }
+        }
+
+
+
+        const gl = this.gl;
+        const texture = gl.createTexture();
+        gl.bindTexture(gl.TEXTURE_2D, texture);
+
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+
+        gl.pixelStorei(gl.UNPACK_ALIGNMENT, 1);
+
+        gl.texImage2D(
+            gl.TEXTURE_2D,
+            0,
+            gl.LUMINANCE,      // R8 approximation WebGL1
+            atlasWidth,
+            atlasHeight,
+            0,
+            gl.LUMINANCE,
+            gl.UNSIGNED_BYTE,
+            atlas
+        );
+        
+        this.gl.uniform1i(this.uNoise3DTexture, 0);
+
+
+        // this.texture = this.gl.createTexture()
+        // this.gl.bindTexture(this.gl.TEXTURE_3D, this.texture)
+
+        // this.gl.texParameteri(this.gl.TEXTURE_3D, this.gl.TEXTURE_MIN_FILTER, this.gl.LINEAR)
+        // this.gl.texParameteri(this.gl.TEXTURE_3D, this.gl.TEXTURE_MAG_FILTER, this.gl.LINEAR)
+        // this.gl.texParameteri(this.gl.TEXTURE_3D, this.gl.TEXTURE_WRAP_R, this.gl.CLAMP_TO_EDGE)
+        // this.gl.texParameteri(this.gl.TEXTURE_3D, this.gl.TEXTURE_WRAP_S, this.gl.CLAMP_TO_EDGE)
+        // this.gl.texParameteri(this.gl.TEXTURE_3D, this.gl.TEXTURE_WRAP_T, this.gl.CLAMP_TO_EDGE)
+
+        // this.gl.pixelStorei(this.gl.UNPACK_ALIGNMENT, 1)
+        // this.gl.texImage3D(
+        //     this.gl.TEXTURE_3D,
+        //     0,
+        //     this.gl.R8,
+        //     128, 128, 128,
+        //     0,
+        //     this.gl.RED,
+        //     this.gl.UNSIGNED_BYTE,
+        //     this.experience.ressources.items["3DTextureNsoise"]
+        // )
+
 
 
 
