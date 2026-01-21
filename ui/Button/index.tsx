@@ -36,7 +36,7 @@ const createStyles = (type: 'primary' | 'secondary' | 'tertiary' | 'back' | 'ver
             flexDirection: "row",
             borderRadius: 4,
             ...(type === "primary" && {
-                minHeight: 46,
+                height: 46,
             }),
             ...(type === "verticalIcon" && {
                 backgroundColor: primaryColorTokens["color-tertiary-medium"],

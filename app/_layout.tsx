@@ -5,15 +5,21 @@ import { useTheme } from "@react-navigation/native";
 import { useFonts } from "expo-font";
 import { Stack } from "expo-router";
 import { StyleSheet, View } from "react-native";
+import { useParametersProgressStorage } from "@/storage/useParametersProgressStorage";
+import { useEffect } from "react";
+import FolderPage from "./(pages)/foldersPage";
+
+
 export default function RootLayout() {
+    const currentParameter = useParametersProgressStorage((state) => state.currentParameter)
+    const hasParameterBeenModified = useParametersProgressStorage((state) => state.hasParameterBeenModified)
+    
     const [loaded, error] = useFonts({
         JetBrainsMono: require("../assets/fonts/JetBrainsMono/JetBrainsMono[wght].ttf"),
     });
 
     const { colors } = useTheme();
     colors.background = 'transparent';
-
-
 
     return <>
         <View
@@ -42,7 +48,14 @@ export default function RootLayout() {
             </Stack>
         </View>
         <View style={styles.validateButton}>
-            <Button type="primary" icon={{ name: "file" }} overridePadding={12}></Button>
+            <Button type="primary" icon={{name: "file"}} overridePadding={12}></Button>
+            {
+                currentParameter === "" &&
+                <Button type="primary" label="Finaliser" overridePadding={24}></Button>
+            }
+        </View>
+        <View style={{position: "absolute", width: "100%", height: "100%", backgroundColor: "rgba(0, 0, 0, 0.85)"}}>
+            <FolderPage showConfigureButton={false}></FolderPage>
         </View>
     </>;
 }
@@ -55,11 +68,13 @@ const styles = StyleSheet.create({
     },
 
     validateButton: {
-        display: "flex",
+        display:"flex",
+        flexDirection: "row",
         alignItems: "center",
         position: "absolute",
         bottom: 0,
         right: 0,
-        padding: 24
+        padding: 24,
+        gap: 4
     },
 }) 

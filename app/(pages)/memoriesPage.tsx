@@ -9,9 +9,14 @@ import { useMemoryStorage } from "@/assets/scripts/storage/store";
 import Button from "@/ui/Button";
 import SvgComponent from "@/ui/svg";
 import { router } from "expo-router";
+import { useEffect } from "react";
+import { useParametersProgressStorage } from "@/storage/useParametersProgressStorage";
 
 
 const MemoriesParameters = () => {
+    const setCurrentParameter = useParametersProgressStorage((state) => state.setCurrentParameter)
+    const setHasParameterBeenModified = useParametersProgressStorage((state) => state.setHasParameterBeenModified)
+    
     const memories = useMemoryStorage((state) => state.memories)
     const shootMemory = useMemoryStorage((state) => state.removeMemory)
 
@@ -26,6 +31,10 @@ const MemoriesParameters = () => {
     const back = () => {
         router.navigate("/configuratorPage")
     }
+    useEffect(() => {
+        setCurrentParameter("memories")
+        setHasParameterBeenModified(true)
+    }, [])
 
     return (
         <View style={styles.container}>

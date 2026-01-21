@@ -31,7 +31,7 @@ interface CustomModalProps extends ViewProps {
         }[]
     }[]
 
-    configure: () => void
+    configure?: () => void
 }
 
 
@@ -208,6 +208,23 @@ const Modal: React.FC<CustomModalProps> = (props) => {
             </Svg>
 
         </View>
+
+        {
+            tabs.map((tab, i) => {
+                return <Tab
+                    key={i}
+                    label={tab}
+                    index={i}
+                    Style={Style}
+                    selected={selectedTab === tab}
+                    setSelectedTab={setSelectedTab}
+                    offset={90}
+                    selectColor={selectColor}
+                />
+            })
+        }
+
+
         <View
             style={{
                 width: "100%",

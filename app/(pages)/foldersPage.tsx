@@ -4,7 +4,11 @@ import { useProgressStorage, ProgressStateType } from "@/assets/scripts/storage/
 import Folder from "@/ui/Folders/";
 import { router } from "expo-router";
 
-const FolderPage = () => {
+interface FolderPageProps {
+    showConfigureButton?: boolean
+}
+
+const FolderPage = ({showConfigureButton = true}: FolderPageProps) => {
     const gameProgress: ProgressStateType = useProgressStorage()
 
     const client = {
@@ -87,7 +91,10 @@ const FolderPage = () => {
                     },
                 ]}
                 currentView=''
-                configure={configure}
+
+                {
+                    ...showConfigureButton && ({configure})
+                }
             />
 
 

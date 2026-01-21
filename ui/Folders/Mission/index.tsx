@@ -60,11 +60,14 @@ const FolderHero: React.FC<CustomFolderProps> = (props) => {
                         height: 48
                     }
                 }>
-                    <Button
-                        type="primary"
-                        label="Configurer"
-                        onPress={configure}
-                    />
+                    {
+                        configure &&
+                        <Button
+                            type="primary"
+                            label="Configurer"
+                            onPress={configure}
+                        />
+                    }
                 </View>
             </View>
 

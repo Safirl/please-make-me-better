@@ -1,5 +1,5 @@
-import { router } from "expo-router";
-import { useEffect } from "react";
+import { router, useFocusEffect } from "expo-router";
+import { useCallback, useEffect } from "react";
 import { Dimensions, Pressable, View } from "react-native";
 import { useStorage } from "../../assets/scripts/storage/store";
 import Button from "@/ui/Button";
@@ -7,19 +7,26 @@ import Helpers from "../utils/Helpers";
 import Svg, { Circle } from "react-native-svg";
 import { StyleSheet } from "react-native";
 import { Href } from "expo-router";
+import { useParametersProgressStorage } from "@/storage/useParametersProgressStorage";
 
 const dimensions = Dimensions.get("window")
 
 export default function configuratorPage() {
-  const currentParameter: string = useStorage((state: any) => state.currentParameter)
-  const setCurrentParameter = useStorage((state: any) => state.setCurrentParameter)
+  const setCurrentParameter = useParametersProgressStorage((state) => state.setCurrentParameter)
 
   useEffect(() => {
     if (!Helpers.isDevMode) return;
     let root = Helpers.instance.getGUIFolder();
     let folder = root.addFolder("Parameter");
+    setCurrentParameter("")
     // Helpers.instance.tweak()
   }, [])
+
+  useFocusEffect(
+    useCallback(() => {
+      setCurrentParameter("")
+    }, [])
+);
 
   const buttons = [
     { label: "Memories", icon: "memory" as const, route: "/memoriesPage" as Href, style: styles.button1 },
