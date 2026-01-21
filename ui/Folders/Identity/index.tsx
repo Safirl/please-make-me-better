@@ -18,7 +18,6 @@ interface CustomFolderProps extends ViewProps {
 
 
 
-
 const FolderHero: React.FC<CustomFolderProps> = (props) => {
 
     const {
@@ -27,6 +26,8 @@ const FolderHero: React.FC<CustomFolderProps> = (props) => {
         // setSelectedView,
         ...rest
     } = props
+
+    const noisyHuman = require("../../../assets/images/folders/id/id_noisy_human.png")
 
     const Style = createStyle();
 
@@ -38,11 +39,11 @@ const FolderHero: React.FC<CustomFolderProps> = (props) => {
         <View>
             <Image
                 style={Style.image}
-                source={{ uri: "./assets/images/folders/id/id_noisy_human.png" }}
+                source={noisyHuman}
                 contentFit="cover"
             />
         </View>
-        <View 
+        <View
             style={Style.textArea}
         >
 
@@ -78,12 +79,12 @@ const FolderHero: React.FC<CustomFolderProps> = (props) => {
             </Text>
 
             {/* <Text > */}
-                <Text style={[Style.paragraph, Style.accentParagraph]}>
-                    Elle se sent en décalage avec les critères de beauté dominants.
-                </Text>
-                <Text style={[Style.paragraph]}>
-                    Comme si elle ne coïncidait jamais avec ce qu'on attend d'elle.
-                </Text>
+            <Text style={[Style.paragraph, Style.accentParagraph]}>
+                Elle se sent en décalage avec les critères de beauté dominants.
+            </Text>
+            <Text style={[Style.paragraph]}>
+                Comme si elle ne coïncidait jamais avec ce qu'on attend d'elle.
+            </Text>
             {/* </Text> */}
 
         </View>
