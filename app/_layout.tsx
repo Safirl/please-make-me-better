@@ -47,13 +47,14 @@ export default function RootLayout() {
                 <Stack.Screen name="(pages)/memoriesPage" options={{ title: '', headerStyle: styles.headerStyle }} />
                 <Stack.Screen name="(pages)/personalityPage" options={{ title: '', headerStyle: styles.headerStyle }} />
                 <Stack.Screen name="(pages)/emotionsPage" options={{ title: '', headerStyle: styles.headerStyle }} />
+                <Stack.Screen name="(pages)/endingPage" options={{ title: '', headerStyle: styles.headerStyle }} />
             </Stack>
         </View>
         <View style={styles.validateButton}>
-            <Button type="primary" icon={{name: "file"}} overridePadding={12} onPress={()=>setFolderVisibility(true)}></Button>
+            <Button type="primary" icon={{name: "file"}} overridePadding={12} onPress={hasParameterBeenModified ? ()=>setFolderVisibility(true) : ()=>{}}></Button>
             {
                 currentParameter === "" &&
-                <Button type="primary" label="Finaliser" overridePadding={24}></Button>
+                <Button type={hasParameterBeenModified ? "primary" : "secondary"} label="Finaliser" overridePadding={24}></Button>
             }
         </View>
 

@@ -113,7 +113,7 @@ export const characters = [
             { id: 24, label: "Instable", traitA: 3, traitB: 7, icon: "instable", value: 0.8, route: 2 },
             { id: 25, label: "Tendu", traitA: 3, traitB: 8, icon: "tendu", value: 0.7, route: 2 },
 
-            { id: 26, label: "Aventureux", traitA: 4, traitB: 5, icon: "aventureux", value: 0.2, route: 1 },
+            { id: 26, label: "Aventureux", traitA: 4, traitB: 5, icon: "aventure", value: 0.2, route: 1 },
             { id: 27, label: "Envahissant", traitA: 4, traitB: 6, icon: "envahissant", value: 0.8, route: 2 },
             { id: 28, label: "Casse-cou", traitA: 4, traitB: 7, icon: "casse-cou", value: 0.6, route: 1 },
             { id: 29, label: "Imprévisible", traitA: 4, traitB: 8, icon: "imprevisible", value: 0.6, route: 1 },
