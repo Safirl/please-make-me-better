@@ -7,11 +7,13 @@ import Animated, { useAnimatedStyle, useDerivedValue, useSharedValue, withSpring
 import { router } from "expo-router";
 import Button from "@/ui/Button";
 import SvgComponent from "@/ui/svg";
+import { useParametersProgressStorage } from "@/assets/scripts/storage/useParametersProgressStorage";
 
 const DIMENSIONS = Dimensions.get("window")
 
 const personalityParameters = () => {
-
+    const setCurrentParameter = useParametersProgressStorage((state) => state.setCurrentParameter)
+    const setHasParameterBeenModified = useParametersProgressStorage((state) => state.setHasParameterBeenModified)
     const selectedTraits = usePersonalityStorage((state) => state.selectedTraits)
     const SceneSelectContainerOpacity = useSharedValue(0)
     const SceneSelectContainerTop = useSharedValue(-DIMENSIONS.height)
@@ -34,6 +36,11 @@ const personalityParameters = () => {
             SceneComposedContainerTop.value = withSpring(DIMENSIONS.height)
         }
     }, [selectedTraits[0], selectedTraits[1]])
+
+    useEffect(() => {
+        setCurrentParameter("personality")
+        setHasParameterBeenModified(true)
+    }, [])
 
     const sceneSelectedAnimatedStyle = useAnimatedStyle(() => (
         {

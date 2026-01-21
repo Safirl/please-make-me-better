@@ -1,16 +1,19 @@
 import { Cursor } from "@/ui/Parameters/cursor"
 import { StyleSheet, View, Text } from "react-native"
 import Font from "@/assets/styles/fonts";
-import React from "react";
+import React, { useEffect } from "react";
 import { Gesture, GestureDetector } from "react-native-gesture-handler";
 import Button from "@/ui/Button";
 import SvgComponent from "@/ui/svg";
 import { router } from "expo-router";
 import { useEmotionStorage } from "@/assets/scripts/storage/store";
+import { useParametersProgressStorage } from "@/assets/scripts/storage/useParametersProgressStorage";
 
 const OFFSET = 70
 
 const emotionsParameters = () => {
+    const setCurrentParameter = useParametersProgressStorage((state) => state.setCurrentParameter)
+    const setHasParameterBeenModified = useParametersProgressStorage((state) => state.setHasParameterBeenModified)
     const emotions = useEmotionStorage((state) => state.emotions)
     const setEmotionIntensity = useEmotionStorage((state) => state.setEmotionIntensity)
 
@@ -20,6 +23,10 @@ const emotionsParameters = () => {
     const back = () => {
         router.navigate("/configuratorPage")
     }
+    useEffect(() => {
+        setCurrentParameter("emotions")
+        setHasParameterBeenModified(true)
+    }, [])
 
     return (
         <View style={styles.container}>

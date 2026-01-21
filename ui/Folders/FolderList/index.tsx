@@ -36,6 +36,7 @@ const FolderHero: React.FC<CustomFolderProps> = (props) => {
             {
                 folders.map((folder, i) => {
                     return <View
+                        key={i}
                         style={Style.item}
                     >
                         <Button
