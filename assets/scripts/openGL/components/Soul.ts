@@ -78,25 +78,25 @@ export default class Soul extends Component {
 
         this.createSphere()
 
-
-        Helpers.instance.tweak(
-            "speed",
-            this.params,
-            (e: number) => { },
-            0,
-            10,
-            0.1,
-            HELPER_FOLDER
-        )
-        Helpers.instance.tweak(
-            "blendingFactor",
-            this.params,
-            (e: number) => { },
-            0,
-            10,
-            0.1,
-            HELPER_FOLDER
-        )
+/*
+         Helpers.instance.tweak(
+             "speed",
+             this.params,
+             (e: number) => { },
+             0,
+             10,
+             0.1,
+             HELPER_FOLDER
+         )
+         Helpers.instance.tweak(
+             "blendingFactor",
+             this.params,
+             (e: number) => { },
+             0,
+             10,
+             0.1,
+             HELPER_FOLDER
+         )
         Helpers.instance.tweak(
             "factor",
             this.params,
@@ -109,7 +109,7 @@ export default class Soul extends Component {
 
         /**
          * Sphere color
-         */
+
         [
             "redIntenisty",
             "greenIntenisty",
@@ -130,7 +130,7 @@ export default class Soul extends Component {
 
         /**
          * Sphere shape
-         */
+         
         Helpers.instance.tweak(
             "radius",
             this.params,
@@ -168,16 +168,16 @@ export default class Soul extends Component {
             "SPHERE SHAPE"
         )
 
-        Helpers.instance.tweak(
-            "filaments",
-            this.params,
-            (e: number) => { },
-            0,
-            1,
-            0.01,
-            "SPHERE SHAPE"
-        )
-
+         Helpers.instance.tweak(
+             "filaments",
+             this.params,
+             (e: number) => { },
+             0,
+             1,
+             0.01,
+             "SPHERE SHAPE"
+         )
+*/
 
         const emotionState = useEmotionStorage.getState()
         this.params.redIntenisty = emotionState.emotions[0].intensity
