@@ -3,12 +3,15 @@ import fonts from "@/assets/styles/fonts"
 import { primaryBackgroundTokens } from "@/assets/tokens/primary/backgrounds.tokens"
 import { primaryColorTokens } from "@/assets/tokens/primary/colors.tokens"
 import Button from "@/ui/Button"
-import { useEffect, useState } from "react"
+import { useCallback, useEffect, useState } from "react"
 import { View, Text, StyleSheet } from "react-native"
 import { texts } from "@/assets/data/endingTexts"
 import { useEmotionStorage, useMemoryStorage, usePersonalityStorage } from "@/assets/scripts/storage/useParametersStorage"
 import TextAnimatedLine from "@/ui/animations/animatedTexts/AnimatedText";
 import { useParametersDisplayStateStorage } from "@/assets/scripts/storage/useParametersProgressStorage"
+import { useFocusEffect } from "expo-router"
+import { useAnimatedImage } from "@shopify/react-native-skia"
+import Animated, { useAnimatedStyle, useSharedValue, withTiming } from "react-native-reanimated"
 
 const EndingPage = () => {
     const choices = useProgressStorage((state) => state.choices)
@@ -19,6 +22,12 @@ const EndingPage = () => {
     const resetMemories = useMemoryStorage((state) => state.resetMemories)
     const resetParametersProgress = useParametersDisplayStateStorage((state) => state.resetParametersProgress)
     const setChoices = useProgressStorage((state) => state.setChoices)
+
+    useFocusEffect(
+        useCallback(() => {
+            containerOpacity.value = withTiming(1, {duration: 800})
+        }, [])
+    );
 
     useEffect(() => {
         const paths = [
@@ -37,8 +46,10 @@ const EndingPage = () => {
     }, [choices])
 
     const handleRetry = () => {
-        resetExperience()
-        setStep("configurator");
+        containerOpacity.value = withTiming(0, {duration: 800}, () => {
+            resetExperience()
+            setStep("configurator");
+        })
     }
 
     const resetExperience = () => {
@@ -49,9 +60,16 @@ const EndingPage = () => {
         setChoices([]);
     }
 
+    const containerOpacity = useSharedValue(0)
+    const animatedContainerStyle = useAnimatedStyle(() => {
+        return {
+            opacity: containerOpacity.value
+        }
+    })
+
     return (
         <View style={styles.container}>
-            <View>
+            <Animated.View style={animatedContainerStyle}>
                 {/* SVG */}
                 <View style={styles.textContainer}>
                     <TextAnimatedLine
@@ -69,8 +87,8 @@ const EndingPage = () => {
                         text={"L’état général du client n’est pas compatible avec sa demande. Le dossier ne peut être considéré comme clos."}
                     ></TextAnimatedLine>
                 </View>
-            </View>
-            <View style={styles.rightContainer}>
+            </Animated.View>
+            <Animated.View style={[styles.rightContainer, animatedContainerStyle]}>
                 <Text style={styles.errorText}>
                 //ERREUR//
                 </Text>
@@ -89,7 +107,7 @@ const EndingPage = () => {
                     <Text style={{ ...fonts.paragraph, color: primaryColorTokens["color-tertiary-lower"] }}>Tentatives restantes</Text>
                 </View>
                 <Button label="Rééssayer" type="primary" overridePadding={60} onPress={handleRetry}></Button>
-            </View>
+            </Animated.View>
         </View>
     )
 }
@@ -124,7 +142,7 @@ const styles = StyleSheet.create({
         borderWidth: 2,
         borderColor: primaryColorTokens["color-tertiary-lowest"],
         borderStyle: "dashed",
-        borderRadius: 4
+        borderRadius: 4,
     },
 
     errorText: {
