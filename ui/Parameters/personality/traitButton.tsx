@@ -97,7 +97,7 @@ const TraitButton = (props: traitButtonProps) => {
                 });
             if (selectedTraits['0']?.id === props.id || selectedTraits['1']?.id === props.id && !emptyButton) {
                 position.left.value = withSpring(DIMENSIONS.width/2)
-                position.top.value = withSpring(DIMENSIONS.height/2 + DIMENSIONS.height)
+                position.top.value = withSpring(DIMENSIONS.height/2 + DIMENSIONS.height*2)
             }
             else {
                 position.top.value = withSpring(newPos.y);

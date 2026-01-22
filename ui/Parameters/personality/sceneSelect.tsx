@@ -10,6 +10,9 @@ import { Dimensions, LayoutChangeEvent, StyleSheet, View, Text, StyleProp, ViewS
 import { Gesture, GestureDetector, GestureHandlerRootView } from "react-native-gesture-handler";
 import Animated, { Easing, useAnimatedStyle, useDerivedValue, useSharedValue, withDelay, withSpring, withTiming } from "react-native-reanimated";
 import Svg, { Circle, Defs, LinearGradient, Path, Stop } from "react-native-svg";
+import { opacity } from "react-native-reanimated/lib/typescript/Colors";
+import { transform } from "typescript";
+import { router } from "expo-router";
 
 const CIRCLE_RADIUS = 450 / 2;
 const TOTAL_ANGLE = 2 * Math.PI
@@ -57,6 +60,9 @@ const SceneSelect = (props: sceneSelectProps) => {
     });
 
     useEffect(() => {
+        // createdComposedTraits[0] = {id: 0, icon: "back-pain"}
+        // createdComposedTraits[1] = {id: 1, icon: "back-pain"}
+        // createdComposedTraits[2] = {id: 2, icon: "back-pain"}
         if (createdComposedTraits[0]) {
             resultIcon1Scale.value = withDelay(400, withTiming(1, { easing: Easing.inOut(Easing.back(0.6)), duration: 2500 }))
         }
@@ -64,22 +70,107 @@ const SceneSelect = (props: sceneSelectProps) => {
             resultIcon2Scale.value = withDelay(400, withTiming(1, { easing: Easing.inOut(Easing.back(0.6)), duration: 2500 }))
         }
         if (createdComposedTraits[2]) {
-            resultIcon3Scale.value = withDelay(400, withTiming(1, { easing: Easing.inOut(Easing.back(0.6)), duration: 2500 }))
+            resultIcon3Scale.value = withDelay(400, withTiming(1, { easing: Easing.inOut(Easing.back(0.6)), duration: 2500 }, () => {
+                endAnimation()
+            }))
         }
     }, [createdComposedTraits[0], createdComposedTraits[1], createdComposedTraits[2]])
+    
+    const endAnimation = () => {
+        iconContainerAlpha.value = 0
+        selectionContainerOpacity.value = withTiming(0, { easing: Easing.inOut(Easing.back(0.6)), duration: 2500 })
+
+        setTimeout(() => {
+            resultIcon1Scale.value = withTiming(3.5, { easing: Easing.inOut(Easing.ease), duration: 2500 })
+            resultIcon2Scale.value = withTiming(3.5, { easing: Easing.inOut(Easing.ease), duration: 2500 })
+            resultIcon3Scale.value = withTiming(3.5, { easing: Easing.inOut(Easing.ease), duration: 2500 })
+    
+            resultContainerLeft.value = withTiming(DIMENSIONS.width/2, { easing: Easing.inOut(Easing.ease), duration: 2500 })
+            resultContainerBottom.value = withTiming(DIMENSIONS.height/2+70, { easing: Easing.inOut(Easing.ease), duration: 2500 })
+            resultContainerMarginLeft.value = withTiming(0, { easing: Easing.inOut(Easing.ease), duration: 2500 })
+            resultContainerMarginBottom.value = withTiming(0, { easing: Easing.inOut(Easing.ease), duration: 2500 })
+            resultContainerGap.value = withTiming(128, { easing: Easing.inOut(Easing.ease), duration: 2500 })
+            alphabgAnimated.value = withTiming(0, { easing: Easing.inOut(Easing.ease), duration: 2500 }, () => {
+                mergeWithSoul()
+            })
+        }, 500);
+    }
+
+    const mergeWithSoul = () => {
+        resultIcon1Scale.value = withDelay(0, withTiming(1, { easing: Easing.inOut(Easing.ease), duration: 1500 }))
+        resultIcon2Scale.value = withDelay(500, withTiming(1, { easing: Easing.inOut(Easing.ease), duration: 1500 }))
+        resultIcon3Scale.value = withDelay(1000, withTiming(1, { easing: Easing.inOut(Easing.ease), duration: 1500 }))
+        resultIcon1Opacity.value = withDelay(0, withTiming(0, { easing: Easing.inOut(Easing.ease), duration: 1500 }))
+        resultIcon2Opacity.value = withDelay(500, withTiming(0, { easing: Easing.inOut(Easing.ease), duration: 1500 }))
+        resultIcon3Opacity.value = withDelay(1000, withTiming(0, { easing: Easing.inOut(Easing.ease), duration: 1500 }))
+
+        resultIcon1TransformX.value = withDelay(0, withTiming(75, { easing: Easing.inOut(Easing.ease), duration: 1500 }))
+        resultIcon2TransformX.value = withDelay(500, withTiming(0, { easing: Easing.inOut(Easing.ease), duration: 1500 }))
+        resultIcon3TransformX.value = withDelay(1000, withTiming(-75, { easing: Easing.inOut(Easing.ease), duration: 1500 }))
+        resultIcon1TransformY.value = withDelay(0, withTiming(175, { easing: Easing.inOut(Easing.ease), duration: 1500 }))
+        resultIcon2TransformY.value = withDelay(500, withTiming(175, { easing: Easing.inOut(Easing.ease), duration: 1500 }))
+        resultIcon3TransformY.value = withDelay(1000, withTiming(175, { easing: Easing.inOut(Easing.ease), duration: 1500 }))
+
+        setTimeout(() => {
+            router.navigate("/configuratorPage")
+        }, 3000);
+    }
+
+    const selectionContainerOpacity = useSharedValue(1)
+    const animatedSelectionStyle = useAnimatedStyle(() => ({
+        opacity: selectionContainerOpacity.value
+    }))
 
     //result icons
     const resultIcon1Scale = useSharedValue(0)
+    const resultIcon1TransformX = useSharedValue(0)
+    const resultIcon1TransformY = useSharedValue(0)
+    const resultIcon1Opacity = useSharedValue(1)
     const animatedResultIcon1 = useAnimatedStyle(() => ({
-        transform: [{ scale: resultIcon1Scale.value }]
+        transform: [{ scale: resultIcon1Scale.value }, {translateX: resultIcon1TransformX.value}, {translateY: resultIcon1TransformY.value}],
+        opacity: resultIcon1Opacity.value
     }))
     const resultIcon2Scale = useSharedValue(0)
+    const resultIcon2TransformX = useSharedValue(0)
+    const resultIcon2TransformY = useSharedValue(0)
+    const resultIcon2Opacity = useSharedValue(1)
     const animatedResultIcon2 = useAnimatedStyle(() => ({
-        transform: [{ scale: resultIcon2Scale.value }]
+        transform: [{ scale: resultIcon2Scale.value }, {translateX: resultIcon2TransformX.value}, {translateY: resultIcon2TransformY.value}],
+        opacity: resultIcon2Opacity.value
     }))
     const resultIcon3Scale = useSharedValue(0)
+    const resultIcon3TransformX = useSharedValue(0)
+    const resultIcon3TransformY = useSharedValue(0)
+    const resultIcon3Opacity = useSharedValue(1)
     const animatedResultIcon3 = useAnimatedStyle(() => ({
-        transform: [{ scale: resultIcon3Scale.value }]
+        transform: [{ scale: resultIcon3Scale.value }, {translateX: resultIcon3TransformX.value}, {translateY: resultIcon3TransformY.value}],
+        opacity: resultIcon3Opacity.value
+    }))
+
+    const resultContainerLeft = useSharedValue(32)//32
+    const resultContainerBottom = useSharedValue(0)//0
+    const resultContainerMarginLeft = useSharedValue(64)//64
+    const resultContainerMarginBottom = useSharedValue(32)//32
+    const resultContainerGap = useSharedValue(12)//12
+    const resultContainerAnimatedStyle = useAnimatedStyle(() => ({
+        bottom: resultContainerBottom.value,
+        left: resultContainerLeft.value,
+        marginLeft: resultContainerMarginLeft.value,
+        valueBottom: resultContainerMarginBottom.value,
+        gap: resultContainerGap.value,
+        transform: [{translateX: "-50%"}]
+    }), [])
+
+    //icons container
+    const iconContainerAlpha = useSharedValue(1)
+    const iconContainerAnimatedStyle = useAnimatedStyle(() => ({
+        borderColor: `rgba(150, 150, 150, ${iconContainerAlpha.value})`
+    }))
+
+    //background
+    const alphabgAnimated = useSharedValue(1)
+    const backgroundAlphaAnimatedValue = useAnimatedStyle(() => ({
+        backgroundColor: `rgba(29, 30, 34, ${alphabgAnimated.value})`
     }))
 
     //glow
@@ -103,8 +194,8 @@ const SceneSelect = (props: sceneSelectProps) => {
     }
 
     return (
-        <>
-            <View style={[styles.container, props.style]}>
+        <Animated.View style={[{height: "100%"}, backgroundAlphaAnimatedValue]}>
+            <Animated.View style={[styles.container, props.style, animatedSelectionStyle]}>
                 <Text style={styles.count}>
                     {
                         selectedTraits[0] && selectedTraits[1] && 2
@@ -172,35 +263,35 @@ const SceneSelect = (props: sceneSelectProps) => {
                         Drag two traits down to create a new one
                     </Text>
                 </View>
-            </View>
+            </Animated.View>
 
-            <View style={styles.resultContainer}>
-                <View style={styles.resultIconContainer}>
+            <Animated.View style={[styles.resultContainer, resultContainerAnimatedStyle]}>
+                <Animated.View style={[styles.resultIconContainer, iconContainerAnimatedStyle]}>
                     {
                         createdComposedTraits[0] &&
                         <Animated.View style={[styles.resultIcon, animatedResultIcon1]}>
                             <SvgComponent name={createdComposedTraits[0].icon}></SvgComponent>
                         </Animated.View>
                     }
-                </View>
-                <View style={styles.resultIconContainer}>
+                </Animated.View>
+                <Animated.View style={[styles.resultIconContainer, iconContainerAnimatedStyle]}>
                     {
                         createdComposedTraits[1] &&
                         <Animated.View style={[styles.resultIcon, animatedResultIcon2]}>
                             <SvgComponent name={createdComposedTraits[1].icon}></SvgComponent>
                         </Animated.View>
                     }
-                </View>
-                <View style={styles.resultIconContainer}>
+                </Animated.View>
+                <Animated.View style={[styles.resultIconContainer, iconContainerAnimatedStyle]}>
                     {
                         createdComposedTraits[2] &&
                         <Animated.View style={[styles.resultIcon, animatedResultIcon3]}>
                             <SvgComponent name={createdComposedTraits[2].icon}></SvgComponent>
                         </Animated.View>
                     }
-                </View>
-            </View>
-        </>
+                </Animated.View>
+            </Animated.View>
+        </Animated.View>
     )
 }
 

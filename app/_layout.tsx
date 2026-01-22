@@ -1,12 +1,12 @@
 import GL from "@/ui/GL";
 import Button from "@/ui/Button";
 import { primaryBackgroundTokens } from "@/assets/tokens/primary/backgrounds.tokens";
-import { useRoute, useTheme } from "@react-navigation/native";
+import { useTheme } from "@react-navigation/native";
 import { useFonts } from "expo-font";
-import { router, Stack, useFocusEffect, usePathname } from "expo-router";
-import { Easing, Pressable, StyleSheet, View } from "react-native";
+import { Stack, usePathname } from "expo-router";
+import { Easing, StyleSheet, View } from "react-native";
 import { useParametersDisplayStateStorage } from "@/assets/scripts/storage/useParametersProgressStorage";
-import { useCallback, useEffect } from "react";
+import { useEffect } from "react";
 import FolderPage from "./(pages)/foldersPage";
 import { useSharedValue, withTiming } from "react-native-reanimated";
 import { useChoicesCalculator } from "@/assets/scripts/hooks/usePathCalculator";
@@ -31,7 +31,6 @@ export default function RootLayout() {
     const [loaded, error] = useFonts({
         JetBrainsMono: require("../assets/fonts/JetBrainsMono/JetBrainsMono[wght].ttf"),
     });
-    const endingRoute = "/endingPage"
     const pathname = usePathname()
 
     const { colors } = useTheme();
@@ -62,7 +61,7 @@ export default function RootLayout() {
                 backgroundColor: primaryBackgroundTokens["background-secondary"]
             }}
         >
-            <GL />
+            {/* <GL /> */}
         </View>
         <View style={{ height: "100%", overflow: "hidden" }}>
             <Stack screenOptions={{
