@@ -7,7 +7,7 @@ import { useProgressStorage, ProgressStateType } from "@/assets/scripts/storage/
 import { usePlayerNameStorage } from "@/assets/scripts/storage/usePlayerNameStorage";
 import Svg, { Defs, Path, Mask, Rect, LinearGradient, Stop } from "react-native-svg";
 import { RelativePathString, router } from "expo-router";
-import Animated, { withSequence, useSharedValue, withSpring, useAnimatedStyle, withTiming } from "react-native-reanimated";
+import Animated, { withSequence, useSharedValue, withSpring, useAnimatedStyle, withTiming, Easing } from "react-native-reanimated";
 
 const personalityParameters = () => {
     const [userName, setUserName] = useState("")
@@ -102,6 +102,9 @@ const personalityParameters = () => {
 
     }, [])
 
+    useEffect(() => {
+        alphabgAnimated.value = withTiming(1, { easing: Easing.inOut(Easing.ease), duration: 500 })
+    }, [])
 
     const next = () => {
         if (!userName) return
@@ -118,10 +121,13 @@ const personalityParameters = () => {
         }, 750)
     }
 
-
+    const alphabgAnimated = useSharedValue(0)
+    const containerAnimatedStyle = useAnimatedStyle(() => ({
+        backgroundColor: `rgba(29, 30, 34, ${alphabgAnimated.value})`
+    }))
 
     return (
-        <View style={styles.container}>
+        <Animated.View style={[styles.container, containerAnimatedStyle]}>
 
 
             <Animated.View
@@ -198,7 +204,7 @@ const personalityParameters = () => {
 
             </View>
 
-        </View >
+        </Animated.View >
     )
 }
 
@@ -207,7 +213,7 @@ const styles = StyleSheet.create({
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
-        height: "100%"
+        height: "100%",
     },
     fileLabel: {
         ...Fonts.subTitleLight,

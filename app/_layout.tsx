@@ -6,9 +6,9 @@ import { useFonts } from "expo-font";
 import { Stack, usePathname } from "expo-router";
 import { Easing, StyleSheet, View } from "react-native";
 import { useParametersDisplayStateStorage } from "@/assets/scripts/storage/useParametersProgressStorage";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import FolderPage from "./(pages)/foldersPage";
-import { useSharedValue, withTiming } from "react-native-reanimated";
+import Animated, { useAnimatedStyle, useSharedValue, withTiming } from "react-native-reanimated";
 import { useChoicesCalculator } from "@/assets/scripts/hooks/usePathCalculator";
 import { useProgressStorage } from "@/assets/scripts/storage/useGameProgressStorage";
 import { useEmotionStorage, useMemoryStorage, usePersonalityStorage } from "@/assets/scripts/storage/useParametersStorage";
@@ -19,7 +19,6 @@ export default function RootLayout() {
     const hasParameterBeenModified = useParametersDisplayStateStorage((state) => state.hasParameterBeenModified)
     const isFolderVisible = useParametersDisplayStateStorage((state) => state.isFolderVisible)
     const setFolderVisibility = useParametersDisplayStateStorage((state) => state.setFolderVisibility)
-    const opacity = useSharedValue(1)
     const setChoices = useProgressStorage((state) => state.setChoices)
     const selectedMemories = useMemoryStorage((state) => state.memories)
     const composedTrait = usePersonalityStorage((state) => state.createdComposedTraits)
@@ -35,13 +34,16 @@ export default function RootLayout() {
 
     const { colors } = useTheme();
     colors.background = 'transparent';
-
+    
     const {getFinalChoices} = useChoicesCalculator({selectedMemories, composedTrait, emotions})
-
+    
     const showEnding = () => {
         setChoices(getFinalChoices())
-        opacity.value = withTiming(0, {duration: 2000, easing: Easing.out(Easing.ease)}, () => {
+        setIsTransitionLayerActive(true)
+        opacity.value = withTiming(1, {duration: 2000, easing: Easing.out(Easing.ease)}, () => {
             navigateToNextStep()
+            setIsTransitionLayerActive(false)
+            opacity.value = 0;
         })
     }
 
@@ -51,7 +53,20 @@ export default function RootLayout() {
         }
     },[pathname])
 
+    useEffect(() => {
+        console.log(isTransitionLayerActive)
+    }, [])
+
+    const [isTransitionLayerActive, setIsTransitionLayerActive] = useState(false)
+    const opacity = useSharedValue(0)
+    const animatedTransitionLayerStyle = useAnimatedStyle(()=>({
+        opacity: opacity.value
+    }))
+    
     return <>
+        {
+            isTransitionLayerActive && <Animated.View style={[styles.transitionLayer, animatedTransitionLayerStyle]}/>
+        }
         <View
             style={{
                 position: "fixed",
@@ -61,7 +76,7 @@ export default function RootLayout() {
                 backgroundColor: primaryBackgroundTokens["background-secondary"]
             }}
         >
-            {/* <GL /> */}
+            <GL />
         </View>
         <View style={{ height: "100%", overflow: "hidden" }}>
             <Stack screenOptions={{
@@ -100,6 +115,14 @@ export default function RootLayout() {
 
 
 const styles = StyleSheet.create({
+    transitionLayer: {
+        position: "absolute",
+        zIndex: 100,
+        backgroundColor: primaryBackgroundTokens["background-primary"],
+        height: "100%",
+        width: "100%"
+    },
+
     headerStyle: {
         backgroundColor: "rgba(0,0,0,0)",
         borderWidth: 0,

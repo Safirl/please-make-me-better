@@ -20,6 +20,7 @@ const DIMENSIONS = Dimensions.get("window")
 
 interface sceneSelectProps {
     style: StyleProp<ViewStyle>
+    animateAlphaBg: () => void;
 }
 
 const SceneSelect = (props: sceneSelectProps) => {
@@ -89,8 +90,8 @@ const SceneSelect = (props: sceneSelectProps) => {
             resultContainerBottom.value = withTiming(DIMENSIONS.height/2+70, { easing: Easing.inOut(Easing.ease), duration: 2500 })
             resultContainerMarginLeft.value = withTiming(0, { easing: Easing.inOut(Easing.ease), duration: 2500 })
             resultContainerMarginBottom.value = withTiming(0, { easing: Easing.inOut(Easing.ease), duration: 2500 })
-            resultContainerGap.value = withTiming(128, { easing: Easing.inOut(Easing.ease), duration: 2500 })
-            alphabgAnimated.value = withTiming(0, { easing: Easing.inOut(Easing.ease), duration: 2500 }, () => {
+            props.animateAlphaBg()
+            resultContainerGap.value = withTiming(128, { easing: Easing.inOut(Easing.ease), duration: 2500 }, () => {
                 mergeWithSoul()
             })
         }, 500);
@@ -167,12 +168,6 @@ const SceneSelect = (props: sceneSelectProps) => {
         borderColor: `rgba(150, 150, 150, ${iconContainerAlpha.value})`
     }))
 
-    //background
-    const alphabgAnimated = useSharedValue(1)
-    const backgroundAlphaAnimatedValue = useAnimatedStyle(() => ({
-        backgroundColor: `rgba(29, 30, 34, ${alphabgAnimated.value})`
-    }))
-
     //glow
     const glowWidth = useSharedValue(0)
     const glowHeight = useSharedValue(0)
@@ -194,7 +189,7 @@ const SceneSelect = (props: sceneSelectProps) => {
     }
 
     return (
-        <Animated.View style={[{height: "100%"}, backgroundAlphaAnimatedValue]}>
+        <Animated.View style={[{height: "100%"}]}>
             <Animated.View style={[styles.container, props.style, animatedSelectionStyle]}>
                 <Text style={styles.count}>
                     {
