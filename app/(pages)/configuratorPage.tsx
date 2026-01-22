@@ -19,21 +19,21 @@ export default function configuratorPage() {
   const currentStep = useProgressStorage((state) => state.currentStep)
   const route = useRoute()
 
-  const scaleCircle = useSharedValue(1)
-  const opacityCircle = useSharedValue(1)
+  const scaleCircle = useSharedValue(1.2)
+  const opacityCircle = useSharedValue(0)
 
 
-  const scalebtn1 = useSharedValue(1)
-  const scalebtn2 = useSharedValue(1)
-  const scalebtn3 = useSharedValue(1)
+  const scalebtn1 = useSharedValue(1.5)
+  const scalebtn2 = useSharedValue(1.5)
+  const scalebtn3 = useSharedValue(1.5)
 
-  const translateXbtn1 = useSharedValue(0)
-  const translateXbtn2 = useSharedValue(0)
-  const translateXbtn3 = useSharedValue(0)
+  const translateXbtn1 = useSharedValue(-100)
+  const translateXbtn2 = useSharedValue(-100)
+  const translateXbtn3 = useSharedValue(100)
 
-  const translateYbtn1 = useSharedValue(0)
-  const translateYbtn2 = useSharedValue(0)
-  const translateYbtn3 = useSharedValue(0)
+  const translateYbtn1 = useSharedValue(-100)
+  const translateYbtn2 = useSharedValue(100)
+  const translateYbtn3 = useSharedValue(250)
 
   useEffect(() => {
     setCurrentParameter("")
@@ -189,6 +189,75 @@ export default function configuratorPage() {
       opacity: opacityCircle.value
     }
   })
+
+
+
+  useEffect(() => {
+
+    const duration = 800
+    const easeOut = Easing.out(Easing.exp)
+
+    const btn1delay = 0
+    const btn2delay = 20
+    const btn3delay = 40
+
+
+
+
+    scaleCircle.value = withDelay(
+      0,
+      withTiming(1, { duration: duration, easing: easeOut })
+    )
+    opacityCircle.value = withDelay(
+      0,
+      withTiming(1, { duration: duration, easing: easeOut })
+    )
+
+
+    scalebtn1.value = withDelay(
+      btn1delay,
+      withTiming(1, { duration: duration, easing: easeOut })
+    )
+    scalebtn2.value = withDelay(
+      btn2delay,
+      withTiming(1, { duration: duration, easing: easeOut })
+    )
+    scalebtn3.value = withDelay(
+      btn3delay,
+      withTiming(1, { duration: duration, easing: easeOut })
+    )
+
+
+
+    translateXbtn1.value = withDelay(
+      btn1delay,
+      withTiming(0, { duration: duration, easing: easeOut })
+    )
+    translateXbtn2.value = withDelay(
+      btn2delay,
+      withTiming(0, { duration: duration, easing: easeOut })
+    )
+    translateXbtn3.value = withDelay(
+      btn3delay,
+      withTiming(0, { duration: duration, easing: easeOut })
+    )
+
+
+
+    translateYbtn1.value = withDelay(
+      btn1delay,
+      withTiming(0, { duration: duration, easing: easeOut })
+    )
+    translateYbtn2.value = withDelay(
+      btn2delay,
+      withTiming(0, { duration: duration, easing: easeOut })
+    )
+    translateYbtn3.value = withDelay(
+      btn3delay,
+      withTiming(0, { duration: duration, easing: easeOut })
+    )
+
+  }, [])
   return (
     <View
       style={styles.container}
