@@ -11,13 +11,15 @@ import SvgComponent from "@/ui/svg";
 import { router } from "expo-router";
 import { useEffect } from "react";
 import { useParametersDisplayStateStorage } from "@/assets/scripts/storage/useParametersProgressStorage";
+import Animated, { withSequence, useAnimatedStyle, useSharedValue, withTiming, withDelay } from "react-native-reanimated";
+import { Easing } from "react-native"
 
 const DIMENSIONS = Dimensions.get("screen")
 
 const MemoriesParameters = () => {
     const setCurrentParameter = useParametersDisplayStateStorage((state) => state.setCurrentParameter)
     const setHasParameterBeenModified = useParametersDisplayStateStorage((state) => state.setHasParameterBeenModified)
-    
+
     const memories = useMemoryStorage((state) => state.memories)
     const shootMemory = useMemoryStorage((state) => state.removeMemory)
 
@@ -30,17 +32,66 @@ const MemoriesParameters = () => {
         })
     }
 
+    const easeOut = Easing.in(Easing.exp)
+
     const back = () => {
-        router.navigate("/configuratorPage")
+        const d = 750
+        globalOpacity.value = withTiming(0, { duration: d, easing: easeOut })
+
+        setTimeout(() => {
+            router.navigate("/configuratorPage")
+        }, d + 100)
     }
+
+
+    const globalOpacity = useSharedValue(0)
 
     useEffect(() => {
         setCurrentParameter("memories")
         setHasParameterBeenModified(true)
+
+
+        globalOpacity.value = withSequence(
+            withTiming(0, { duration: 1, easing: easeOut }),
+            withDelay(
+                100,
+                withTiming(0, { duration: 1, easing: easeOut })
+            ),
+            withDelay(
+                500,
+                withTiming(1, { duration: 1, easing: easeOut }),
+            ),
+            withDelay(
+                10,
+                withTiming(0, { duration: 1, easing: easeOut })
+            ),
+            withDelay(
+                100,
+                withTiming(1, { duration: 1, easing: easeOut })
+            ),
+            withDelay(
+                10,
+                withTiming(0, { duration: 1, easing: easeOut })
+            ),
+            withDelay(
+                100,
+                withTiming(1, { duration: 1, easing: easeOut })
+            )
+        )
+
     }, [])
 
+
+
+
+    const globalOpacityStyleAnimation = useAnimatedStyle(() => {
+        return {
+            opacity: globalOpacity.value
+        }
+    })
+
     return (
-        <View style={styles.container}>
+        <Animated.View style={[styles.container, globalOpacityStyleAnimation]}>
 
             <View
                 style={{
@@ -63,7 +114,7 @@ const MemoriesParameters = () => {
                 <Target key={memory.id} x={memory.posX * DIMENSIONS.width} y={memory.posY * DIMENSIONS.height} type={memory.type} label={memory.label} />
             ))}
 
-        </View>
+        </Animated.View>
     )
 }
 

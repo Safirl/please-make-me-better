@@ -3,9 +3,11 @@ import { primaryFontTokens } from "@/assets/tokens/primary/font.tokens";
 import { primaryTextTokens } from "@/assets/tokens/primary/text.tokens";
 import { View, Text, Pressable, StyleSheet, LayoutChangeEvent, Dimensions } from "react-native";
 import fonts from "@/assets/styles/fonts";
-import Animated, { useAnimatedStyle, useSharedValue } from "react-native-reanimated";
+import Animated, { useAnimatedStyle, withSequence, useSharedValue, withTiming, withDelay } from "react-native-reanimated";
 import Svg, { Rect } from "react-native-svg";
 import { useMemoryStorage } from "@/assets/scripts/storage/useParametersStorage";
+import { useEffect } from "react";
+import { Easing } from "react-native"
 
 const dimensions = Dimensions.get("screen");
 
@@ -22,6 +24,8 @@ const Target = (props: targetProps) => {
     const positionY = useSharedValue(props.y)
     const width = useSharedValue(0)
     const height = useSharedValue(0)
+    const globalOpacity = useSharedValue(0)
+
 
     const onLayoutHandler = (e: LayoutChangeEvent) => {
         width.value = e.nativeEvent.layout.width;
@@ -46,9 +50,34 @@ const Target = (props: targetProps) => {
         ],
     }))
 
+    useEffect(() => {
+        const easeOut = Easing.in(Easing.exp)
+
+        globalOpacity.value = withSequence(
+            withTiming(0, { duration: 1, easing: easeOut }),
+
+            withDelay(
+                720,
+                withTiming(1, { duration: 50, easing: easeOut }),
+
+            ),
+            withDelay(
+                100,
+                withTiming(1, { duration: 1, easing: easeOut })
+            )
+        )
+
+
+    }, [])
+
+    const globalOpacityStyleAnimation = useAnimatedStyle(() => {
+        return {
+            opacity: globalOpacity.value
+        }
+    })
 
     return (
-        <Animated.View style={[styles.container, positionStyle]} onLayout={onLayoutHandler}>
+        <Animated.View style={[styles.container, positionStyle, globalOpacityStyleAnimation]} onLayout={onLayoutHandler}>
             <Text style={styles.text}>{props.label || "lorem ipsum"}</Text>
             <Pressable style={[styles.buttonBase, props.type === "filled" && styles.buttonFilled]}>
                 {
