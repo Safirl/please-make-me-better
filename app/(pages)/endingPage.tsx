@@ -6,10 +6,15 @@ import Button from "@/ui/Button"
 import { useEffect, useState } from "react"
 import { View, Text, StyleSheet } from "react-native"
 import {texts} from "@/assets/data/endingTexts"
+import { useEmotionStorage, useMemoryStorage, usePersonalityStorage } from "@/assets/scripts/storage/useParametersStorage"
 
 const EndingPage = () => {
     const choices = useProgressStorage((state) => state.choices)
+    const setStep = useProgressStorage((state) => state.setStep)
     const [chosenPath, setChosenPath] = useState({choice: -1, length: -1})
+    const resetEmotions = useEmotionStorage((state) => state.resetEmotions)
+    const resetPersonality = usePersonalityStorage((state) => state.resetPersonality)
+    const resetMemories = useMemoryStorage((state) => state.resetMemories)
 
     useEffect(() => {
         const paths = [
@@ -17,15 +22,24 @@ const EndingPage = () => {
             {choice: 1, length: choices.filter((choice) => choice === 1).length},
             {choice: 2, length: choices.filter((choice) => choice === 2).length}
         ]
-        console.log(paths)
 
+        let currentChosenPath = {choice: -1, length: -1};
         paths.forEach(path => {
-            if (path.length > chosenPath.length) {
-                setChosenPath(path)
+            if (path.length > currentChosenPath.length) {
+                currentChosenPath = path
             }
         });
-        console.log(chosenPath)
+        setChosenPath(currentChosenPath)
     }, [choices])
+
+    const handleRetry = () => {
+        setStep("configurator");
+    }
+
+    const resetExperience = () => {
+        //reset personality storage, memories storage, emotion storage and parameters progress storage and choices in gameStorage
+
+    }
 
     return (
     <View style={styles.container}>
@@ -55,7 +69,7 @@ const EndingPage = () => {
                 </View>
                 <Text style={{...fonts.paragraph, color: primaryColorTokens["color-tertiary-lower"]}}>Tentatives restantes</Text>
             </View>
-            <Button label="Rééssayer" type="primary" overridePadding={60}></Button>
+            <Button label="Rééssayer" type="primary" overridePadding={60} onPress={handleRetry}></Button>
         </View>
     </View>
     )

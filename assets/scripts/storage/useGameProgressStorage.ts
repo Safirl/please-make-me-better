@@ -35,6 +35,7 @@ export const useProgressStorage = create<ProgressStateType>((set) => ({
     setStep: (newStep) => set((state) => {
         const foundStep = steps.find(step => step.step === newStep);
         if (foundStep){
+            router.navigate(foundStep.path as RelativePathString)
             return {
                 currentStep: foundStep
             }

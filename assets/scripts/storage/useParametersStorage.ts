@@ -5,15 +5,16 @@ interface MemoryState {
   memories: Memory[]
   gunPosition: {x: number, y: number}
   setGunPosition: (newPosition: {x: number, y: number}) => void
-
   removeMemory: (oldMemory: Memory) => void
+  resetMemories: () => void;
 }
 
 export const useMemoryStorage = create<MemoryState>((set) => ({
   memories: characters[0].memories,
   gunPosition: {x:0,y:0},
   setGunPosition: (newPosition) => set((state) => ({gunPosition: newPosition})),
-  removeMemory: (oldMemory: Memory) => set((state) => ({memories: state.memories.filter((i: Memory) => i !== oldMemory)}))
+  removeMemory: (oldMemory: Memory) => set((state) => ({memories: state.memories.filter((i: Memory) => i !== oldMemory)})),
+  resetMemories: () => set((state) => ({memories: characters[0].memories}))
 }))
 
 interface PersonalityState {
@@ -37,6 +38,7 @@ interface PersonalityState {
   setClosestTraitId: (id: number) => void;
   setCurrentScene: (id: number) => void;
   createComposedTrait: (trait: ComposedTrait) => void;
+  resetPersonality: () => void;
 }
 
 export const usePersonalityStorage = create<PersonalityState>((set) => ({
@@ -70,15 +72,18 @@ export const usePersonalityStorage = create<PersonalityState>((set) => ({
   resetTraits: () => set(() => ({selectedTraits: {0:null,1:null}})),
   setClosestTraitId: (id) => set(() => ({closestTraitId: id})),
   setCurrentScene: (id) => set(() => ({currentScene: id})),
-  createComposedTrait: (trait) => set((state) => ({createdComposedTraits: [...state.createdComposedTraits, trait]}))
+  createComposedTrait: (trait) => set((state) => ({createdComposedTraits: [...state.createdComposedTraits, trait]})),
+  resetPersonality: () => set((state) => ({selectedTraits: {0:null,1:null}, createdComposedTrait: []}))
 }))
 
 interface EmotionState {
   emotions: Emotion[]
   setEmotionIntensity: (id: number, intensity: number) => void;
+  resetEmotions: () => void;
 }
 
 export const useEmotionStorage = create<EmotionState>((set) => ({
   emotions: characters[0].emotions,
+  resetEmotions: () => set(() => ({emotions: characters[0].emotions})),
   setEmotionIntensity: (id, intensity) => set((state) => ({emotions: state.emotions.map((e,i) => i === id ? {id: id, label: e.label, intensity: intensity} as Emotion : e)}))
 }))

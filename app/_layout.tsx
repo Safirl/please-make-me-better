@@ -41,7 +41,6 @@ export default function RootLayout() {
     const {getFinalChoices} = useChoicesCalculator({selectedMemories, composedTrait, emotions})
 
     const showEnding = () => {
-        console.log(getFinalChoices())
         setChoices(getFinalChoices())
         opacity.value = withTiming(0, {duration: 2000, easing: Easing.out(Easing.ease)}, () => {
             navigateToNextStep()

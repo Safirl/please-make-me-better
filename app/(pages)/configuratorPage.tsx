@@ -21,10 +21,10 @@ export default function configuratorPage() {
   
 
   useEffect(() => {
+    setCurrentParameter("")
     if (!Helpers.isDevMode) return;
     let root = Helpers.instance.getGUIFolder();
     let folder = root.addFolder("Parameter");
-    setCurrentParameter("")
     // Helpers.instance.tweak()
   }, [])
 

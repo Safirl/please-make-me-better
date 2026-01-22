@@ -31,7 +31,6 @@ export const useChoicesCalculator = ({
         composedTrait.forEach(trait => {
             personalityChoices.push(trait.path)
         });
-        console.log("personality: ", personalityChoices)
         return personalityChoices;
     }
 
@@ -65,7 +64,6 @@ export const useChoicesCalculator = ({
     const getFinalChoices = () => {
         let finalChoices: number[] = []
         finalChoices = finalChoices.concat(getEmotionChoices(), getMemoryChoices(), getPersonalityChoices())
-        console.log("finalChoices: ", finalChoices)
         return finalChoices
     }
 
