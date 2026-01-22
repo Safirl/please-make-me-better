@@ -14,9 +14,10 @@ const EndingPage = () => {
     useEffect(() => {
         const paths = [
             {choice: 0, length: choices.filter((choice) => choice === 0).length},
-            {choice: 0, length: choices.filter((choice) => choice === 1).length},
+            {choice: 1, length: choices.filter((choice) => choice === 1).length},
             {choice: 2, length: choices.filter((choice) => choice === 2).length}
         ]
+        console.log(paths)
 
         paths.forEach(path => {
             if (path.length > chosenPath.length) {

@@ -20,8 +20,7 @@ const FolderPage = ({showConfigureButton = true}: FolderPageProps) => {
     }
 
     const configure = () => {
-        gameProgress.nextStep("folders")
-        gameProgress.currentRoute && router.navigate(gameProgress.currentRoute.path as RelativePathString)
+        gameProgress.setNextStep()
     }
 
     return <View

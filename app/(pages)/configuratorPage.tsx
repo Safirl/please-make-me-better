@@ -7,11 +7,18 @@ import Svg, { Circle } from "react-native-svg";
 import { StyleSheet } from "react-native";
 import { Href } from "expo-router";
 import { useParametersDisplayStateStorage } from "@/assets/scripts/storage/useParametersProgressStorage";
+import { useProgressStorage } from "@/assets/scripts/storage/useGameProgressStorage";
+import { useRoute } from "@react-navigation/native";
 
 const DIMENSIONS = Dimensions.get("window")
 
 export default function configuratorPage() {
   const setCurrentParameter = useParametersDisplayStateStorage((state) => state.setCurrentParameter)
+  const setCurrentStepFromPath = useProgressStorage((state) => state.setCurrentStepFromPath)
+  const currentStep = useProgressStorage((state) => state.currentStep)
+  const route = useRoute()
+
+  
 
   useEffect(() => {
     if (!Helpers.isDevMode) return;
@@ -25,7 +32,16 @@ export default function configuratorPage() {
     useCallback(() => {
       setCurrentParameter("")
     }, [])
-);
+  );
+
+  useEffect(() => {
+    const trueRoute = route.name.replace('(pages)', '')
+    // console.log("route: ", trueRoute)
+    if (!currentStep) {
+        setCurrentStepFromPath(trueRoute)
+    }
+    // console.log("new current step: ", currentStep)
+  }, [currentStep])
 
   const buttons = [
     { label: "Memories", icon: "memory" as const, route: "/memoriesPage" as Href, style: styles.button1 },

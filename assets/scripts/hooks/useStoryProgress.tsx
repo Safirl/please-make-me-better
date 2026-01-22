@@ -8,10 +8,10 @@ export const useStoryProgress = (gameProgress: ProgressStateType) => {
 
 
     const moveNextStep = () => {
-        gameProgress.nextStep()
+        gameProgress.setNextStep()
     }
     const movePrevStep = () => {
-        gameProgress.prevStep()
+        gameProgress.setPrevStep()
     }
 
 
