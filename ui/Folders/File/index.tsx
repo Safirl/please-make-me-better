@@ -4,7 +4,8 @@ import { createStyle } from "./style";
 import Button from "@/ui/Button";
 import { Image } from 'expo-image';
 import { Svg, Path } from "react-native-svg";
-import { primaryTokens } from "@/assets/tokens/primary/primary.token";
+import TextAnimatedLine from "@/ui/animations/animatedTexts/AnimatedText";
+
 import SvgComponent from "@/ui/svg";
 
 interface CustomFolderProps extends ViewProps {
@@ -39,6 +40,7 @@ const FolderHero: React.FC<CustomFolderProps> = (props) => {
 
     const Style = createStyle();
 
+
     return <View
         {...rest}
         style={Style.main}
@@ -60,7 +62,7 @@ const FolderHero: React.FC<CustomFolderProps> = (props) => {
             style={Style.textArea}
         >
 
-            <Text style={Style.title}>{title}</Text>
+            <TextAnimatedLine style={Style.title} text={title} />
 
             <View
                 style={Style.hr}
@@ -68,18 +70,41 @@ const FolderHero: React.FC<CustomFolderProps> = (props) => {
 
 
             {
-                parahraph.map(lines => {
+                parahraph.map((lines, i) => {
                     return <Text style={[Style.paragraph]}>
                         {
-                            lines.map(line => {
-                                return <Text
+                            lines.map((line, j) => {
+                                return <TextAnimatedLine
+                                    key={line.text}
                                     style={[
                                         line.style === "accent" && Style.accentParagraph,
                                         line.style === "accent2" && Style.accentParagraph2
                                     ]}
+                                    text={line.text}
+                                    delay={(() => {
+                                        let acc = 0
+
+                                        parahraph.map((p, l) => {
+                                            if (l < i) {
+                                                acc += p.reduce((sum, a) => {
+                                                    return sum += a.text.length
+                                                }, 0)
+                                            }
+                                        })
+                                        const charCount = lines.map((a, k) => {
+                                            if (k < j) {
+                                                acc += a.text.length
+                                            }
+                                        })
+
+
+                                        return acc * 5 + 120
+
+                                    })()}
+
                                 >
-                                    {line.text}
-                                </Text>
+
+                                </TextAnimatedLine>
 
                             })
                         }

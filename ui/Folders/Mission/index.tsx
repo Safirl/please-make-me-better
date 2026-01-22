@@ -6,6 +6,7 @@ import { Image } from 'expo-image';
 import { Svg, Path } from "react-native-svg";
 import { primaryTokens } from "@/assets/tokens/primary/primary.token";
 import SvgComponent from "@/ui/svg";
+import TextAnimatedLine from "@/ui/animations/animatedTexts/AnimatedText";
 
 interface CustomFolderProps extends ViewProps {
     // title: string
@@ -52,8 +53,8 @@ const FolderHero: React.FC<CustomFolderProps> = (props) => {
                 maxHeight: 48
             }]}>
                 <View style={[Style.headingTextSection]}>
-                    <Text style={[Style.title]}>Reconfigurer Mia</Text>
-                    <Text style={[Style.paragraph, Style.secondaryText]}>Votre mission consiste à déplacer :</Text>
+                    <TextAnimatedLine style={[Style.title]} text={"Reconfigurer Mia"}></TextAnimatedLine>
+                    <TextAnimatedLine style={[Style.paragraph, Style.secondaryText]} text={"Votre mission consiste à déplacer :"} delay={"Reconfigurer Mia".length * 5}></TextAnimatedLine>
                 </View>
                 <View style={
                     {
@@ -80,23 +81,28 @@ const FolderHero: React.FC<CustomFolderProps> = (props) => {
                     <View style={[Style.mission, Style.lineDirection]}>
                         <SvgComponent name='eye' />
                         <View style={[]}>
-                            <Text style={[Style.paragraph]}>Le regard</Text>
-                            <Text style={[Style.paragraph, Style.secondaryText]}>Miroir → introspection</Text>
+                            <TextAnimatedLine style={[Style.paragraph]} text={"Le regard"} delay={("Votre mission consiste à déplacer :".length + "Reconfigurer Mia".length) * 5}></TextAnimatedLine>
+                            <TextAnimatedLine style={[Style.paragraph, Style.secondaryText]} delay={("Le regard".length + "Votre mission consiste à déplacer :".length + "Reconfigurer Mia".length) * 5} text="Miroir → introspection"></TextAnimatedLine>
                         </View>
                     </View>
                     <View style={[Style.mission, Style.lineDirection]}>
                         <SvgComponent name='heart' />
                         <View style={[]}>
-                            <Text style={[Style.paragraph]}>Le besoin</Text>
-                            <Text style={[Style.paragraph, Style.secondaryText]}>Validation → relations</Text>
+                            <TextAnimatedLine style={[Style.paragraph]} delay={("Miroir → introspection".length + "Le regard".length + "Votre mission consiste à déplacer :".length + "Reconfigurer Mia".length) * 5} text={"Le besoin"}></TextAnimatedLine>
+                            <TextAnimatedLine style={[Style.paragraph, Style.secondaryText]} delay={("Miroir → introspection".length + "Le regard".length + "Votre mission consiste à déplacer :".length + "Reconfigurer Mia".length + "Validation → relations".length) * 5} text={"Validation → relations"}></TextAnimatedLine>
                         </View>
                     </View>
                 </View>
                 <View style={[Style.mission, Style.columnDirection]}>
                     <SvgComponent name='star' />
                     <View style={[]}>
-                        <Text style={[Style.paragraph]}>La valeur</Text>
-                        <Text style={[Style.paragraph, Style.secondaryText]}>Apparence → identité</Text>
+                        <TextAnimatedLine
+                            delay={("Validation → relations".length + "Miroir → introspection".length + "Le regard".length + "Votre mission consiste à déplacer :".length + "Reconfigurer Mia".length + "Validation → relations".length) * 5}
+                            style={[Style.paragraph]} text={"La valeur"}></TextAnimatedLine>
+                        <TextAnimatedLine
+                            delay={("La valeur".length + "Validation → relations".length + "Miroir → introspection".length + "Le regard".length + "Votre mission consiste à déplacer :".length + "Reconfigurer Mia".length + "Validation → relations".length) * 5}
+
+                            style={[Style.paragraph, Style.secondaryText]} text={"Apparence → identité"}></TextAnimatedLine>
                     </View>
                 </View>
 

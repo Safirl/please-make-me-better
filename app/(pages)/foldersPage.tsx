@@ -8,7 +8,7 @@ interface FolderPageProps {
     showConfigureButton?: boolean
 }
 
-const FolderPage = ({showConfigureButton = true}: FolderPageProps) => {
+const FolderPage = ({ showConfigureButton = true }: FolderPageProps) => {
     const gameProgress: ProgressStateType = useProgressStorage()
 
     const client = {
@@ -92,7 +92,7 @@ const FolderPage = ({showConfigureButton = true}: FolderPageProps) => {
                 currentView=''
 
                 {
-                    ...showConfigureButton && ({configure})
+                ...showConfigureButton && ({ configure })
                 }
             />
 

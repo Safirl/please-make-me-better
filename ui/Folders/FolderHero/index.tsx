@@ -3,6 +3,7 @@ import { Image } from 'expo-image';
 import type { GestureResponderEvent, ViewProps } from "react-native";
 import { Text, View } from "react-native";
 import { createStyle } from "./style";
+import TextAnimatedLine from "@/ui/animations/animatedTexts/AnimatedText";
 
 interface CustomFolderProps extends ViewProps {
     client: {
@@ -38,20 +39,20 @@ const FolderHero: React.FC<CustomFolderProps> = (props) => {
 
             <Image
                 style={Style.image}
-                source={client.profilePicture }
+                source={client.profilePicture}
                 contentFit="cover"
             />
 
             <View>
-                <Text style={Style.titleFont}>{client.name}</Text>
-                <Text style={Style.paragraphFont}>{client.request}</Text>
-                <Text style={Style.paragraphFont}>{client.work}</Text>
-                <Text style={Style.paragraphFont}>{client.age}</Text>
+                <TextAnimatedLine style={Style.titleFont} text={client.name} charSpeed={35}/>
+                <TextAnimatedLine style={Style.paragraphFont} text={client.request} charSpeed={35} delay={120}/>
+                <TextAnimatedLine style={Style.paragraphFont} text={client.work} charSpeed={35} delay={240}/>
+                <TextAnimatedLine style={Style.paragraphFont} text={client.age} charSpeed={35} delay={360}/>
             </View>
         </View>
         <View>
-            <Button 
-                icon={{name: "human"}} 
+            <Button
+                icon={{ name: "human" }}
                 type="secondary"
                 label="Fiche Identité"
                 onPress={configure}

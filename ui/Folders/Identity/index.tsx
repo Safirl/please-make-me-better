@@ -5,6 +5,7 @@ import Button from "@/ui/Button";
 import { Image } from 'expo-image';
 import { Svg, Path } from "react-native-svg";
 import { primaryTokens } from "@/assets/tokens/primary/primary.token";
+import TextAnimatedLine from "@/ui/animations/animatedTexts/AnimatedText";
 
 interface CustomFolderProps extends ViewProps {
     //     title: string
@@ -47,12 +48,12 @@ const FolderHero: React.FC<CustomFolderProps> = (props) => {
             style={Style.textArea}
         >
 
-            <Text style={Style.title}>Perdue et en perte d'elle même </Text>
+            <TextAnimatedLine style={Style.title} text={"Perdue et en perte d'elle même"} > </TextAnimatedLine>
 
 
 
 
-            <Text style={Style.subTitle} >Qui est Mia ? </Text>
+            <TextAnimatedLine style={Style.subTitle} text={"Qui est Mia ?"} delay={("Perdue et en perte d'elle même".length) * 5}> </TextAnimatedLine>
 
             <Svg
                 width="286"
@@ -70,26 +71,28 @@ const FolderHero: React.FC<CustomFolderProps> = (props) => {
 
 
             <Text style={[Style.paragraph]}>
-                <Text >
-                    Depuis longtemps,
-                </Text>
-                <Text style={[Style.accentParagraph]}>
-                    elle ressent un malaise.
-                </Text>
+                <TextAnimatedLine text={"Depuis longtemps,"}
+
+                    delay={("Qui est Mia ?".length + "Perdue et en perte d'elle même".length) * 5}
+                />{" "}
+                <TextAnimatedLine
+                    delay={("Depuis longtemps,".length + "Qui est Mia ?".length + "Perdue et en perte d'elle même".length) * 5}
+                    text={"elle ressent un malaise."} style={[Style.accentParagraph]} />
             </Text>
 
-            {/* <Text > */}
-            <Text style={[Style.paragraph, Style.accentParagraph]}>
-                Elle se sent en décalage avec les critères de beauté dominants.
-            </Text>
-            <Text style={[Style.paragraph]}>
-                Comme si elle ne coïncidait jamais avec ce qu'on attend d'elle.
-            </Text>
-            {/* </Text> */}
+            <TextAnimatedLine
+                delay={("elle ressent un malaise.".length + "Depuis longtemps,".length + "Qui est Mia ?".length + "Perdue et en perte d'elle même".length) * 5}
+
+                text={"Elle se sent en décalage avec les critères de beauté dominants."} style={[Style.paragraph, Style.accentParagraph]} />
+            <TextAnimatedLine
+                delay={("Elle se sent en décalage avec les critères de beauté dominants.".length + "elle ressent un malaise.".length + "Depuis longtemps,".length + "Qui est Mia ?".length + "Perdue et en perte d'elle même".length) * 5}
+
+
+                text={"Comme si elle ne coïncidait jamais avec ce qu'on attend d'elle."} style={[Style.paragraph]} />
 
         </View>
 
-    </View>
+    </View >
 
 
 
