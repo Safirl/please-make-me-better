@@ -5,6 +5,7 @@ interface useParametersProgressStorage {
     hasParameterBeenModified: boolean;
     isFolderVisible: boolean;
 
+    resetParametersProgress: () => void;
     setCurrentParameter: (newValue: "" | "personality" | "memories" | "emotions") => void;
     setHasParameterBeenModified: (newValue: boolean) => void;
     setFolderVisibility: (visible: boolean) => void;
@@ -15,6 +16,7 @@ export const useParametersDisplayStateStorage = create<useParametersProgressStor
     hasParameterBeenModified: false,
     isFolderVisible: false,
 
+    resetParametersProgress: () => set(({currentParameter: "", hasParameterBeenModified: false, isFolderVisible: false})),
     setCurrentParameter: (newValue) => set(() => ({currentParameter: newValue})),
     setHasParameterBeenModified: (newValue) => set(() => ({hasParameterBeenModified: newValue})),
     setFolderVisibility: (visible) => set(() => ({isFolderVisible: visible}))

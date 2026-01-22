@@ -8,6 +8,7 @@ import { View, Text, StyleSheet } from "react-native"
 import { texts } from "@/assets/data/endingTexts"
 import { useEmotionStorage, useMemoryStorage, usePersonalityStorage } from "@/assets/scripts/storage/useParametersStorage"
 import TextAnimatedLine from "@/ui/animations/animatedTexts/AnimatedText";
+import { useParametersDisplayStateStorage } from "@/assets/scripts/storage/useParametersProgressStorage"
 
 const EndingPage = () => {
     const choices = useProgressStorage((state) => state.choices)
@@ -16,6 +17,8 @@ const EndingPage = () => {
     const resetEmotions = useEmotionStorage((state) => state.resetEmotions)
     const resetPersonality = usePersonalityStorage((state) => state.resetPersonality)
     const resetMemories = useMemoryStorage((state) => state.resetMemories)
+    const resetParametersProgress = useParametersDisplayStateStorage((state) => state.resetParametersProgress)
+    const setChoices = useProgressStorage((state) => state.setChoices)
 
     useEffect(() => {
         const paths = [
@@ -34,12 +37,16 @@ const EndingPage = () => {
     }, [choices])
 
     const handleRetry = () => {
+        resetExperience()
         setStep("configurator");
     }
 
     const resetExperience = () => {
-        //reset personality storage, memories storage, emotion storage and parameters progress storage and choices in gameStorage
-
+        resetEmotions()
+        resetMemories()
+        resetPersonality()
+        resetParametersProgress()
+        setChoices([]);
     }
 
     return (

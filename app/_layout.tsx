@@ -25,7 +25,6 @@ export default function RootLayout() {
     const composedTrait = usePersonalityStorage((state) => state.createdComposedTraits)
     const emotions = useEmotionStorage((state) => state.emotions)
     const currentStep = useProgressStorage((state) => state.currentStep)
-    const choices = useProgressStorage((state) => state.choices)
     const navigateToNextStep = useProgressStorage((state) => state.setNextStep)
     const setCurrentStepFromPath = useProgressStorage((state) => state.setCurrentStepFromPath)
     
@@ -63,7 +62,7 @@ export default function RootLayout() {
                 backgroundColor: primaryBackgroundTokens["background-secondary"]
             }}
         >
-            {/* <GL /> */}
+            <GL />
         </View>
         <View style={{ height: "100%", overflow: "hidden" }}>
             <Stack screenOptions={{

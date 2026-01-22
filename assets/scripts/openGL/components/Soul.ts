@@ -1,10 +1,9 @@
 import Helpers from "@/app/utils/Helpers";
-import { useEmotionStorage, useMemoryStorage, useSoulStorage, usePers@/assets/scripts/storage/useParameterss/scripts/storage/store";
+import { useEmotionStorage, useMemoryStorage, usePersonalityStorage } from "@/assets/scripts/storage/useParametersStorage";
 import Experience from "../Experience";
 import Component from "../classes/Component";
 import fragment from "./fragment";
 const HELPER_FOLDER = "Sphere"
-
 
 const lerp = (t: number, i: number, e: number) => t * (1 - e) + i * e
 
@@ -16,7 +15,7 @@ export default class Soul extends Component {
 
 
     private params = {
-        blendingFactor: (useSoulStorage.getState() as any).fluidity * this.paramsFactors.fluidityFactor, //8 is the factor. TODO Change later
+        blendingFactor: 8. * this.paramsFactors.fluidityFactor, //8 is the factor. TODO Change later
         factor: 0.25,
         speed: 2,
 
@@ -35,9 +34,9 @@ export default class Soul extends Component {
          */
         radius: 2,
         form: 1,
-        noiseFactor: 2.02,
+        noiseFactor: 0,
         noiseScale: 0.5,
-        filaments: 1,
+        filaments: .15,
     }
 
     private uTimeLoc: WebGLUniformLocation | null = null
@@ -190,10 +189,10 @@ export default class Soul extends Component {
     }
 
     onSoulStorageChanged = () => {
-        useSoulStorage.subscribe((state: any) => {
-            this.params.blendingFactor = state.fluidity * this.paramsFactors.fluidityFactor;
+        // useSoulStorage.subscribe((state: any) => {
+        //     this.params.blendingFactor = state.fluidity * this.paramsFactors.fluidityFactor;
 
-        })
+        // })
         useEmotionStorage.subscribe(state => {
 
             this.params.redIntenisty = state.emotions[0].intensity
@@ -217,9 +216,12 @@ export default class Soul extends Component {
 
         })
         useMemoryStorage.subscribe(state => {
-            this.targetNoiseFactor = state.memories.length / 3 * 2.02
-            this.targetFilaments = Math.max(state.memories.length / 3 * 1, 0.15)
-            this.targetRadius = [1.5, 2, 2, 2][state.memories.length]
+            this.targetNoiseFactor = 1 - (state.memories.length / 4) * 2.02
+            this.targetFilaments = Math.max(1 - (state.memories.length / 4) * 1, 0.15)
+            this.targetRadius = [1.5, 2, 2, 2, 2][state.memories.length]
+            console.log("1", this.targetNoiseFactor)
+            console.log("2", this.targetFilaments)
+            console.log("undefined", this.targetRadius)
         })
     }
 
