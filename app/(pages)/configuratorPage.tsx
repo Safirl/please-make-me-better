@@ -9,7 +9,8 @@ import { Href } from "expo-router";
 import { useParametersDisplayStateStorage } from "@/assets/scripts/storage/useParametersProgressStorage";
 import { useProgressStorage } from "@/assets/scripts/storage/useGameProgressStorage";
 import { useRoute } from "@react-navigation/native";
-
+import { Easing } from "react-native"
+import Animated, { useAnimatedStyle, useSharedValue, withTiming, withDelay } from "react-native-reanimated";
 const DIMENSIONS = Dimensions.get("window")
 
 export default function configuratorPage() {
@@ -18,7 +19,21 @@ export default function configuratorPage() {
   const currentStep = useProgressStorage((state) => state.currentStep)
   const route = useRoute()
 
-  
+  const scaleCircle = useSharedValue(1)
+  const opacityCircle = useSharedValue(1)
+
+
+  const scalebtn1 = useSharedValue(1)
+  const scalebtn2 = useSharedValue(1)
+  const scalebtn3 = useSharedValue(1)
+
+  const translateXbtn1 = useSharedValue(0)
+  const translateXbtn2 = useSharedValue(0)
+  const translateXbtn3 = useSharedValue(0)
+
+  const translateYbtn1 = useSharedValue(0)
+  const translateYbtn2 = useSharedValue(0)
+  const translateYbtn3 = useSharedValue(0)
 
   useEffect(() => {
     setCurrentParameter("")
@@ -38,7 +53,7 @@ export default function configuratorPage() {
     const trueRoute = route.name.replace('(pages)', '')
     // console.log("route: ", trueRoute)
     if (!currentStep) {
-        setCurrentStepFromPath(trueRoute)
+      setCurrentStepFromPath(trueRoute)
     }
     // console.log("new current step: ", currentStep)
   }, [currentStep])
@@ -50,41 +65,168 @@ export default function configuratorPage() {
   ];
 
   const handleNavigate = (route: Href) => {
-    router.navigate(route)
+
+    const duration = 800
+    const easeOut = Easing.in(Easing.exp)
+
+    let btn1delay = 0
+    let btn2delay = 20
+    let btn3delay = 40
+
+    if (route === "/emotionsPage") {
+
+      btn1delay = 20
+      btn2delay = 0
+      btn3delay = 40
+
+    }
+    if (route === "/personalityPage") {
+
+      btn1delay = 40
+      btn2delay = 20
+      btn3delay = 0
+
+    }
+
+
+
+
+
+
+    scaleCircle.value = withDelay(
+      0,
+      withTiming(1.2, { duration: duration, easing: easeOut })
+    )
+    opacityCircle.value = withDelay(
+      0,
+      withTiming(0, { duration: duration, easing: easeOut })
+    )
+
+
+    scalebtn1.value = withDelay(
+      btn1delay,
+      withTiming(1.5, { duration: duration, easing: easeOut })
+    )
+    scalebtn2.value = withDelay(
+      btn2delay,
+      withTiming(1.5, { duration: duration, easing: easeOut })
+    )
+    scalebtn3.value = withDelay(
+      btn3delay,
+      withTiming(1.5, { duration: duration, easing: easeOut })
+    )
+
+
+
+    translateXbtn1.value = withDelay(
+      btn1delay,
+      withTiming(-100, { duration: duration, easing: easeOut })
+    )
+    translateXbtn2.value = withDelay(
+      btn2delay,
+      withTiming(-100, { duration: duration, easing: easeOut })
+    )
+    translateXbtn3.value = withDelay(
+      btn3delay,
+      withTiming(100, { duration: duration, easing: easeOut })
+    )
+
+
+
+    translateYbtn1.value = withDelay(
+      btn1delay,
+      withTiming(-100, { duration: duration, easing: easeOut })
+    )
+    translateYbtn2.value = withDelay(
+      btn2delay,
+      withTiming(100, { duration: duration, easing: easeOut })
+    )
+    translateYbtn3.value = withDelay(
+      btn3delay,
+      withTiming(250, { duration: duration, easing: easeOut })
+    )
+
+    setTimeout(() => {
+      router.navigate(route)
+    }, duration)
   }
 
+  const btn1Style = useAnimatedStyle(() => {
+    return {
+      transform: [
+        { translateX: translateXbtn1.value },
+        { translateY: translateYbtn1.value },
+        { scale: scalebtn1.value },
+      ]
+    }
+  });
+
+  const btn2Style = useAnimatedStyle(() => {
+    return {
+      transform: [
+        { translateX: translateXbtn2.value },
+        { translateY: translateYbtn2.value },
+        { scale: scalebtn2.value },
+      ]
+    }
+  });
+
+  const btn3Style = useAnimatedStyle(() => {
+    return {
+      transform: [
+        { translateX: translateXbtn3.value },
+        { translateY: translateYbtn3.value },
+        { scale: scalebtn3.value },
+      ]
+    }
+  });
+
+  const circleAnimationStyle = useAnimatedStyle(() => {
+    return {
+      transform: [
+        { scale: scaleCircle.value }
+      ],
+      opacity: opacityCircle.value
+    }
+  })
   return (
     <View
       style={styles.container}
     >
       {
-        buttons.map(({ label, icon, route, style }) => (
-          <View key={label} style={style}>
+        buttons.map(({ label, icon, route, style }, i) => (
+          <Animated.View key={label} style={[
+            style, [
+              btn1Style,
+              btn2Style,
+              btn3Style
+            ][i]
+          ]}>
             <Button
               type="tertiary"
               label={label}
               icon={{ name: icon }}
               onPress={() => handleNavigate(route)}
             />
-          </View>
+          </Animated.View>
         ))
       }
 
-
-      <Svg
-        style={styles.circle}
-        width={500}
-        height={500}
-        fill="none"
-      >
-        <Circle
-          cx={250}
-          cy={220}
-          r={250}
-          stroke="#969696"
-          strokeDasharray="11 11"
-        />
-      </Svg>
+      <Animated.View style={[styles.circle, circleAnimationStyle]}>
+        <Svg
+          width={500}
+          height={500}
+          fill="none"
+        >
+          <Circle
+            cx={250}
+            cy={250}
+            r={250}
+            stroke="#969696"
+            strokeDasharray="11 11"
+          />
+        </Svg>
+      </Animated.View>
     </View>
   );
 }
