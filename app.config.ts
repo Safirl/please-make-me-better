@@ -58,6 +58,9 @@ export default ({config}: ConfigContext): ExpoConfig => {
                 {
                     "fonts": ["./assets/fonts/JetBrainsMono/JetBrainsMono[wght].ttf"],
                 }
+            ],
+            [
+                "expo-audio"
             ]
         ],
         "experiments": {

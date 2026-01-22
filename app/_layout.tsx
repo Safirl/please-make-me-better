@@ -12,6 +12,7 @@ import Animated, { useAnimatedStyle, useSharedValue, withTiming } from "react-na
 import { useChoicesCalculator } from "@/assets/scripts/hooks/usePathCalculator";
 import { useProgressStorage } from "@/assets/scripts/storage/useGameProgressStorage";
 import { useEmotionStorage, useMemoryStorage, usePersonalityStorage } from "@/assets/scripts/storage/useParametersStorage";
+import { useAudioPlayer } from 'expo-audio';
 
 
 export default function RootLayout() {
@@ -26,6 +27,10 @@ export default function RootLayout() {
     const currentStep = useProgressStorage((state) => state.currentStep)
     const navigateToNextStep = useProgressStorage((state) => state.setNextStep)
     const setCurrentStepFromPath = useProgressStorage((state) => state.setCurrentStepFromPath)
+    
+    const audioSource = require("../assets/sfx/music.mp3");
+    const player = useAudioPlayer(audioSource);
+    player.loop = true;
     
     const [loaded, error] = useFonts({
         JetBrainsMono: require("../assets/fonts/JetBrainsMono/JetBrainsMono[wght].ttf"),
@@ -54,7 +59,7 @@ export default function RootLayout() {
     },[pathname])
 
     useEffect(() => {
-        console.log(isTransitionLayerActive)
+        player.play()
     }, [])
 
     const [isTransitionLayerActive, setIsTransitionLayerActive] = useState(false)
