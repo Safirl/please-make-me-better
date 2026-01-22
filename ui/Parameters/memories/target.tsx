@@ -28,14 +28,14 @@ const Target = (props: targetProps) => {
         height.value = e.nativeEvent.layout.height;
     }
 
-    const getParallaxDisplacement = (): {x: number, y: number} => {        
-        const xDiff = gunPosition.x/dimensions.width - .5
-        const yDiff = gunPosition.y/dimensions.height - .5
+    const getParallaxDisplacement = (): { x: number, y: number } => {
+        const xDiff = gunPosition.x / dimensions.width - .5
+        const yDiff = gunPosition.y / dimensions.height - .5
 
         const distance = Math.sqrt(Math.pow((positionX.value - gunPosition.x), 2) + Math.pow((positionY.value - gunPosition.y), 2))
-        return {x:-xDiff* distance * .1,y:-yDiff* distance  * .1}
+        return { x: -xDiff * distance * .1, y: -yDiff * distance * .1 }
         // return {x:-xDiff* 30,y:-yDiff* 30}
-    } 
+    }
 
     const positionStyle = useAnimatedStyle(() => ({
         top: positionY.value,
@@ -43,11 +43,11 @@ const Target = (props: targetProps) => {
         transform: [
             { translateX: (-width.value / 2) + getParallaxDisplacement().x },
             { translateY: (-height.value / 2) + getParallaxDisplacement().y },
-    ],
+        ],
     }))
 
 
-    return(
+    return (
         <Animated.View style={[styles.container, positionStyle]} onLayout={onLayoutHandler}>
             <Text style={styles.text}>{props.label || "lorem ipsum"}</Text>
             <Pressable style={[styles.buttonBase, props.type === "filled" && styles.buttonFilled]}>
@@ -57,19 +57,19 @@ const Target = (props: targetProps) => {
                     <>
                         <Svg width={props.type === "dashed" ? "82" : "62"} height={props.type === "dashed" ? "82" : "62"}>
                             <Rect
-                            x="1"
-                            y="1"
-                            width={props.type === "dashed" ? "80" : "60"}
-                            height={props.type === "dashed" ? "80" : "60"}
-                            fill="none"
-                            stroke={primaryColorTokens["color-white"]}
-                            strokeWidth="2"
-                            strokeDasharray="12 8" // taille du dash / espace
-                            rx="8"
+                                x="1"
+                                y="1"
+                                width={props.type === "dashed" ? "80" : "60"}
+                                height={props.type === "dashed" ? "80" : "60"}
+                                fill="none"
+                                stroke={primaryColorTokens["color-white"]}
+                                strokeWidth="2"
+                                strokeDasharray="12 8" // taille du dash / espace
+                                rx="8"
                             />
                         </Svg>
                         {props.type === "dashed" &&
-                        <Text style={[styles.text, styles.cursor]}>X</Text>
+                            <Text style={[styles.text, styles.cursor]}>X</Text>
                         }
                     </>
                 }
@@ -92,17 +92,18 @@ const styles = StyleSheet.create({
         marginTop: 8,
         borderColor: primaryColorTokens["color-white"],
     },
-    
+
     buttonFilled: {
         padding: 8,
         borderWidth: 16,
         borderRadius: 4,
     },
-    
-    text: {  
+
+    text: {
         ...fonts.paragraph,
+        textAlign: "center"
     },
-    
+
     cursor: {
         position: "absolute",
         left: "43%",
