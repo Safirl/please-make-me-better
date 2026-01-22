@@ -218,7 +218,7 @@ export default class Soul extends Component {
         useMemoryStorage.subscribe(state => {
             this.targetNoiseFactor = 1 - (state.memories.length / 4) * 2.02
             this.targetFilaments = Math.max(1 - (state.memories.length / 4) * 1, 0.15)
-            this.targetRadius = [1.5, 2, 2, 2, 2][state.memories.length]
+            this.targetRadius = [2, 2, 2, 2, 2][state.memories.length]
             console.log("1", this.targetNoiseFactor)
             console.log("2", this.targetFilaments)
             console.log("undefined", this.targetRadius)
