@@ -22,7 +22,6 @@ const emotionsParameters = () => {
     const onValueChanged = (value: number, emotionId: number) => {
         setEmotionIntensity(emotionId, value)
     }
-    const easeOut = Easing.in(Easing.exp)
 
 
 
@@ -33,13 +32,17 @@ const emotionsParameters = () => {
     const globalOpacity = useSharedValue(1)
 
     const back = () => {
-        globalOpacity.value = withTiming(0, { duration: 750, easing: easeOut })
+        const easeOut = Easing.in(Easing.exp)
+
+        globalOpacity.value = withTiming(0, { duration: 500, easing: easeOut })
         setTimeout(() => {
             router.navigate("/configuratorPage")
-        }, 750)
+        }, 500)
     }
 
     useEffect(() => {
+        const easeOut = Easing.out(Easing.exp)
+
         setCurrentParameter("emotions")
         setHasParameterBeenModified(true)
 
@@ -107,10 +110,10 @@ const emotionsParameters = () => {
             <Animated.Text style={[styles.text, { paddingRight: 340 }, text3StyleAnimation]}>{emotions[1].label}</Animated.Text>
             <Animated.Text style={[styles.text, { bottom: 0, paddingBottom: 24 }, text4StyleAnimation]}>{emotions[2].label}</Animated.Text>
             <Animated.Text style={[styles.text, { paddingLeft: 340 }, text2StyleAnimation]}>{emotions[3].label}</Animated.Text>
-            <Cursor delay={140} emotionId={emotions[0].id} value={emotions[0].intensity} offsetY={-OFFSET} rotation="vertical+" onValueChanged={onValueChanged}></Cursor>
-            <Cursor delay={460} emotionId={emotions[1].id} value={emotions[1].intensity} offsetX={-OFFSET} rotation="horizontal-" onValueChanged={onValueChanged}></Cursor>
-            <Cursor delay={320} emotionId={emotions[2].id} value={emotions[2].intensity} offsetY={OFFSET} rotation="vertical-" onValueChanged={onValueChanged}></Cursor>
-            <Cursor delay={280} emotionId={emotions[3].id} value={emotions[3].intensity} offsetX={OFFSET} rotation="horizontal+" onValueChanged={onValueChanged}></Cursor>
+            <Cursor delay={170} emotionId={emotions[0].id} value={emotions[0].intensity} offsetY={-OFFSET} rotation="vertical+" onValueChanged={onValueChanged}></Cursor>
+            <Cursor delay={350} emotionId={emotions[1].id} value={emotions[1].intensity} offsetX={-OFFSET} rotation="horizontal-" onValueChanged={onValueChanged}></Cursor>
+            <Cursor delay={280} emotionId={emotions[2].id} value={emotions[2].intensity} offsetY={OFFSET} rotation="vertical-" onValueChanged={onValueChanged}></Cursor>
+            <Cursor delay={210} emotionId={emotions[3].id} value={emotions[3].intensity} offsetX={OFFSET} rotation="horizontal+" onValueChanged={onValueChanged}></Cursor>
         </Animated.View>
     )
 }

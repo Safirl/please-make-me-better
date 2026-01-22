@@ -194,7 +194,7 @@ export default function configuratorPage() {
 
   useEffect(() => {
 
-    const duration = 800
+    const duration = 1200
     const easeOut = Easing.out(Easing.exp)
 
     const btn1delay = 0

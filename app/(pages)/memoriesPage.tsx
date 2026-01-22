@@ -35,12 +35,12 @@ const MemoriesParameters = () => {
     const easeOut = Easing.in(Easing.exp)
 
     const back = () => {
-        const d = 750
+        const d = 500
         globalOpacity.value = withTiming(0, { duration: d, easing: easeOut })
 
         setTimeout(() => {
             router.navigate("/configuratorPage")
-        }, d + 100)
+        }, d)
     }
 
 

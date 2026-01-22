@@ -64,7 +64,7 @@ export const Cursor = (props: cursorProps) => {
     }
   })
 
-  const easeOut = Easing.in(Easing.exp)
+  const easeOut = Easing.out(Easing.exp)
 
   useEffect(() => {
 
