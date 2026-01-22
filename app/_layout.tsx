@@ -62,7 +62,7 @@ export default function RootLayout() {
                 backgroundColor: primaryBackgroundTokens["background-secondary"]
             }}
         >
-            {/* <GL /> */}
+            <GL />
         </View>
         <View style={{ height: "100%", overflow: "hidden" }}>
             <Stack screenOptions={{

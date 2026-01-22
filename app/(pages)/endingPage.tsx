@@ -42,7 +42,6 @@ const EndingPage = () => {
     }
 
     const resetExperience = () => {
-        //reset parameters progress storage and choices in gameStorage
         resetEmotions()
         resetMemories()
         resetPersonality()

@@ -160,7 +160,7 @@ export const characters = [
             {
                 id: 0,
                 slug: "colere",
-                intensity: .5,
+                intensity: 0,
                 label: "Colère"
             },
             {
@@ -172,13 +172,13 @@ export const characters = [
             {
                 id: 2,
                 slug: "tristesse",
-                intensity: .5,
+                intensity: .9,
                 label: "Tristesse"
             },
             {
                 id: 3,
                 slug: "serenite",
-                intensity: .5,
+                intensity: 0,
                 label: "Sérénité"
             },
         ] as Emotion[]
