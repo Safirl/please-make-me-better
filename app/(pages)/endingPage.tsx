@@ -5,25 +5,26 @@ import { primaryColorTokens } from "@/assets/tokens/primary/colors.tokens"
 import Button from "@/ui/Button"
 import { useEffect, useState } from "react"
 import { View, Text, StyleSheet } from "react-native"
-import {texts} from "@/assets/data/endingTexts"
+import { texts } from "@/assets/data/endingTexts"
 import { useEmotionStorage, useMemoryStorage, usePersonalityStorage } from "@/assets/scripts/storage/useParametersStorage"
+import TextAnimatedLine from "@/ui/animations/animatedTexts/AnimatedText";
 
 const EndingPage = () => {
     const choices = useProgressStorage((state) => state.choices)
     const setStep = useProgressStorage((state) => state.setStep)
-    const [chosenPath, setChosenPath] = useState({choice: -1, length: -1})
+    const [chosenPath, setChosenPath] = useState({ choice: 0, length: -1 })
     const resetEmotions = useEmotionStorage((state) => state.resetEmotions)
     const resetPersonality = usePersonalityStorage((state) => state.resetPersonality)
     const resetMemories = useMemoryStorage((state) => state.resetMemories)
 
     useEffect(() => {
         const paths = [
-            {choice: 0, length: choices.filter((choice) => choice === 0).length},
-            {choice: 1, length: choices.filter((choice) => choice === 1).length},
-            {choice: 2, length: choices.filter((choice) => choice === 2).length}
+            { choice: 0, length: choices.filter((choice) => choice === 0).length },
+            { choice: 1, length: choices.filter((choice) => choice === 1).length },
+            { choice: 2, length: choices.filter((choice) => choice === 2).length }
         ]
 
-        let currentChosenPath = {choice: -1, length: -1};
+        let currentChosenPath = { choice: -1, length: -1 };
         paths.forEach(path => {
             if (path.length > currentChosenPath.length) {
                 currentChosenPath = path
@@ -42,36 +43,47 @@ const EndingPage = () => {
     }
 
     return (
-    <View style={styles.container}>
-        <View>
-            {/* SVG */}
-            <View style= {styles.textContainer}>
-                <Text style={styles.header}>Compte rendu</Text>
-                <Text style={styles.text}>{texts[chosenPath.choice]}</Text>
-                <Text style={[styles.text, {color: primaryColorTokens["color-danger-high"]}]}>L’état général du client n’est pas compatible avec sa demande. Le dossier ne peut être considéré comme clos.</Text>
-            </View>
-        </View>
-        <View style={styles.rightContainer}>
-            <Text style={styles.errorText}>
-                //ERREUR//
-            </Text>
-            <View style={styles.triesContainer}>
-                <View style={styles.triesNumberContainer}>
-                    <Text style={styles.triesText}>
-                        1
-                    </Text>
-                    <Text style={styles.triesText}>
-                        2
-                    </Text>
-                    <Text style={styles.triesText}>
-                        3
-                    </Text>
+        <View style={styles.container}>
+            <View>
+                {/* SVG */}
+                <View style={styles.textContainer}>
+                    <TextAnimatedLine
+                        style={styles.header}
+                        text={"Compte rendu"}
+                    ></TextAnimatedLine>
+                    <TextAnimatedLine
+                        style={styles.text}
+                        text={`${texts[chosenPath.choice]}`}
+                        delay={"Compte rendu".length * 5}
+                    ></TextAnimatedLine>
+                    <TextAnimatedLine
+                        style={[styles.text, { color: primaryColorTokens["color-danger-high"] }]}
+                        delay={("Compte rendu".length + `${texts[chosenPath.choice]}`.length) * 5}
+                        text={"L’état général du client n’est pas compatible avec sa demande. Le dossier ne peut être considéré comme clos."}
+                    ></TextAnimatedLine>
                 </View>
-                <Text style={{...fonts.paragraph, color: primaryColorTokens["color-tertiary-lower"]}}>Tentatives restantes</Text>
             </View>
-            <Button label="Rééssayer" type="primary" overridePadding={60} onPress={handleRetry}></Button>
+            <View style={styles.rightContainer}>
+                <Text style={styles.errorText}>
+                //ERREUR//
+                </Text>
+                <View style={styles.triesContainer}>
+                    <View style={styles.triesNumberContainer}>
+                        <Text style={styles.triesText}>
+                            1
+                        </Text>
+                        <Text style={styles.triesText}>
+                            2
+                        </Text>
+                        <Text style={styles.triesText}>
+                            3
+                        </Text>
+                    </View>
+                    <Text style={{ ...fonts.paragraph, color: primaryColorTokens["color-tertiary-lower"] }}>Tentatives restantes</Text>
+                </View>
+                <Button label="Rééssayer" type="primary" overridePadding={60} onPress={handleRetry}></Button>
+            </View>
         </View>
-    </View>
     )
 }
 
@@ -118,7 +130,7 @@ const styles = StyleSheet.create({
         alignItems: "center"
     },
 
-    triesText:{
+    triesText: {
         ...fonts.paragraph,
         color: primaryColorTokens["color-tertiary-lower"],
         borderColor: primaryColorTokens["color-tertiary-lower"],
