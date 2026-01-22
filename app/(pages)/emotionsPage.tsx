@@ -8,7 +8,9 @@ import SvgComponent from "@/ui/svg";
 import { router } from "expo-router";
 import { useEmotionStorage } from "@/assets/scripts/storage/useParametersStorage";
 import { useParametersDisplayStateStorage } from "@/assets/scripts/storage/useParametersProgressStorage";
+import Animated, { withSequence, useAnimatedStyle, useSharedValue, withTiming, withDelay } from "react-native-reanimated";
 
+import { Easing } from "react-native"
 const OFFSET = 70
 
 const emotionsParameters = () => {
@@ -20,16 +22,74 @@ const emotionsParameters = () => {
     const onValueChanged = (value: number, emotionId: number) => {
         setEmotionIntensity(emotionId, value)
     }
+    const easeOut = Easing.in(Easing.exp)
+
+
+
+    const txt1 = useSharedValue(0)
+    const txt2 = useSharedValue(0)
+    const txt3 = useSharedValue(0)
+    const txt4 = useSharedValue(0)
+    const globalOpacity = useSharedValue(1)
+
     const back = () => {
-        router.navigate("/configuratorPage")
+        globalOpacity.value = withTiming(0, { duration: 750, easing: easeOut })
+        setTimeout(() => {
+            router.navigate("/configuratorPage")
+        }, 750)
     }
+
     useEffect(() => {
         setCurrentParameter("emotions")
         setHasParameterBeenModified(true)
+
+        txt1.value = withDelay(
+            100,
+            withTiming(1, { duration: 750, easing: easeOut })
+        )
+        txt2.value = withDelay(
+            170,
+            withTiming(1, { duration: 750, easing: easeOut })
+        )
+        txt3.value = withDelay(
+            280,
+            withTiming(1, { duration: 750, easing: easeOut })
+        )
+        txt4.value = withDelay(
+            210,
+            withTiming(1, { duration: 750, easing: easeOut })
+        )
     }, [])
 
+    const text1StyleAnimation = useAnimatedStyle(() => {
+        return {
+            opacity: txt1.value
+        }
+    })
+    const text2StyleAnimation = useAnimatedStyle(() => {
+        return {
+            opacity: txt2.value
+        }
+    })
+    const text3StyleAnimation = useAnimatedStyle(() => {
+        return {
+            opacity: txt3.value
+        }
+    })
+    const text4StyleAnimation = useAnimatedStyle(() => {
+        return {
+            opacity: txt4.value
+        }
+    })
+    const globalOpacityAnimationStyle = useAnimatedStyle(() => {
+        return {
+            opacity: globalOpacity.value
+        }
+    })
+
+
     return (
-        <View style={styles.container}>
+        <Animated.View style={[styles.container, globalOpacityAnimationStyle]}>
             <View
                 style={{
                     position: "absolute",
@@ -43,15 +103,15 @@ const emotionsParameters = () => {
                 </Button>
             </View>
 
-            <Text style={[styles.text, { top: 0, paddingTop: 24 }]}>{emotions[0].label}</Text>
-            <Text style={[styles.text, { paddingRight: 340 }]}>{emotions[1].label}</Text>
-            <Text style={[styles.text, { bottom: 0, paddingBottom: 24 }]}>{emotions[2].label}</Text>
-            <Text style={[styles.text, { paddingLeft: 340 }]}>{emotions[3].label}</Text>
-            <Cursor emotionId={emotions[0].id} value={emotions[0].intensity} offsetY={-OFFSET} rotation="vertical+" onValueChanged={onValueChanged}></Cursor>
-            <Cursor emotionId={emotions[1].id} value={emotions[1].intensity} offsetX={-OFFSET} rotation="horizontal-" onValueChanged={onValueChanged}></Cursor>
-            <Cursor emotionId={emotions[2].id} value={emotions[2].intensity} offsetY={OFFSET} rotation="vertical-" onValueChanged={onValueChanged}></Cursor>
-            <Cursor emotionId={emotions[3].id} value={emotions[3].intensity} offsetX={OFFSET} rotation="horizontal+" onValueChanged={onValueChanged}></Cursor>
-        </View>
+            <Animated.Text style={[styles.text, { top: 0, paddingTop: 24 }, text1StyleAnimation]}>{emotions[0].label}</Animated.Text>
+            <Animated.Text style={[styles.text, { paddingRight: 340 }, text3StyleAnimation]}>{emotions[1].label}</Animated.Text>
+            <Animated.Text style={[styles.text, { bottom: 0, paddingBottom: 24 }, text4StyleAnimation]}>{emotions[2].label}</Animated.Text>
+            <Animated.Text style={[styles.text, { paddingLeft: 340 }, text2StyleAnimation]}>{emotions[3].label}</Animated.Text>
+            <Cursor delay={140} emotionId={emotions[0].id} value={emotions[0].intensity} offsetY={-OFFSET} rotation="vertical+" onValueChanged={onValueChanged}></Cursor>
+            <Cursor delay={460} emotionId={emotions[1].id} value={emotions[1].intensity} offsetX={-OFFSET} rotation="horizontal-" onValueChanged={onValueChanged}></Cursor>
+            <Cursor delay={320} emotionId={emotions[2].id} value={emotions[2].intensity} offsetY={OFFSET} rotation="vertical-" onValueChanged={onValueChanged}></Cursor>
+            <Cursor delay={280} emotionId={emotions[3].id} value={emotions[3].intensity} offsetX={OFFSET} rotation="horizontal+" onValueChanged={onValueChanged}></Cursor>
+        </Animated.View>
     )
 }
 
