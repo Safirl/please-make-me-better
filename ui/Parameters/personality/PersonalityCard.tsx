@@ -9,7 +9,7 @@ import Animated, { useAnimatedStyle, useSharedValue, withSpring, withTiming } fr
 import Svg, { Circle } from "react-native-svg"
 import Font from "@/assets/styles/fonts";
 import { useEffect, useState } from "react"
-import { usePersonalityStorage } from "@/assets/scripts/storage/store"
+import { usePersonalityStorage } from "@/assets/scripts/storage/useParametersStorage"
 
 interface PersonalityCardProps {
     trait0: Trait

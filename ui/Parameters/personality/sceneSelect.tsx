@@ -1,6 +1,6 @@
 import fonts from "@/assets/styles/fonts";
 import { Trait } from "@/assets/data/characters";
-import { usePersonalityStorage } from "@/assets/scripts/storage/store";
+import { usePersonalityStorage } from "@/assets/scripts/storage/useParametersStorage";
 import { primaryBackgroundTokens } from "@/assets/tokens/primary/backgrounds.tokens";
 import { primaryColorTokens } from "@/assets/tokens/primary/colors.tokens";
 import TraitButton from "@/ui/Parameters/personality/traitButton";

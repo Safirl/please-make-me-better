@@ -1,4 +1,4 @@
-import { Word } from "@/assets/scripts/storage/store"
+import { Word } from "@/assets/scripts/storage/useParametersStorage"
 import { StyleSheet, Text, View } from "react-native"
 
 interface wordlLabelProps {

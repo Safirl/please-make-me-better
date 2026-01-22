@@ -1,27 +1,57 @@
 import GL from "@/ui/GL";
 import Button from "@/ui/Button";
 import { primaryBackgroundTokens } from "@/assets/tokens/primary/backgrounds.tokens";
-import { useTheme } from "@react-navigation/native";
+import { useRoute, useTheme } from "@react-navigation/native";
 import { useFonts } from "expo-font";
-import { Stack } from "expo-router";
-import { Pressable, StyleSheet, View } from "react-native";
-import { useParametersProgressStorage } from "@/assets/scripts/storage/useParametersProgressStorage";
-import { useEffect } from "react";
+import { router, Stack, useFocusEffect, usePathname } from "expo-router";
+import { Easing, Pressable, StyleSheet, View } from "react-native";
+import { useParametersDisplayStateStorage } from "@/assets/scripts/storage/useParametersProgressStorage";
+import { useCallback, useEffect } from "react";
 import FolderPage from "./(pages)/foldersPage";
+import { useSharedValue, withTiming } from "react-native-reanimated";
+import { useChoicesCalculator } from "@/assets/scripts/hooks/usePathCalculator";
+import { useProgressStorage } from "@/assets/scripts/storage/useGameProgressStorage";
+import { useEmotionStorage, useMemoryStorage, usePersonalityStorage } from "@/assets/scripts/storage/useParametersStorage";
 
 
 export default function RootLayout() {
-    const currentParameter = useParametersProgressStorage((state) => state.currentParameter)
-    const hasParameterBeenModified = useParametersProgressStorage((state) => state.hasParameterBeenModified)
-    const isFolderVisible = useParametersProgressStorage((state) => state.isFolderVisible)
-    const setFolderVisibility = useParametersProgressStorage((state) => state.setFolderVisibility)
+    const currentParameter = useParametersDisplayStateStorage((state) => state.currentParameter)
+    const hasParameterBeenModified = useParametersDisplayStateStorage((state) => state.hasParameterBeenModified)
+    const isFolderVisible = useParametersDisplayStateStorage((state) => state.isFolderVisible)
+    const setFolderVisibility = useParametersDisplayStateStorage((state) => state.setFolderVisibility)
+    const opacity = useSharedValue(1)
+    const setChoices = useProgressStorage((state) => state.setChoices)
+    const selectedMemories = useMemoryStorage((state) => state.memories)
+    const composedTrait = usePersonalityStorage((state) => state.createdComposedTraits)
+    const emotions = useEmotionStorage((state) => state.emotions)
+    const currentStep = useProgressStorage((state) => state.currentStep)
+    const choices = useProgressStorage((state) => state.choices)
+    const navigateToNextStep = useProgressStorage((state) => state.setNextStep)
+    const setCurrentStepFromPath = useProgressStorage((state) => state.setCurrentStepFromPath)
     
     const [loaded, error] = useFonts({
         JetBrainsMono: require("../assets/fonts/JetBrainsMono/JetBrainsMono[wght].ttf"),
     });
+    const endingRoute = "/endingPage"
+    const pathname = usePathname()
 
     const { colors } = useTheme();
     colors.background = 'transparent';
+
+    const {getFinalChoices} = useChoicesCalculator({selectedMemories, composedTrait, emotions})
+
+    const showEnding = () => {
+        setChoices(getFinalChoices())
+        opacity.value = withTiming(0, {duration: 2000, easing: Easing.out(Easing.ease)}, () => {
+            navigateToNextStep()
+        })
+    }
+
+    useEffect(() => {
+        if (!currentStep) {
+            setCurrentStepFromPath(pathname)
+        }
+    },[pathname])
 
     return <>
         <View
@@ -47,15 +77,19 @@ export default function RootLayout() {
                 <Stack.Screen name="(pages)/memoriesPage" options={{ title: '', headerStyle: styles.headerStyle }} />
                 <Stack.Screen name="(pages)/personalityPage" options={{ title: '', headerStyle: styles.headerStyle }} />
                 <Stack.Screen name="(pages)/emotionsPage" options={{ title: '', headerStyle: styles.headerStyle }} />
+                <Stack.Screen name="(pages)/endingPage" options={{ title: '', headerStyle: styles.headerStyle }} />
             </Stack>
         </View>
-        <View style={styles.validateButton}>
-            <Button type="primary" icon={{name: "file"}} overridePadding={12} onPress={()=>setFolderVisibility(true)}></Button>
-            {
-                currentParameter === "" &&
-                <Button type="primary" label="Finaliser" overridePadding={24}></Button>
-            }
-        </View>
+        {
+            currentStep?.step === "configurator" &&
+            <View style={styles.validateButton}>
+                <Button type="primary" icon={{name: "file"}} overridePadding={12} onPress={()=>setFolderVisibility(true)}></Button>
+                {
+                    currentParameter === "" &&
+                    <Button type={hasParameterBeenModified ? "primary" : "secondary"} label="Finaliser" overridePadding={24} onPress={hasParameterBeenModified ? () => showEnding() : () => {}}></Button>
+                }
+            </View>
+        }
 
         {
             isFolderVisible &&

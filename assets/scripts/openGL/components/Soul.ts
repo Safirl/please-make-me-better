@@ -1,5 +1,5 @@
 import Helpers from "@/app/utils/Helpers";
-import { useEmotionStorage, useMemoryStorage, useSoulStorage, usePersonalityStorage } from "@/assets/scripts/storage/store";
+import { useEmotionStorage, useMemoryStorage, useSoulStorage, usePers@/assets/scripts/storage/useParameterss/scripts/storage/store";
 import Experience from "../Experience";
 import Component from "../classes/Component";
 import fragment from "./fragment";

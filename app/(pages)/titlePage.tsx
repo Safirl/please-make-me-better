@@ -37,8 +37,7 @@ const personalityParameters = () => {
             withSpring(1, { duration: 1500 }),
             withSpring(0, { duration: 2500, },
                 () => {
-                    gameProgress.nextStep("title")
-                    gameProgress.currentRoute && router.navigate(gameProgress.currentRoute.path)
+                    gameProgress.setNextStep()
                 })
         )
     }, [])

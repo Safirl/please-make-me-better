@@ -5,7 +5,7 @@ import { View, Text, Pressable, StyleSheet, LayoutChangeEvent, Dimensions } from
 import fonts from "@/assets/styles/fonts";
 import Animated, { useAnimatedStyle, useSharedValue } from "react-native-reanimated";
 import Svg, { Rect } from "react-native-svg";
-import { useMemoryStorage } from "@/assets/scripts/storage/store";
+import { useMemoryStorage } from "@/assets/scripts/storage/useParametersStorage";
 
 const dimensions = Dimensions.get("screen");
 

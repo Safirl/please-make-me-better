@@ -1,24 +1,30 @@
 import { router, useFocusEffect } from "expo-router";
 import { useCallback, useEffect } from "react";
 import { Dimensions, Pressable, View } from "react-native";
-import { useStorage } from "../../assets/scripts/storage/store";
 import Button from "@/ui/Button";
 import Helpers from "../utils/Helpers";
 import Svg, { Circle } from "react-native-svg";
 import { StyleSheet } from "react-native";
 import { Href } from "expo-router";
-import { useParametersProgressStorage } from "@/assets/scripts/storage/useParametersProgressStorage";
+import { useParametersDisplayStateStorage } from "@/assets/scripts/storage/useParametersProgressStorage";
+import { useProgressStorage } from "@/assets/scripts/storage/useGameProgressStorage";
+import { useRoute } from "@react-navigation/native";
 
-const dimensions = Dimensions.get("window")
+const DIMENSIONS = Dimensions.get("window")
 
 export default function configuratorPage() {
-  const setCurrentParameter = useParametersProgressStorage((state) => state.setCurrentParameter)
+  const setCurrentParameter = useParametersDisplayStateStorage((state) => state.setCurrentParameter)
+  const setCurrentStepFromPath = useProgressStorage((state) => state.setCurrentStepFromPath)
+  const currentStep = useProgressStorage((state) => state.currentStep)
+  const route = useRoute()
+
+  
 
   useEffect(() => {
+    setCurrentParameter("")
     if (!Helpers.isDevMode) return;
     let root = Helpers.instance.getGUIFolder();
     let folder = root.addFolder("Parameter");
-    setCurrentParameter("")
     // Helpers.instance.tweak()
   }, [])
 
@@ -26,7 +32,16 @@ export default function configuratorPage() {
     useCallback(() => {
       setCurrentParameter("")
     }, [])
-);
+  );
+
+  useEffect(() => {
+    const trueRoute = route.name.replace('(pages)', '')
+    // console.log("route: ", trueRoute)
+    if (!currentStep) {
+        setCurrentStepFromPath(trueRoute)
+    }
+    // console.log("new current step: ", currentStep)
+  }, [currentStep])
 
   const buttons = [
     { label: "Memories", icon: "memory" as const, route: "/memoriesPage" as Href, style: styles.button1 },
@@ -58,14 +73,14 @@ export default function configuratorPage() {
 
       <Svg
         style={styles.circle}
-        width={490}
-        height={394}
+        width={500}
+        height={500}
         fill="none"
       >
         <Circle
-          cx={245}
-          cy={197}
-          r={(dimensions.width / 2) * .7}
+          cx={250}
+          cy={220}
+          r={250}
           stroke="#969696"
           strokeDasharray="11 11"
         />

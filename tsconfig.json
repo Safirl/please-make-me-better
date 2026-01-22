@@ -17,6 +17,6 @@
     "**/*.tsx",
     ".expo/types/**/*.ts",
     "expo-env.d.ts",
-    "assets/scripts/storage/store.ts"
+    "assets/scripts/storage/useParametersStorage.ts"
   ]
 }

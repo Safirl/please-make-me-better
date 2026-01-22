@@ -1,4 +1,4 @@
-import { usePersonalityStorage } from "@/assets/scripts/storage/store"
+import { usePersonalityStorage } from "@/assets/scripts/storage/useParametersStorage"
 import Animated, { useAnimatedStyle, useDerivedValue, useSharedValue, withTiming } from "react-native-reanimated"
 import { View, Text } from "react-native"
 import TraitButton from "./traitButton"

@@ -1,106 +1,92 @@
+import { RelativePathString, router } from 'expo-router'
 import { create } from 'zustand'
 
 
-type Step = "" | "title" | "login" | "folders" | "configurator" | "end" | "LoreIntroduction"
 export type ProgressStateType = {
-    steps: Step[];
-    currentStep: Step,
-    setCurrentStep: (step: Step) => void
-    nextStep: (cs?: Step) => void
-    prevStep: (cs?: Step) => void
-    currentRoute: Route
-}
-type Routes = {
-    [key: string]: Route
+    currentStep: Step | null,
+    choices: number[]
+    
+    setStep: (newStep: StepType) => void
+    setNextStep: () => void
+    setPrevStep: () => void
+    addChoice: (choice: number) => void
+    setChoices: (choices: number[]) => void
+    setCurrentStepFromPath: (routePath?: string) => void;
 }
 
-type Route = {
-    path: string
-} | null;
+type StepType = "title" | "login" | "folders" | "configurator" | "end" | "loreIntroduction"
+type Step = {
+    step: StepType;
+    path: string;
+};
 
-const routes = {
-    "": null,
-    "title": { path: "/titlePage" },
-    "login": { path: "/loginPage" },
-    "LoreIntroduction": { path: "/LoreIntroductionPage" },
-    "folders": { path: "/foldersPage" },
-    "configurator": { path: "/configuratorPage" },
-    "end": { path: "/end" }
-} as Routes
+export const steps: Step[] = [
+    {step: "title", path: "/titlePage"},
+    {step: "login", path: "/loginPage"},
+    {step: "loreIntroduction", path: "/LoreIntroductionPage" },
+    {step: "folders", path: "/foldersPage" },
+    {step: "configurator", path: "/configuratorPage" },
+    {step: "end", path: "/endingPage" }
+]
 
 export const useProgressStorage = create<ProgressStateType>((set) => ({
-    steps: ["", "title", "login", "LoreIntroduction", "folders", "configurator", "end"] as Step[],
-    currentStep: "",
-    currentRoute: null,
-    initProgress: () => {
+    currentStep: null,
+    choices: [],
+    setStep: (newStep) => set((state) => {
+        const foundStep = steps.find(step => step.step === newStep);
+        if (foundStep){
+            router.navigate(foundStep.path as RelativePathString)
+            return {
+                currentStep: foundStep
+            }
+        }
+        return state;
+    }),
+    setNextStep: () => {
         set(state => {
-            if (state.currentStep === state.steps[0]) {
-
-                state.currentStep = state.steps[1]
-
-                if (!routes[state.currentStep]) {
-                    return state
+            if (!state.currentStep) {
+                return {
+                    currentStep: steps[0]
                 }
-
-
-                state.currentRoute = routes[state.currentStep]
             }
 
-            return state
-        })
-    },
-    setCurrentStep: (step: Step) => {
-        set(state => {
-            state.currentStep = step
-
-            if (!routes[state.currentStep]) {
-                return state
-            }
-
-            state.currentRoute = routes[state.currentStep]
-
-            return state
-        })
-    },
-    nextStep: (cs?: Step) => {
-        /**
-         * Eventually change this logic to avoid 2 calls on the same step changing 
-         * maybe in params send the name of the currentstep and changing state.current state by the params current step.
-         */
-        set(state => {
-            const index = state.steps.indexOf(cs || state.currentStep)
-            if (index < (state.steps.length - 1)) {
-                state.currentStep = state.steps[index + 1]
-
-
-                if (!routes[state.currentStep]) {
-                    return state
+            const index = steps.indexOf(state.currentStep)
+            if (index < (steps.length - 1)) {
+                router.navigate(steps[index + 1].path as RelativePathString)
+                return {
+                    currentStep: steps[index + 1]
                 }
-
-
-                state.currentRoute = routes[state.currentStep]
             }
-
-
+            console.error("can't move to next step: last step has already been reached")
             return state
         })
     },
-    prevStep: (cs?: Step) => {
+    setPrevStep: () => {
         set(state => {
-            const index = state.steps.indexOf(cs || state.currentStep)
+            if (!state.currentStep) {
+                console.error("can't move to prev step: first step has already been reached")
+                return state;
+            }
+
+            const index = steps.indexOf(state.currentStep)
             if (index > 0) {
-                state.currentStep = state.steps[index - 1]
-
-
-                if (!routes[state.currentStep]) {
-                    return state
+                router.navigate(steps[index - 1].path as RelativePathString)
+                return {
+                    currentStep: steps[index - 1]
                 }
-
-
-                state.currentRoute = routes[state.currentStep]
             }
-
+            console.error("can't move to prev step: first step has already been reached")
             return state
         })
-    }
+    },
+    setCurrentStepFromPath: (routePath) => {
+        set(state => {
+            const loadedStep = steps.find(step => step.path === routePath) ?? steps[0]
+            return {
+                currentStep: loadedStep
+            }
+        })
+    },
+    addChoice: (choice) => set((state) => ({choices: [...state.choices, choice]})),
+    setChoices: (choices) => set(() => ({choices: choices}))
 }))
