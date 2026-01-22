@@ -11,6 +11,7 @@ import Svg, { Path } from "react-native-svg"
 import Button from "@/ui/Button"
 import { ComposedTrait } from "@/assets/data/characters"
 import SceneNewTrait from "./sceneNewTrait"
+import { primaryBackgroundTokens } from "@/assets/tokens/primary/backgrounds.tokens"
 
 const SceneComposed = () => {
     const selectedTraits = usePersonalityStorage((state) => state.selectedTraits)
@@ -118,7 +119,7 @@ const styles = StyleSheet.create({
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
-        // backgroundColor: "red",
+        backgroundColor: primaryBackgroundTokens["background-secondary"],
     },
     textContainer: {
         flexDirection: "row",

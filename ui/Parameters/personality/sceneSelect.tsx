@@ -12,6 +12,7 @@ import Animated, { Easing, useAnimatedStyle, useDerivedValue, useSharedValue, wi
 import Svg, { Circle, Defs, LinearGradient, Path, Stop } from "react-native-svg";
 import { opacity } from "react-native-reanimated/lib/typescript/Colors";
 import { transform } from "typescript";
+import { router } from "expo-router";
 
 const CIRCLE_RADIUS = 450 / 2;
 const TOTAL_ANGLE = 2 * Math.PI
@@ -76,7 +77,7 @@ const SceneSelect = (props: sceneSelectProps) => {
     }, [createdComposedTraits[0], createdComposedTraits[1], createdComposedTraits[2]])
     
     const endAnimation = () => {
-        console.log("coucou")
+        iconContainerAlpha.value = 0
         selectionContainerOpacity.value = withTiming(0, { easing: Easing.inOut(Easing.back(0.6)), duration: 2500 })
 
         setTimeout(() => {
@@ -109,6 +110,10 @@ const SceneSelect = (props: sceneSelectProps) => {
         resultIcon1TransformY.value = withDelay(0, withTiming(175, { easing: Easing.inOut(Easing.ease), duration: 1500 }))
         resultIcon2TransformY.value = withDelay(500, withTiming(175, { easing: Easing.inOut(Easing.ease), duration: 1500 }))
         resultIcon3TransformY.value = withDelay(1000, withTiming(175, { easing: Easing.inOut(Easing.ease), duration: 1500 }))
+
+        setTimeout(() => {
+            router.navigate("/configuratorPage")
+        }, 3000);
     }
 
     const selectionContainerOpacity = useSharedValue(1)
@@ -155,6 +160,12 @@ const SceneSelect = (props: sceneSelectProps) => {
         gap: resultContainerGap.value,
         transform: [{translateX: "-50%"}]
     }), [])
+
+    //icons container
+    const iconContainerAlpha = useSharedValue(1)
+    const iconContainerAnimatedStyle = useAnimatedStyle(() => ({
+        borderColor: `rgba(150, 150, 150, ${iconContainerAlpha.value})`
+    }))
 
     //background
     const alphabgAnimated = useSharedValue(1)
@@ -255,30 +266,30 @@ const SceneSelect = (props: sceneSelectProps) => {
             </Animated.View>
 
             <Animated.View style={[styles.resultContainer, resultContainerAnimatedStyle]}>
-                <View style={styles.resultIconContainer}>
+                <Animated.View style={[styles.resultIconContainer, iconContainerAnimatedStyle]}>
                     {
                         createdComposedTraits[0] &&
                         <Animated.View style={[styles.resultIcon, animatedResultIcon1]}>
                             <SvgComponent name={createdComposedTraits[0].icon}></SvgComponent>
                         </Animated.View>
                     }
-                </View>
-                <View style={styles.resultIconContainer}>
+                </Animated.View>
+                <Animated.View style={[styles.resultIconContainer, iconContainerAnimatedStyle]}>
                     {
                         createdComposedTraits[1] &&
                         <Animated.View style={[styles.resultIcon, animatedResultIcon2]}>
                             <SvgComponent name={createdComposedTraits[1].icon}></SvgComponent>
                         </Animated.View>
                     }
-                </View>
-                <View style={styles.resultIconContainer}>
+                </Animated.View>
+                <Animated.View style={[styles.resultIconContainer, iconContainerAnimatedStyle]}>
                     {
                         createdComposedTraits[2] &&
                         <Animated.View style={[styles.resultIcon, animatedResultIcon3]}>
                             <SvgComponent name={createdComposedTraits[2].icon}></SvgComponent>
                         </Animated.View>
                     }
-                </View>
+                </Animated.View>
             </Animated.View>
         </Animated.View>
     )
