@@ -25,7 +25,7 @@ const EndingPage = () => {
 
     useFocusEffect(
         useCallback(() => {
-            containerOpacity.value = withTiming(1, {duration: 800})
+            containerOpacity.value = withTiming(1, {duration: 1200})
         }, [])
     );
 

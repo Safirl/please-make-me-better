@@ -3,7 +3,7 @@ import SceneSelect from "@/ui/Parameters/personality/sceneSelect";
 import { usePersonalityStorage } from "@/assets/scripts/storage/useParametersStorage";
 import { useEffect, useRef, useState } from "react";
 import { Dimensions, LayoutChangeEvent, StyleSheet, View, Text } from "react-native";
-import Animated, { useAnimatedStyle, useDerivedValue, useSharedValue, withSpring, withTiming } from "react-native-reanimated";
+import Animated, { Easing, useAnimatedStyle, useDerivedValue, useSharedValue, withSpring, withTiming } from "react-native-reanimated";
 import { router } from "expo-router";
 import Button from "@/ui/Button";
 import SvgComponent from "@/ui/svg";
@@ -57,11 +57,29 @@ const personalityParameters = () => {
     ))
 
     const back = () => {
-        router.navigate("/configuratorPage")
+        containerTranslateX.value = withTiming(-DIMENSIONS.width, {duration: 600, easing: Easing.in(Easing.exp)}, () => {
+            router.navigate("/configuratorPage")
+        })
+        // containerTranslateY.value = withTiming(-DIMENSIONS.height, {duration: 800}, () => {
+        //     router.navigate("/configuratorPage")
+        // })
     }
 
+    const animateAlphaBg = () => {
+        alphabgAnimated.value = withTiming(0, { easing: Easing.inOut(Easing.ease), duration: 2500 })
+    }
+    
+    //container
+    const alphabgAnimated = useSharedValue(1)
+    const containerTranslateX = useSharedValue(0)
+    const containerTranslateY = useSharedValue(0)
+    const containerAnimatedStyle = useAnimatedStyle(() => ({
+        transform: [{translateX: containerTranslateX.value}, {translateY: containerTranslateY.value}],
+        backgroundColor: `rgba(29, 30, 34, ${alphabgAnimated.value})`
+    }))
+
     return (
-        <>
+        <Animated.View style={[{height: "100%"}, containerAnimatedStyle]}>
             <View
                 style={{
                     position: "absolute",
@@ -75,12 +93,12 @@ const personalityParameters = () => {
                 </Button>
             </View>
             <Animated.View style={[{ position: "relative", height: "100%" }, sceneSelectedAnimatedStyle]}>
-                <SceneSelect style={undefined}></SceneSelect>
+                <SceneSelect style={undefined} animateAlphaBg={animateAlphaBg}></SceneSelect>
             </Animated.View>
             <Animated.View style={[styles.composedContainer, sceneComposedAnimatedStyle]}>
                 <SceneComposed />
             </Animated.View>
-        </>
+        </Animated.View>
     )
 }
 
