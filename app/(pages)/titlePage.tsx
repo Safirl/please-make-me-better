@@ -33,6 +33,7 @@ const personalityParameters = () => {
 
     useEffect(() => {
 
+        console.log("on pass here")
         betterFade.value = withSequence(
             withSpring(1, { duration: 1500 }),
             withSpring(0, { duration: 2500, },

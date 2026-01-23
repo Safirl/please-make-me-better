@@ -4,7 +4,7 @@ import { primaryBackgroundTokens } from "@/assets/tokens/primary/backgrounds.tok
 import { useTheme } from "@react-navigation/native";
 import { useFonts } from "expo-font";
 import { Stack, usePathname } from "expo-router";
-import { Easing, StyleSheet, View } from "react-native";
+import { Easing, Pressable, StyleSheet, View } from "react-native";
 import { useParametersDisplayStateStorage } from "@/assets/scripts/storage/useParametersProgressStorage";
 import { useEffect, useState } from "react";
 import FolderPage from "./(pages)/foldersPage";
@@ -27,11 +27,12 @@ export default function RootLayout() {
     const currentStep = useProgressStorage((state) => state.currentStep)
     const navigateToNextStep = useProgressStorage((state) => state.setNextStep)
     const setCurrentStepFromPath = useProgressStorage((state) => state.setCurrentStepFromPath)
-    
+    const [playing, setPlaying] = useState(false)
+
     const audioSource = require("../assets/sfx/music.mp3");
     const player = useAudioPlayer(audioSource);
     player.loop = true;
-    
+
     const [loaded, error] = useFonts({
         JetBrainsMono: require("../assets/fonts/JetBrainsMono/JetBrainsMono[wght].ttf"),
     });
@@ -39,13 +40,13 @@ export default function RootLayout() {
 
     const { colors } = useTheme();
     colors.background = 'transparent';
-    
-    const {getFinalChoices} = useChoicesCalculator({selectedMemories, composedTrait, emotions})
-    
+
+    const { getFinalChoices } = useChoicesCalculator({ selectedMemories, composedTrait, emotions })
+
     const showEnding = () => {
         setChoices(getFinalChoices())
         setIsTransitionLayerActive(true)
-        opacity.value = withTiming(1, {duration: 2000, easing: Easing.out(Easing.ease)}, () => {
+        opacity.value = withTiming(1, { duration: 2000, easing: Easing.out(Easing.ease) }, () => {
             navigateToNextStep()
             setIsTransitionLayerActive(false)
             opacity.value = 0;
@@ -56,21 +57,28 @@ export default function RootLayout() {
         if (!currentStep) {
             setCurrentStepFromPath(pathname)
         }
-    },[pathname])
+    }, [pathname])
 
     useEffect(() => {
-        player.play()
     }, [])
+
+    const play = () => {
+        if (!playing) {
+            setPlaying(true)
+            player.play()
+
+        }
+    }
 
     const [isTransitionLayerActive, setIsTransitionLayerActive] = useState(false)
     const opacity = useSharedValue(0)
-    const animatedTransitionLayerStyle = useAnimatedStyle(()=>({
+    const animatedTransitionLayerStyle = useAnimatedStyle(() => ({
         opacity: opacity.value
     }))
-    
+
     return <>
         {
-            isTransitionLayerActive && <Animated.View style={[styles.transitionLayer, animatedTransitionLayerStyle]}/>
+            isTransitionLayerActive && <Animated.View style={[styles.transitionLayer, animatedTransitionLayerStyle]} />
         }
         <View
             style={{
@@ -83,6 +91,17 @@ export default function RootLayout() {
         >
             <GL />
         </View>
+        {!playing && <Pressable
+            style={{
+                position: "absolute",
+                zIndex: 99999999999999,
+                height: "100%",
+                width: "100%",
+                backgroundColor: "red",
+                opacity: 0
+            }}
+            onPress={play}
+        ></Pressable>}
         <View style={{ height: "100%", overflow: "hidden" }}>
             <Stack screenOptions={{
                 contentStyle: { backgroundColor: 'transparent' },
@@ -101,17 +120,17 @@ export default function RootLayout() {
         {
             currentStep?.step === "configurator" &&
             <View style={styles.validateButton}>
-                <Button type="primary" icon={{name: "file"}} overridePadding={12} onPress={()=>setFolderVisibility(true)}></Button>
+                <Button type="primary" icon={{ name: "file" }} overridePadding={12} onPress={() => setFolderVisibility(true)}></Button>
                 {
                     currentParameter === "" &&
-                    <Button type={hasParameterBeenModified ? "primary" : "secondary"} label="Finaliser" overridePadding={24} onPress={hasParameterBeenModified ? () => showEnding() : () => {}}></Button>
+                    <Button type={hasParameterBeenModified ? "primary" : "secondary"} label="Finaliser" overridePadding={24} onPress={hasParameterBeenModified ? () => showEnding() : () => { }}></Button>
                 }
             </View>
         }
 
         {
             isFolderVisible &&
-            <View style={{position: "absolute", width: "100%", height: "100%", backgroundColor: "rgba(0, 0, 0, 0.85)"}}>
+            <View style={{ position: "absolute", width: "100%", height: "100%", backgroundColor: "rgba(0, 0, 0, 0.85)" }}>
                 <FolderPage showConfigureButton={false}></FolderPage>
             </View>
         }
@@ -134,7 +153,7 @@ const styles = StyleSheet.create({
     },
 
     validateButton: {
-        display:"flex",
+        display: "flex",
         flexDirection: "row",
         alignItems: "center",
         position: "absolute",

@@ -23,14 +23,19 @@ const FolderPage = ({ showConfigureButton = true }: FolderPageProps) => {
     }
 
     const configure = () => {
-        globalOpacity.value = withTiming(0, {duration: 2000, easing: Easing.inOut(Easing.ease)})
-        backgroundOpacity.value = withDelay(1200, withTiming(0, {duration: 1000, easing: Easing.inOut(Easing.ease)}, () => {
+        globalOpacity.value = withTiming(0, { duration: 1000, easing: Easing.inOut(Easing.ease) })
+        // backgroundOpacity.value = withDelay(0, withTiming(0, { duration: 0, easing: Easing.inOut(Easing.ease) }, () => {
+        // }))
+
+        setTimeout(() => {
+
             gameProgress.setNextStep()
-        }))
+        }, 1000)
     }
 
+
     useEffect(() => {
-        globalOpacity.value = withTiming(1, {duration: 600, easing: Easing.inOut(Easing.ease)})
+        globalOpacity.value = withTiming(1, { duration: 600, easing: Easing.inOut(Easing.ease) })
     }, [])
 
     const globalOpacity = useSharedValue(0)
@@ -46,12 +51,12 @@ const FolderPage = ({ showConfigureButton = true }: FolderPageProps) => {
 
     return <Animated.View
         style={[{
-                alignItems: "center",
-                justifyContent: "center",
-                height: "100%",
-            },
+            alignItems: "center",
+            justifyContent: "center",
+            height: "100%",
+        },
             backgroundOpacityAnimatedStyle,
-            (showConfigureButton && {backgroundColor: primaryBackgroundTokens["background-secondary"]})
+        (showConfigureButton && { backgroundColor: primaryBackgroundTokens["background-secondary"] })
         ]}>
 
 
