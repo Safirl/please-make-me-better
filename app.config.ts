@@ -11,7 +11,7 @@ export default ({config}: ConfigContext): ExpoConfig => {
     return {
         ...config,
         name: "please-make-me-better",
-        owner: "ecni2027",
+        owner: "gobelins-ecni2027-groupe8",
 
         "slug": "groupe8",
         "version": "1.0.0",
